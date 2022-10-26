@@ -46,7 +46,7 @@ public class AuthsignalModule extends ReactContextBaseJavaModule implements Acti
     }
 
     @ReactMethod
-    public void show(String url, Callback callback) {
+    public void launch(String url, Callback callback) {
         final Activity activity = getCurrentActivity();
         final Uri parsedUrl = Uri.parse(url);
         this.callback = callback;

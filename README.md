@@ -11,9 +11,9 @@ npm install react-native-authsignal
 ## Usage
 
 ```js
-import { showUrl } from 'react-native-authsignal';
+import { launch } from 'react-native-authsignal';
 
-const token = await showUrl(url);
+const token = await launch(url);
 
 if (token) {
   // Send token to backend to validate challenge attempt
