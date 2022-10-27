@@ -17,9 +17,9 @@ const Authsignal = NativeModules.Authsignal
       }
     );
 
-export function showUrl(url: string): Promise<string | null> {
+export function launch(url: string): Promise<string | null> {
   if (Platform.OS === 'ios') {
-    return Authsignal.showUrl(url);
+    return Authsignal.launch(url);
   } else {
     return new Promise((resolve, reject) => {
       const callback = (error: any, token: string) => {
@@ -36,7 +36,7 @@ export function showUrl(url: string): Promise<string | null> {
         }
       };
 
-      Authsignal.showUrl(url, callback);
+      Authsignal.launch(url, callback);
     });
   }
 }

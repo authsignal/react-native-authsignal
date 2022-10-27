@@ -37,7 +37,7 @@ public class AuthenticationActivity extends Activity {
         final Intent authenticationIntent = getIntent();
 
         if (!intentLaunched && authenticationIntent.getExtras() == null) {
-            finish(); // Activity was launched in an unexpected way
+            finish();
             return;
         } else if (!intentLaunched) {
             intentLaunched = true;
