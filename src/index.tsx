@@ -1,12 +1,9 @@
 import { NativeModules, Platform } from 'react-native';
+import { LINKING_ERROR } from './error';
+import { AuthsignalPasskey } from './passkey';
+import { AuthsignalPush } from './push';
 
-const LINKING_ERROR =
-  `The package 'react-native-authsignal' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo Go\n';
-
-const Authsignal = NativeModules.Authsignal
+const AuthsignalModule = NativeModules.Authsignal
   ? NativeModules.Authsignal
   : new Proxy(
       {},
@@ -17,9 +14,33 @@ const Authsignal = NativeModules.Authsignal
       }
     );
 
+interface ConstructorArgs {
+  tenantID: string;
+  baseURL?: string;
+}
+
+export class Authsignal {
+  tenantID: string;
+  baseURL: string;
+
+  passkey: AuthsignalPasskey;
+  push: AuthsignalPush;
+
+  constructor({
+    tenantID,
+    baseURL = 'https://challenge.authsignal.com/v1',
+  }: ConstructorArgs) {
+    this.tenantID = tenantID;
+    this.baseURL = baseURL;
+
+    this.passkey = new AuthsignalPasskey({ tenantID, baseURL });
+    this.push = new AuthsignalPush({ tenantID, baseURL });
+  }
+}
+
 export function launch(url: string): Promise<string | null> {
   if (Platform.OS === 'ios') {
-    return Authsignal.launch(url);
+    return AuthsignalModule.launch(url);
   } else {
     return new Promise((resolve, reject) => {
       const callback = (error: any, token: string) => {
@@ -36,7 +57,7 @@ export function launch(url: string): Promise<string | null> {
         }
       };
 
-      Authsignal.launch(url, callback);
+      AuthsignalModule.launch(url, callback);
     });
   }
 }

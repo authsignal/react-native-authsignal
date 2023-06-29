@@ -1,7 +1,7 @@
 {
   "name": "react-native-authsignal",
-  "version": "0.1.0",
-  "description": "test",
+  "version": "0.2.0",
+  "description": "The official Authsignal React Native library.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/index.d.ts",
@@ -37,7 +37,7 @@
     "android"
   ],
   "repository": "https://github.com/authsignal/react-native-authsignal.git",
-  "author": "Authsignal <chris@authsignal.com> (https://www.authsignal.com)",
+  "author": "Authsignal <support@authsignal.com> (https://www.authsignal.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/authsignal/react-native-authsignal.git/issues"
