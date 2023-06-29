@@ -37,7 +37,7 @@ public class AuthsignalPasskeyModule extends ReactContextBaseJavaModule {
   @NonNull
   @Override
   public String getName() {
-    return "AuthsignalPasskey";
+    return "AuthsignalPasskeyModule";
   }
 
   @ReactMethod

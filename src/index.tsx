@@ -3,8 +3,8 @@ import { LINKING_ERROR } from './error';
 import { AuthsignalPasskey } from './passkey';
 import { AuthsignalPush } from './push';
 
-const AuthsignalModule = NativeModules.Authsignal
-  ? NativeModules.Authsignal
+const AuthsignalModule = NativeModules.AuthsignalModule
+  ? NativeModules.AuthsignalModule
   : new Proxy(
       {},
       {

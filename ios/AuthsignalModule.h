@@ -3,9 +3,9 @@
 @import AuthenticationServices;
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
-@interface Authsignal : NSObject <RCTBridgeModule, ASWebAuthenticationPresentationContextProviding>
+@interface AuthsignalModule : NSObject <RCTBridgeModule, ASWebAuthenticationPresentationContextProviding>
 @end
 #else
-@interface Authsignal : NSObject <RCTBridgeModule>
+@interface AuthsignalModule : NSObject <RCTBridgeModule>
 @end
 #endif

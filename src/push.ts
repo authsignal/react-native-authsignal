@@ -14,8 +14,8 @@ interface PushCredential {
 
 let initialized = false;
 
-const AuthsignalPushModule = NativeModules.AuthsignalPush
-  ? NativeModules.AuthsignalPush
+const AuthsignalPushModule = NativeModules.AuthsignalPushModule
+  ? NativeModules.AuthsignalPushModule
   : new Proxy(
       {},
       {
@@ -43,7 +43,7 @@ export class AuthsignalPush {
   async addCredential(token: string): Promise<boolean> {
     await this.ensureModuleIsInitialized();
 
-    return AuthsignalPushModule.addCredential(token, null);
+    return AuthsignalPushModule.addCredential(token);
   }
 
   async removeCredential(): Promise<boolean> {

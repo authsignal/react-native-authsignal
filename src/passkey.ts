@@ -18,8 +18,8 @@ interface PasskeySignInInput {
 
 let initialized = false;
 
-const AuthsignalPasskeyModule = NativeModules.AuthsignalPasskey
-  ? NativeModules.AuthsignalPasskey
+const AuthsignalPasskeyModule = NativeModules.AuthsignalPasskeyModule
+  ? NativeModules.AuthsignalPasskeyModule
   : new Proxy(
       {},
       {

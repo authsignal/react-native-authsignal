@@ -38,7 +38,7 @@ public class AuthsignalPushModule extends ReactContextBaseJavaModule {
   @NonNull
   @Override
   public String getName() {
-    return "AuthsignalPush";
+    return "AuthsignalPushModule";
   }
 
   @ReactMethod
