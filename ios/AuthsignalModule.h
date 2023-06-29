@@ -9,4 +9,3 @@
 @interface Authsignal : NSObject <RCTBridgeModule>
 @end
 #endif
-

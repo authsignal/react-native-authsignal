@@ -40,13 +40,13 @@ export class AuthsignalPush {
     return AuthsignalPushModule.getCredential();
   }
 
-  async addCredential(token: string): Promise<void> {
+  async addCredential(token: string): Promise<boolean> {
     await this.ensureModuleIsInitialized();
 
-    return AuthsignalPushModule.addCredential(token);
+    return AuthsignalPushModule.addCredential(token, null);
   }
 
-  async removeCredential(): Promise<void> {
+  async removeCredential(): Promise<boolean> {
     await this.ensureModuleIsInitialized();
 
     return AuthsignalPushModule.removeCredential();
@@ -62,7 +62,7 @@ export class AuthsignalPush {
     challengeId: string,
     approved: boolean,
     verificationCode: string | null
-  ): Promise<void> {
+  ): Promise<boolean> {
     await this.ensureModuleIsInitialized();
 
     return NativeModules.updateChallenge(

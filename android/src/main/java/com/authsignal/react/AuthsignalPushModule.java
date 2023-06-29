@@ -72,10 +72,10 @@ public class AuthsignalPushModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void addCredential(String token, String deviceName, Promise promise) {
+  public void addCredential(String token, Promise promise) {
     if (authsignalPush != null) {
       authsignalPush
-        .addCredentialAsync(token, deviceName)
+        .addCredentialAsync(token, null)
         .thenAcceptAsync(promise::resolve);
     } else {
       Log.w(TAG, INIT_WARNING);
