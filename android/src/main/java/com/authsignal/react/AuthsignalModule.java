@@ -42,7 +42,7 @@ public class AuthsignalModule extends ReactContextBaseJavaModule implements Acti
     @NonNull
     @Override
     public String getName() {
-        return "Authsignal";
+        return "AuthsignalModule";
     }
 
     @ReactMethod

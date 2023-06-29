@@ -1,7 +1,4 @@
 buildscript {
-  // Buildscript is evaluated before everything else so we can't use getExtOrDefault
-  def kotlin_version = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : project.properties['Authsignal_kotlinVersion']
-
   repositories {
       google()
       mavenCentral()
@@ -9,8 +6,6 @@ buildscript {
 
   dependencies {
     classpath 'com.android.tools.build:gradle:4.2.0'
-    // noinspection DifferentKotlinGradleVersion
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
 }
 
@@ -19,7 +14,7 @@ def isNewArchitectureEnabled() {
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+
 
 if (isNewArchitectureEnabled()) {
   apply plugin: 'com.facebook.react'
@@ -128,14 +123,14 @@ repositories {
   }
 }
 
-def kotlin_version = getExtOrDefault('kotlinVersion')
-
 dependencies {
-    //noinspection GradleDynamicVersion
+  //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
+
   implementation "androidx.browser:browser:1.2.0"
-  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-// From node_modules
+
+  implementation("com.authsignal:authsignal-push-android:0.1.11")
+  implementation("com.authsignal:authsignal-passkey-android:0.0.4")
 }
 
 if (isNewArchitectureEnabled()) {

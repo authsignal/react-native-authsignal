@@ -12,7 +12,11 @@ import com.facebook.react.uimanager.ViewManager;
 public class AuthsignalPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-        return Arrays.<NativeModule>asList(new AuthsignalModule(reactContext));
+        return Arrays.asList(
+          new AuthsignalModule(reactContext),
+          new AuthsignalPasskeyModule(reactContext),
+          new AuthsignalPushModule(reactContext)
+        );
     }
 
     @Override

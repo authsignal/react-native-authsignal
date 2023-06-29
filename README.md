@@ -1,6 +1,6 @@
 # react-native-authsignal
 
-React Native library for the Authsignal API
+The official Authsignal library for React Native.
 
 ## Installation
 

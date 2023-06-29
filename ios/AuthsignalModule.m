@@ -1,11 +1,11 @@
-#import "Authsignal.h"
+#import "AuthsignalModule.h"
 #import <React/RCTConvert.h>
 
-@interface Authsignal ()
+@interface AuthsignalModule ()
 @property (strong, nonatomic) NSObject *session;
 @end
 
-@implementation Authsignal
+@implementation AuthsignalModule
 
 RCT_EXPORT_MODULE();
 
