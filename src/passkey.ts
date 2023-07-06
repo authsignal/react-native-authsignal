@@ -70,11 +70,13 @@ export class AuthsignalPasskey {
     await this.ensureModuleIsInitialized();
 
     try {
-      if (autofill && Platform.OS !== 'ios') {
+      if (autofill && Platform.OS === 'ios') {
+        return await AuthsignalPasskeyModule.signIn(token, autofill);
+      } else if (!autofill) {
+        return await AuthsignalPasskeyModule.signIn(token);
+      } else {
         throw new Error('autofill is only supported on iOS');
       }
-
-      return await AuthsignalPasskeyModule.signIn(token, autofill);
     } catch (ex) {
       if (this.enableLogging) {
         console.warn(ex);
