@@ -55,7 +55,7 @@ public class AuthsignalPushModule extends ReactContextBaseJavaModule {
       authsignalPush
         .getCredentialAsync()
         .thenAcceptAsync((response) -> {
-          if (response.getData() == null) {
+          if (response.getError() != null) {
             promise.reject("getCredential error", response.getError());
           } else {
             PushCredential credential = response.getData();
@@ -79,7 +79,7 @@ public class AuthsignalPushModule extends ReactContextBaseJavaModule {
       authsignalPush
         .addCredentialAsync(token, null)
         .thenAcceptAsync(response -> {
-          if (response.getData() == null) {
+          if (response.getError() != null) {
             promise.reject("addCredential error", response.getError());
           } else {
             promise.resolve(response.getData());
@@ -98,7 +98,7 @@ public class AuthsignalPushModule extends ReactContextBaseJavaModule {
       authsignalPush
         .removeCredentialAsync()
         .thenAcceptAsync(response -> {
-          if (response.getData() == null) {
+          if (response.getError() != null) {
             promise.reject("removeCredential error", response.getError());
           } else {
             promise.resolve(response.getData());
@@ -117,7 +117,7 @@ public class AuthsignalPushModule extends ReactContextBaseJavaModule {
       authsignalPush
         .getChallengeAsync()
         .thenAcceptAsync(response -> {
-          if (response.getData() == null) {
+          if (response.getError() != null) {
             promise.reject("getChallenge error", response.getError());
           } else {
             promise.resolve(response.getData());
@@ -141,7 +141,7 @@ public class AuthsignalPushModule extends ReactContextBaseJavaModule {
       authsignalPush
         .updateChallengeAsync(challengeId, approved, verificationCode)
         .thenAcceptAsync(response -> {
-          if (response.getData() == null) {
+          if (response.getError() != null) {
             promise.reject("updateChallenge error", response.getError());
           } else {
             promise.resolve(response.getData());
