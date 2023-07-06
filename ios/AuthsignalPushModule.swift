@@ -32,9 +32,9 @@ class AuthsignalPushModule: NSObject {
     Task.init {
       let response = await authsignal.getCredential()
             
-      if (response.error) {
+      if (response.error != nil) {
         reject(response.error)
-      } else if (response.data) {
+      } else if (response.data != nil) {
         let data: [String: String?] = [
           "credentialID": response.data.credentialID,
           "createdAt": response.data.createdAt,
@@ -62,7 +62,7 @@ class AuthsignalPushModule: NSObject {
     Task.init {
       let response = await authsignal.addCredential(token: tokenStr)
       
-      if (response.error) {
+      if (response.error != nil) {
         reject(response.error)
       } else {
         resolve(response.data)
@@ -81,7 +81,7 @@ class AuthsignalPushModule: NSObject {
     Task.init {
       let response = await authsignal.removeCredential()
       
-      if (response.error) {
+      if (response.error != nil) {
         reject(response.error)
       } else {
         resolve(response.data)
@@ -100,7 +100,7 @@ class AuthsignalPushModule: NSObject {
     Task.init {
       let response = await authsignal.getChallenge()
       
-      if (response.error) {
+      if (response.error != nil) {
         reject(response.error)
       } else {
         resolve(response.data)
@@ -126,7 +126,7 @@ class AuthsignalPushModule: NSObject {
     Task.init {
       let response = await authsignal.updateChallenge(challengeID: challenge, approved: approval, verificationCode: code)
       
-      if (response.error) {
+      if (response.error != nil) {
         reject(response.error)
       } else {
         resolve(response.data)

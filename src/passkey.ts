@@ -1,5 +1,6 @@
 import { NativeModules, Platform } from 'react-native';
 import { LINKING_ERROR } from './error';
+import type { AuthsignalResponse } from './types';
 
 interface ConstructorArgs {
   tenantID: string;
@@ -44,7 +45,7 @@ export class AuthsignalPasskey {
   async signUp({
     token,
     userName,
-  }: PasskeySignUpInput): Promise<string | undefined> {
+  }: PasskeySignUpInput): Promise<AuthsignalResponse<string>> {
     await this.ensureModuleIsInitialized();
 
     try {
@@ -53,30 +54,38 @@ export class AuthsignalPasskey {
       if (this.enableLogging) {
         console.warn(ex);
       }
-    }
 
-    return undefined;
+      if (ex instanceof Error) {
+        return { error: ex.message };
+      }
+
+      throw ex;
+    }
   }
 
   async signIn({
     token,
     autofill = false,
-  }: PasskeySignInInput): Promise<string | undefined> {
+  }: PasskeySignInInput): Promise<AuthsignalResponse<string>> {
     await this.ensureModuleIsInitialized();
 
     try {
-      if (Platform.OS === 'ios') {
-        return await AuthsignalPasskeyModule.signIn(token, autofill);
-      } else if (token) {
-        return await AuthsignalPasskeyModule.signIn(token);
+      if (autofill && Platform.OS !== 'ios') {
+        throw new Error('autofill is only supported on iOS');
       }
+
+      return await AuthsignalPasskeyModule.signIn(token, autofill);
     } catch (ex) {
       if (this.enableLogging) {
         console.warn(ex);
       }
-    }
 
-    return undefined;
+      if (ex instanceof Error) {
+        return { error: ex.message };
+      }
+
+      throw ex;
+    }
   }
 
   cancel() {

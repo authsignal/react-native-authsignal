@@ -1,5 +1,6 @@
 import { NativeModules } from 'react-native';
 import { LINKING_ERROR } from './error';
+import type { AuthsignalResponse } from './types';
 
 interface ConstructorArgs {
   tenantID: string;
@@ -37,7 +38,7 @@ export class AuthsignalPush {
     this.enableLogging = enableLogging;
   }
 
-  async getCredential(): Promise<PushCredential | undefined> {
+  async getCredential(): Promise<AuthsignalResponse<PushCredential>> {
     await this.ensureModuleIsInitialized();
 
     try {
@@ -47,11 +48,15 @@ export class AuthsignalPush {
         console.warn(ex);
       }
 
-      return undefined;
+      if (ex instanceof Error) {
+        return { error: ex.message };
+      }
+
+      throw ex;
     }
   }
 
-  async addCredential(token: string): Promise<boolean> {
+  async addCredential(token: string): Promise<AuthsignalResponse<boolean>> {
     await this.ensureModuleIsInitialized();
 
     try {
@@ -61,11 +66,15 @@ export class AuthsignalPush {
         console.warn(ex);
       }
 
-      return false;
+      if (ex instanceof Error) {
+        return { error: ex.message };
+      }
+
+      throw ex;
     }
   }
 
-  async removeCredential(): Promise<boolean> {
+  async removeCredential(): Promise<AuthsignalResponse<boolean>> {
     await this.ensureModuleIsInitialized();
 
     try {
@@ -75,11 +84,15 @@ export class AuthsignalPush {
         console.warn(ex);
       }
 
-      return false;
+      if (ex instanceof Error) {
+        return { error: ex.message };
+      }
+
+      throw ex;
     }
   }
 
-  async getChallenge(): Promise<string | undefined> {
+  async getChallenge(): Promise<AuthsignalResponse<string>> {
     await this.ensureModuleIsInitialized();
 
     try {
@@ -89,7 +102,11 @@ export class AuthsignalPush {
         console.warn(ex);
       }
 
-      return undefined;
+      if (ex instanceof Error) {
+        return { error: ex.message };
+      }
+
+      throw ex;
     }
   }
 
@@ -97,7 +114,7 @@ export class AuthsignalPush {
     challengeId: string,
     approved: boolean,
     verificationCode: string | null
-  ): Promise<boolean> {
+  ): Promise<AuthsignalResponse<boolean>> {
     await this.ensureModuleIsInitialized();
 
     try {
@@ -111,7 +128,11 @@ export class AuthsignalPush {
         console.warn(ex);
       }
 
-      return false;
+      if (ex instanceof Error) {
+        return { error: ex.message };
+      }
+
+      throw ex;
     }
   }
 
