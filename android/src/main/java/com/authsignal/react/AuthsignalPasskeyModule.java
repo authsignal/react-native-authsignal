@@ -61,7 +61,13 @@ public class AuthsignalPasskeyModule extends ReactContextBaseJavaModule {
     if (authsignalPasskey != null) {
       authsignalPasskey
         .signUpAsync(token, userName)
-        .thenAcceptAsync(promise::resolve);
+        .thenAcceptAsync(response -> {
+          if (response.getData() == null) {
+            promise.reject("signUp error", response.getError());
+          } else {
+            promise.resolve(response.getData());
+          }
+        });
     } else {
       Log.w(TAG, INIT_WARNING);
 
@@ -74,7 +80,13 @@ public class AuthsignalPasskeyModule extends ReactContextBaseJavaModule {
     if (authsignalPasskey != null) {
       authsignalPasskey
         .signInAsync(token)
-        .thenAcceptAsync(promise::resolve);
+        .thenAcceptAsync(response -> {
+          if (response.getData() == null) {
+            promise.reject("signIn error", response.getError());
+          } else {
+            promise.resolve(response.getData());
+          }
+        });
     } else {
       Log.w(TAG, INIT_WARNING);
 

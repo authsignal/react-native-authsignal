@@ -22,9 +22,13 @@ class AuthsignalPasskeyModule: NSObject {
     let userNameStr = userName as String?
     
     Task.init {
-      let token = await authsignal?.signUp(token: tokenStr, userName: userNameStr)
+      let response = await authsignal?.signUp(token: tokenStr, userName: userNameStr)
       
-      resolve(token)
+      if (response.error) {
+        reject(response.error)
+      } else {
+        resolve(response.data)
+      }
     }
   }
   
@@ -32,9 +36,13 @@ class AuthsignalPasskeyModule: NSObject {
     let tokenStr = token as String?
     
     Task.init {
-      let token = await authsignal?.signIn(token: tokenStr, autofill: autofill)
+      let response = await authsignal?.signIn(token: tokenStr, autofill: autofill)
       
-      resolve(token)
+      if (response.error) {
+        reject(response.error)
+      } else {
+        resolve(response.data)
+      }
     }
   }
   

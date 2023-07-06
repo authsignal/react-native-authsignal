@@ -17,11 +17,13 @@ const AuthsignalModule = NativeModules.AuthsignalModule
 interface ConstructorArgs {
   tenantID: string;
   baseURL?: string;
+  enableLogging?: boolean;
 }
 
 export class Authsignal {
   tenantID: string;
   baseURL: string;
+  enableLogging: boolean;
 
   passkey: AuthsignalPasskey;
   push: AuthsignalPush;
@@ -29,12 +31,14 @@ export class Authsignal {
   constructor({
     tenantID,
     baseURL = 'https://challenge.authsignal.com/v1',
+    enableLogging = __DEV__,
   }: ConstructorArgs) {
     this.tenantID = tenantID;
     this.baseURL = baseURL;
+    this.enableLogging = enableLogging;
 
-    this.passkey = new AuthsignalPasskey({ tenantID, baseURL });
-    this.push = new AuthsignalPush({ tenantID, baseURL });
+    this.passkey = new AuthsignalPasskey({ tenantID, baseURL, enableLogging });
+    this.push = new AuthsignalPush({ tenantID, baseURL, enableLogging });
   }
 }
 

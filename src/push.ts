@@ -4,6 +4,7 @@ import { LINKING_ERROR } from './error';
 interface ConstructorArgs {
   tenantID: string;
   baseURL: string;
+  enableLogging: boolean;
 }
 
 interface PushCredential {
@@ -28,34 +29,68 @@ const AuthsignalPushModule = NativeModules.AuthsignalPushModule
 export class AuthsignalPush {
   tenantID: string;
   baseURL: string;
+  enableLogging: boolean;
 
-  constructor({ tenantID, baseURL }: ConstructorArgs) {
+  constructor({ tenantID, baseURL, enableLogging }: ConstructorArgs) {
     this.tenantID = tenantID;
     this.baseURL = baseURL;
+    this.enableLogging = enableLogging;
   }
 
   async getCredential(): Promise<PushCredential | undefined> {
     await this.ensureModuleIsInitialized();
 
-    return AuthsignalPushModule.getCredential();
+    try {
+      return await AuthsignalPushModule.getCredential();
+    } catch (ex) {
+      if (this.enableLogging) {
+        console.warn(ex);
+      }
+
+      return undefined;
+    }
   }
 
   async addCredential(token: string): Promise<boolean> {
     await this.ensureModuleIsInitialized();
 
-    return AuthsignalPushModule.addCredential(token);
+    try {
+      return await AuthsignalPushModule.addCredential(token);
+    } catch (ex) {
+      if (this.enableLogging) {
+        console.warn(ex);
+      }
+
+      return false;
+    }
   }
 
   async removeCredential(): Promise<boolean> {
     await this.ensureModuleIsInitialized();
 
-    return AuthsignalPushModule.removeCredential();
+    try {
+      return await AuthsignalPushModule.removeCredential();
+    } catch (ex) {
+      if (this.enableLogging) {
+        console.warn(ex);
+      }
+
+      return false;
+    }
   }
 
   async getChallenge(): Promise<string | undefined> {
     await this.ensureModuleIsInitialized();
 
-    return AuthsignalPushModule.getChallenge();
+    try {
+      return await AuthsignalPushModule.getChallenge();
+    } catch (ex) {
+      if (this.enableLogging) {
+        console.warn(ex);
+      }
+
+      return undefined;
+    }
   }
 
   async updateChallenge(
@@ -65,11 +100,19 @@ export class AuthsignalPush {
   ): Promise<boolean> {
     await this.ensureModuleIsInitialized();
 
-    return NativeModules.updateChallenge(
-      challengeId,
-      approved,
-      verificationCode
-    );
+    try {
+      return await NativeModules.updateChallenge(
+        challengeId,
+        approved,
+        verificationCode
+      );
+    } catch (ex) {
+      if (this.enableLogging) {
+        console.warn(ex);
+      }
+
+      return false;
+    }
   }
 
   private async ensureModuleIsInitialized() {
