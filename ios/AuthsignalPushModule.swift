@@ -25,23 +25,24 @@ class AuthsignalPushModule: NSObject {
     _ resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
-    if (authsignal == nil) {
+    guard let authsignal = authsignal else {
       resolve(nil)
+      return
     }
     
     Task.init {
       let response = await authsignal.getCredential()
-            
-      if (response.error != nil) {
-        reject(response.error)
-      } else if (response.data != nil) {
-        let data: [String: String?] = [
-          "credentialID": response.data.credentialID,
-          "createdAt": response.data.createdAt,
-          "lastAuthenticatedAt": response.data.lastAuthenticatedAt,
+      
+      if let error = response.error {
+        reject("getCredential error", error, nil)
+      } else if let data = response.data {
+        let credential: [String: String?] = [
+          "credentialID": response.data!.credentialID,
+          "createdAt": response.data!.createdAt,
+          "lastAuthenticatedAt": response.data!.lastAuthenticatedAt,
         ]
         
-        resolve(data)
+        resolve(credential)
       } else {
         resolve(nil)
       }
@@ -53,8 +54,9 @@ class AuthsignalPushModule: NSObject {
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
-    if (authsignal == nil) {
+    guard let authsignal = authsignal else {
       resolve(nil)
+      return
     }
     
     let tokenStr = token as String
@@ -62,8 +64,8 @@ class AuthsignalPushModule: NSObject {
     Task.init {
       let response = await authsignal.addCredential(token: tokenStr)
       
-      if (response.error != nil) {
-        reject(response.error)
+      if let error = response.error {
+        reject("addCredential error", error, nil)
       } else {
         resolve(response.data)
       }
@@ -74,15 +76,16 @@ class AuthsignalPushModule: NSObject {
     _ resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
-    if (authsignal == nil) {
+    guard let authsignal = authsignal else {
       resolve(nil)
+      return
     }
     
     Task.init {
       let response = await authsignal.removeCredential()
       
-      if (response.error != nil) {
-        reject(response.error)
+      if let error = response.error {
+        reject("removeCredential error", error, nil)
       } else {
         resolve(response.data)
       }
@@ -93,15 +96,16 @@ class AuthsignalPushModule: NSObject {
     _ resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
-    if (authsignal == nil) {
+    guard let authsignal = authsignal else {
       resolve(nil)
+      return
     }
     
     Task.init {
       let response = await authsignal.getChallenge()
       
-      if (response.error != nil) {
-        reject(response.error)
+      if let error = response.error {
+        reject("getChallenge error", error, nil)
       } else {
         resolve(response.data)
       }
@@ -115,8 +119,9 @@ class AuthsignalPushModule: NSObject {
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
-    if (authsignal == nil) {
+    guard let authsignal = authsignal else {
       resolve(nil)
+      return
     }
     
     let challenge = challengeID as String
@@ -124,10 +129,14 @@ class AuthsignalPushModule: NSObject {
     let code = verificationCode as String?
     
     Task.init {
-      let response = await authsignal.updateChallenge(challengeID: challenge, approved: approval, verificationCode: code)
+      let response = await authsignal.updateChallenge(
+        challengeID: challenge,
+        approved: approval,
+        verificationCode: code
+      )
       
-      if (response.error != nil) {
-        reject(response.error)
+      if let error = response.error {
+        reject("updateChallenge error", error, nil)
       } else {
         resolve(response.data)
       }

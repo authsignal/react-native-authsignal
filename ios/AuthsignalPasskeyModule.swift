@@ -10,22 +10,36 @@ class AuthsignalPasskeyModule: NSObject {
     return true
   }
   
-  @objc func initialize(_ tenantID: NSString, withBaseURL baseURL: NSString, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
-  
+  @objc func initialize(
+    _ tenantID: NSString,
+    withBaseURL baseURL: NSString,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock
+  ) -> Void {
     self.authsignal = AuthsignalPasskey(tenantID: tenantID as String, baseURL: baseURL as String)
     
     resolve(nil)
   }
   
-  @objc func signUp(_ token: NSString, withUserName userName: NSString, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
+  @objc func signUp(
+    _ token: NSString,
+    withUserName userName: NSString,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock
+  ) -> Void {
+    if (authsignal == nil) {
+      resolve(nil)
+      return
+    }
+    
     let tokenStr = token as String
     let userNameStr = userName as String?
     
     Task.init {
-      let response = await authsignal?.signUp(token: tokenStr, userName: userNameStr)
+      let response = await authsignal!.signUp(token: tokenStr, userName: userNameStr)
       
-      if (response.error) {
-        reject(response.error)
+      if (response.error != nil) {
+        reject("signUp error", response.error, nil)
       } else {
         resolve(response.data)
       }
@@ -33,13 +47,18 @@ class AuthsignalPasskeyModule: NSObject {
   }
   
   @objc func signIn(_ token: NSString?, withAutofill autofill: Bool, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
+    if (authsignal == nil) {
+      resolve(nil)
+      return
+    }
+    
     let tokenStr = token as String?
     
     Task.init {
-      let response = await authsignal?.signIn(token: tokenStr, autofill: autofill)
+      let response = await authsignal!.signIn(token: tokenStr, autofill: autofill)
       
-      if (response.error) {
-        reject(response.error)
+      if (response.error != nil) {
+        reject("signIn error", response.error, nil)
       } else {
         resolve(response.data)
       }
