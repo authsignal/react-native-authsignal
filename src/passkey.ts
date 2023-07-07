@@ -1,9 +1,11 @@
 import { NativeModules, Platform } from 'react-native';
 import { LINKING_ERROR } from './error';
+import type { AuthsignalResponse } from './types';
 
 interface ConstructorArgs {
   tenantID: string;
   baseURL: string;
+  enableLogging: boolean;
 }
 
 interface PasskeySignUpInput {
@@ -32,33 +34,65 @@ const AuthsignalPasskeyModule = NativeModules.AuthsignalPasskeyModule
 export class AuthsignalPasskey {
   tenantID: string;
   baseURL: string;
+  enableLogging: boolean;
 
-  constructor({ tenantID, baseURL }: ConstructorArgs) {
+  constructor({ tenantID, baseURL, enableLogging }: ConstructorArgs) {
     this.tenantID = tenantID;
     this.baseURL = baseURL;
+    this.enableLogging = enableLogging;
   }
 
   async signUp({
     token,
     userName,
-  }: PasskeySignUpInput): Promise<string | undefined> {
+  }: PasskeySignUpInput): Promise<AuthsignalResponse<string>> {
     await this.ensureModuleIsInitialized();
 
-    return await AuthsignalPasskeyModule.signUp(token, userName);
+    try {
+      const data = await AuthsignalPasskeyModule.signUp(token, userName);
+
+      return { data };
+    } catch (ex) {
+      if (this.enableLogging) {
+        console.log(ex);
+      }
+
+      if (ex instanceof Error) {
+        return { error: ex.message };
+      }
+
+      throw ex;
+    }
   }
 
   async signIn({
     token,
     autofill = false,
-  }: PasskeySignInInput): Promise<string | undefined> {
+  }: PasskeySignInInput): Promise<AuthsignalResponse<string>> {
     await this.ensureModuleIsInitialized();
 
-    if (Platform.OS === 'ios') {
-      return AuthsignalPasskeyModule.signIn(token, autofill);
-    } else if (token) {
-      return AuthsignalPasskeyModule.signIn(token);
-    } else {
-      return undefined;
+    try {
+      if (Platform.OS === 'ios') {
+        const data = await AuthsignalPasskeyModule.signIn(token, autofill);
+
+        return { data };
+      } else if (!autofill) {
+        const data = await AuthsignalPasskeyModule.signIn(token);
+
+        return { data };
+      } else {
+        throw new Error('autofill is only supported on iOS');
+      }
+    } catch (ex) {
+      if (this.enableLogging && !autofill) {
+        console.log(ex);
+      }
+
+      if (ex instanceof Error) {
+        return { error: ex.message };
+      }
+
+      throw ex;
     }
   }
 

@@ -10,66 +10,136 @@ class AuthsignalPushModule: NSObject {
     return true
   }
   
-  @objc func initialize(_ tenantID: NSString, withBaseURL baseURL: NSString, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
-  
+  @objc func initialize(
+    _ tenantID: NSString,
+    withBaseURL baseURL: NSString,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock
+  ) -> Void {
     self.authsignal = AuthsignalPush(tenantID: tenantID as String, baseURL: baseURL as String)
     
     resolve(nil)
   }
 
-  @objc func getCredential(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
+  @objc func getCredential(
+    _ resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock
+  ) -> Void {
+    guard let authsignal = authsignal else {
+      resolve(nil)
+      return
+    }
+    
     Task.init {
-      let credential = await authsignal?.getCredential()
-            
-      if let credential = credential {
-        let data: [String: String?] = [
-          "credentialID": credential.credentialID,
-          "createdAt": credential.createdAt,
-          "lastAuthenticatedAt": credential.lastAuthenticatedAt,
+      let response = await authsignal.getCredential()
+      
+      if let error = response.error {
+        reject("getCredential error", error, nil)
+      } else if let data = response.data {
+        let credential: [String: String?] = [
+          "credentialID": response.data!.credentialID,
+          "createdAt": response.data!.createdAt,
+          "lastAuthenticatedAt": response.data!.lastAuthenticatedAt,
         ]
         
-        resolve(data)
+        resolve(credential)
       } else {
         resolve(nil)
       }
     }
   }
 
-  @objc func addCredential(_ token: NSString, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
+  @objc func addCredential(
+    _ token: NSString,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock
+  ) -> Void {
+    guard let authsignal = authsignal else {
+      resolve(nil)
+      return
+    }
+    
     let tokenStr = token as String
-
+    
     Task.init {
-      let success = await authsignal?.addCredential(token: tokenStr)
+      let response = await authsignal.addCredential(token: tokenStr)
       
-      resolve(success)
+      if let error = response.error {
+        reject("addCredential error", error, nil)
+      } else {
+        resolve(response.data)
+      }
     }
   }
   
-  @objc func removeCredential(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
+  @objc func removeCredential(
+    _ resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock
+  ) -> Void {
+    guard let authsignal = authsignal else {
+      resolve(nil)
+      return
+    }
+    
     Task.init {
-      let success = await authsignal?.removeCredential()
+      let response = await authsignal.removeCredential()
       
-      resolve(success)
+      if let error = response.error {
+        reject("removeCredential error", error, nil)
+      } else {
+        resolve(response.data)
+      }
     }
   }
 
-  @objc func getChallenge(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
+  @objc func getChallenge(
+    _ resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock
+  ) -> Void {
+    guard let authsignal = authsignal else {
+      resolve(nil)
+      return
+    }
+    
     Task.init {
-      let challengeId = await authsignal?.getChallenge()
+      let response = await authsignal.getChallenge()
       
-      resolve(challengeId)
+      if let error = response.error {
+        reject("getChallenge error", error, nil)
+      } else {
+        resolve(response.data)
+      }
     }
   }
 
-  @objc func updateChallenge(_ challengeID: NSString, withApproval approved: Bool, withVerificationCode verificationCode: NSString, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
+  @objc func updateChallenge(
+    _ challengeID: NSString,
+    withApproval approved: Bool,
+    withVerificationCode verificationCode: NSString,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock
+  ) -> Void {
+    guard let authsignal = authsignal else {
+      resolve(nil)
+      return
+    }
+    
     let challenge = challengeID as String
     let approval = approved as Bool
     let code = verificationCode as String?
     
     Task.init {
-      await authsignal?.updateChallenge(challengeID: challenge, approved: approval, verificationCode: code)
+      let response = await authsignal.updateChallenge(
+        challengeID: challenge,
+        approved: approval,
+        verificationCode: code
+      )
       
-      resolve(nil)
+      if let error = response.error {
+        reject("updateChallenge error", error, nil)
+      } else {
+        resolve(response.data)
+      }
     }
   }
 }
