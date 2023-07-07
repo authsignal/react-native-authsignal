@@ -47,7 +47,7 @@ export class AuthsignalPush {
       return { data };
     } catch (ex) {
       if (this.enableLogging) {
-        console.warn(ex);
+        console.log(ex);
       }
 
       if (ex instanceof Error) {
@@ -67,7 +67,7 @@ export class AuthsignalPush {
       return { data };
     } catch (ex) {
       if (this.enableLogging) {
-        console.warn(ex);
+        console.log(ex);
       }
 
       if (ex instanceof Error) {
@@ -86,7 +86,7 @@ export class AuthsignalPush {
       return { data };
     } catch (ex) {
       if (this.enableLogging) {
-        console.warn(ex);
+        console.log(ex);
       }
 
       if (ex instanceof Error) {
@@ -106,7 +106,7 @@ export class AuthsignalPush {
       return { data };
     } catch (ex) {
       if (this.enableLogging) {
-        console.warn(ex);
+        console.log(ex);
       }
 
       if (ex instanceof Error) {
@@ -134,7 +134,7 @@ export class AuthsignalPush {
       return { data };
     } catch (ex) {
       if (this.enableLogging) {
-        console.warn(ex);
+        console.log(ex);
       }
 
       if (ex instanceof Error) {

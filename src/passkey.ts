@@ -54,7 +54,7 @@ export class AuthsignalPasskey {
       return { data };
     } catch (ex) {
       if (this.enableLogging) {
-        console.warn(ex);
+        console.log(ex);
       }
 
       if (ex instanceof Error) {
@@ -85,7 +85,7 @@ export class AuthsignalPasskey {
       }
     } catch (ex) {
       if (this.enableLogging && !autofill) {
-        console.warn(ex);
+        console.log(ex);
       }
 
       if (ex instanceof Error) {
