@@ -48,8 +48,6 @@ export class AuthsignalPasskey {
   }: PasskeySignUpInput): Promise<AuthsignalResponse<string>> {
     await this.ensureModuleIsInitialized();
 
-    this.cancel();
-
     try {
       const data = await AuthsignalPasskeyModule.signUp(token, userName);
 
@@ -73,8 +71,6 @@ export class AuthsignalPasskey {
   }: PasskeySignInInput): Promise<AuthsignalResponse<string>> {
     await this.ensureModuleIsInitialized();
 
-    this.cancel();
-
     try {
       if (Platform.OS === 'ios') {
         const data = await AuthsignalPasskeyModule.signIn(token, autofill);
@@ -88,7 +84,7 @@ export class AuthsignalPasskey {
         throw new Error('autofill is only supported on iOS');
       }
     } catch (ex) {
-      if (this.enableLogging) {
+      if (this.enableLogging && !autofill) {
         console.warn(ex);
       }
 
