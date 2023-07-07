@@ -42,7 +42,9 @@ export class AuthsignalPush {
     await this.ensureModuleIsInitialized();
 
     try {
-      return await AuthsignalPushModule.getCredential();
+      const data = await AuthsignalPushModule.getCredential();
+
+      return { data };
     } catch (ex) {
       if (this.enableLogging) {
         console.warn(ex);
@@ -60,7 +62,9 @@ export class AuthsignalPush {
     await this.ensureModuleIsInitialized();
 
     try {
-      return await AuthsignalPushModule.addCredential(token);
+      const data = await AuthsignalPushModule.addCredential(token);
+
+      return { data };
     } catch (ex) {
       if (this.enableLogging) {
         console.warn(ex);
@@ -78,7 +82,8 @@ export class AuthsignalPush {
     await this.ensureModuleIsInitialized();
 
     try {
-      return await AuthsignalPushModule.removeCredential();
+      const data = await AuthsignalPushModule.removeCredential();
+      return { data };
     } catch (ex) {
       if (this.enableLogging) {
         console.warn(ex);
@@ -96,7 +101,9 @@ export class AuthsignalPush {
     await this.ensureModuleIsInitialized();
 
     try {
-      return await AuthsignalPushModule.getChallenge();
+      const data = await AuthsignalPushModule.getChallenge();
+
+      return { data };
     } catch (ex) {
       if (this.enableLogging) {
         console.warn(ex);
@@ -118,11 +125,13 @@ export class AuthsignalPush {
     await this.ensureModuleIsInitialized();
 
     try {
-      return await NativeModules.updateChallenge(
+      const data = await NativeModules.updateChallenge(
         challengeId,
         approved,
         verificationCode
       );
+
+      return { data };
     } catch (ex) {
       if (this.enableLogging) {
         console.warn(ex);
