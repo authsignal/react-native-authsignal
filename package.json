@@ -1,6 +1,6 @@
 {
   "name": "react-native-authsignal",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "The official Authsignal React Native library.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -34,7 +34,11 @@
   "keywords": [
     "react-native",
     "ios",
-    "android"
+    "android",
+    "passkeys",
+    "auth",
+    "authentication",
+    "mfa"
   ],
   "repository": "https://github.com/authsignal/react-native-authsignal.git",
   "author": "Authsignal <support@authsignal.com> (https://www.authsignal.com)",
