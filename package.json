@@ -36,6 +36,7 @@
     "ios",
     "android",
     "passkeys",
+    "push",
     "auth",
     "authentication",
     "mfa"
