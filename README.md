@@ -1,6 +1,6 @@
 # react-native-authsignal
 
-Check out our [official documentation](https://docs.authsignal.com/sdks/client/react-native) for how to use the Authsignal React Native SDK.
+Check out our [official React Native documentation](https://docs.authsignal.com/sdks/client/react-native).
 
 ## Installation
 
