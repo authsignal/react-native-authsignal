@@ -19,6 +19,7 @@ interface PasskeySignInInput {
 }
 
 let initialized = false;
+let autofillRequestPending = false;
 
 const AuthsignalPasskeyModule = NativeModules.AuthsignalPasskeyModule
   ? NativeModules.AuthsignalPasskeyModule
@@ -73,7 +74,17 @@ export class AuthsignalPasskey {
 
     try {
       if (Platform.OS === 'ios') {
+        if (autofill) {
+          if (autofillRequestPending) {
+            return {};
+          } else {
+            autofillRequestPending = true;
+          }
+        }
+
         const data = await AuthsignalPasskeyModule.signIn(token, autofill);
+
+        autofillRequestPending = false;
 
         return { data };
       } else if (!autofill) {
@@ -87,6 +98,8 @@ export class AuthsignalPasskey {
       if (this.enableLogging && !autofill) {
         console.log(ex);
       }
+
+      autofillRequestPending = false;
 
       if (ex instanceof Error) {
         return { error: ex.message };
