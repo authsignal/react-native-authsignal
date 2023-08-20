@@ -120,12 +120,12 @@ export class AuthsignalPush {
   async updateChallenge(
     challengeId: string,
     approved: boolean,
-    verificationCode: string | null
+    verificationCode: string | null = null
   ): Promise<AuthsignalResponse<boolean>> {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await NativeModules.updateChallenge(
+      const data = await AuthsignalPushModule.updateChallenge(
         challengeId,
         approved,
         verificationCode
