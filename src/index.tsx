@@ -32,7 +32,7 @@ export class Authsignal {
 
   constructor({
     tenantID,
-    baseURL = 'https://challenge.authsignal.com/v1',
+    baseURL = 'https://api.authsignal.com/v1',
     enableLogging = __DEV__,
   }: ConstructorArgs) {
     this.tenantID = tenantID;
