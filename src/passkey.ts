@@ -73,26 +73,26 @@ export class AuthsignalPasskey {
     await this.ensureModuleIsInitialized();
 
     try {
-      if (Platform.OS === 'ios') {
-        if (autofill) {
-          if (autofillRequestPending) {
-            return {};
-          } else {
-            autofillRequestPending = true;
-          }
+      if (autofill) {
+        if (autofillRequestPending) {
+          return {};
+        } else {
+          autofillRequestPending = true;
         }
+      }
 
+      if (Platform.OS === 'ios') {
         const data = await AuthsignalPasskeyModule.signIn(token, autofill);
 
         autofillRequestPending = false;
 
         return { data };
-      } else if (!autofill) {
+      } else {
         const data = await AuthsignalPasskeyModule.signIn(token);
 
+        autofillRequestPending = false;
+
         return { data };
-      } else {
-        throw new Error('autofill is only supported on iOS');
       }
     } catch (ex) {
       if (this.enableLogging && !autofill) {
