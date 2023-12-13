@@ -66,10 +66,9 @@ export class AuthsignalPasskey {
     }
   }
 
-  async signIn({
-    token,
-    autofill = false,
-  }: PasskeySignInInput): Promise<AuthsignalResponse<string>> {
+  async signIn({ token, autofill = false }: PasskeySignInInput = {}): Promise<
+    AuthsignalResponse<string>
+  > {
     await this.ensureModuleIsInitialized();
 
     try {
