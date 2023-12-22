@@ -10,6 +10,7 @@ RCT_EXTERN_METHOD(initialize:(NSString)tenantID
 
 RCT_EXTERN_METHOD(signUp:(NSString)token
                   withUserName:(NSString)userName
+                  withDisplayName:(NSString)displayName
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 

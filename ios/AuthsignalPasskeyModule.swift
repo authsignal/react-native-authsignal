@@ -24,6 +24,7 @@ class AuthsignalPasskeyModule: NSObject {
   @objc func signUp(
     _ token: NSString,
     withUserName userName: NSString,
+    withDisplayName displayName: NSString,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -34,9 +35,10 @@ class AuthsignalPasskeyModule: NSObject {
     
     let tokenStr = token as String
     let userNameStr = userName as String?
+    let displayNameStr = displayName as String?
     
     Task.init {
-      let response = await authsignal!.signUp(token: tokenStr, userName: userNameStr)
+      let response = await authsignal!.signUp(token: tokenStr, userName: userNameStr, displayName: displayNameStr)
       
       if (response.error != nil) {
         reject("signUp error", response.error, nil)
