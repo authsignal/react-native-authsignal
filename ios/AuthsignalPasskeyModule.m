@@ -19,6 +19,9 @@ RCT_EXTERN_METHOD(signIn:(NSString*)token
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(isAvailableOnDevice:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN__BLOCKING_SYNCHRONOUS_METHOD(cancel)
 
 @end
