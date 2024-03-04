@@ -120,6 +120,12 @@ export class AuthsignalPasskey {
     }
   }
 
+  async isAvailableOnDevice(): Promise<boolean> {
+    await this.ensureModuleIsInitialized();
+
+    return await AuthsignalPasskeyModule.isAvailableOnDevice();
+  }
+
   private async ensureModuleIsInitialized() {
     if (initialized) {
       return;
