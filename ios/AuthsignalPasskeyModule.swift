@@ -76,4 +76,21 @@ class AuthsignalPasskeyModule: NSObject {
   @objc func invalidate() -> Void {
     authsignal?.cancel()
   }
+
+  @objc func isAvailableOnDevice(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
+    if (authsignal == nil) {
+      resolve(false)
+      return
+    }
+    
+    Task.init {
+      let response = await authsignal!.isAvailableOnDevice()
+      
+      if (response.error != nil) {
+        resolve(false)
+      } else {
+        resolve(response.data)
+      }
+    }
+  }
 }
