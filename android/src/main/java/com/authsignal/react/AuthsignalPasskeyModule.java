@@ -98,7 +98,7 @@ public class AuthsignalPasskeyModule extends ReactContextBaseJavaModule {
   public void isAvailableOnDevice(Promise promise) {
     if (authsignalPasskey != null) {
       authsignalPasskey
-        .isAvailableOnDevice()
+        .isAvailableOnDeviceAsync()
         .thenAcceptAsync(response -> {
           promise.resolve(response.getData() != null ? response.getData() : false);
         });
