@@ -48,16 +48,23 @@ class AuthsignalPasskeyModule: NSObject {
     }
   }
   
-  @objc func signIn(_ token: NSString?, withAutofill autofill: Bool, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
+  @objc func signIn(
+    _ action: NSString,
+    withToken token: NSString,
+    withAutofill autofill: Bool,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock
+  ) -> Void {
     if (authsignal == nil) {
       resolve(nil)
       return
     }
     
+    let actionStr = action as String?
     let tokenStr = token as String?
     
     Task.init {
-      let response = await authsignal!.signIn(token: tokenStr, autofill: autofill)
+      let response = await authsignal!.signIn(action: actionStr, token: tokenStr, autofill: autofill)
       
       if (response.error != nil) {
         reject("signIn error", response.error, nil)
