@@ -76,10 +76,10 @@ public class AuthsignalPasskeyModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void signIn(String token, Promise promise) {
+  public void signIn(String action, String token, Promise promise) {
     if (authsignalPasskey != null) {
       authsignalPasskey
-        .signInAsync(token)
+        .signInAsync(action, token)
         .thenAcceptAsync(response -> {
           if (response.getError() != null) {
             promise.reject("signIn error", response.getError());

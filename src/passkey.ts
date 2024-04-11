@@ -15,6 +15,7 @@ interface PasskeySignUpInput {
 }
 
 interface PasskeySignInInput {
+  action?: string;
   token?: string;
   autofill?: boolean;
 }
@@ -72,9 +73,11 @@ export class AuthsignalPasskey {
     }
   }
 
-  async signIn({ token, autofill = false }: PasskeySignInInput = {}): Promise<
-    AuthsignalResponse<string>
-  > {
+  async signIn({
+    action,
+    token,
+    autofill = false,
+  }: PasskeySignInInput = {}): Promise<AuthsignalResponse<string>> {
     await this.ensureModuleIsInitialized();
 
     try {
@@ -87,13 +90,17 @@ export class AuthsignalPasskey {
       }
 
       if (Platform.OS === 'ios') {
-        const data = await AuthsignalPasskeyModule.signIn(token, autofill);
+        const data = await AuthsignalPasskeyModule.signIn(
+          action,
+          token,
+          autofill
+        );
 
         autofillRequestPending = false;
 
         return { data };
       } else {
-        const data = await AuthsignalPasskeyModule.signIn(token);
+        const data = await AuthsignalPasskeyModule.signIn(action, token);
 
         autofillRequestPending = false;
 

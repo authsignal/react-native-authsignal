@@ -14,7 +14,8 @@ RCT_EXTERN_METHOD(signUp:(NSString)token
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(signIn:(NSString*)token
+RCT_EXTERN_METHOD(signIn:(NSString*)action
+                  withToken(NSString*)token
                   withAutofill:(BOOL)autofill
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
