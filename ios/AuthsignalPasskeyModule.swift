@@ -64,7 +64,7 @@ class AuthsignalPasskeyModule: NSObject {
     let tokenStr = token as String?
     
     Task.init {
-      let response = await authsignal!.signIn(action: actionStr, token: tokenStr, autofill: autofill)
+      let response = await authsignal!.signIn(token: tokenStr, action: actionStr, autofill: autofill)
       
       if (response.error != nil) {
         reject("signIn error", response.error, nil)
