@@ -23,8 +23,8 @@ class AuthsignalPasskeyModule: NSObject {
   
   @objc func signUp(
     _ token: NSString,
-    withUserName userName: NSString,
-    withDisplayName displayName: NSString,
+    withUserName userName: NSString?,
+    withDisplayName displayName: NSString?,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -49,8 +49,8 @@ class AuthsignalPasskeyModule: NSObject {
   }
   
   @objc func signIn(
-    _ action: NSString,
-    withToken token: NSString,
+    _ action: NSString?,
+    withToken token: NSString?,
     withAutofill autofill: Bool,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
