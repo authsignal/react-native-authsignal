@@ -6,8 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.authsignal.passkey.AuthsignalPasskey;
-import com.authsignal.passkey.models.SignInResponse;
-import com.authsignal.passkey.models.SignUpResponse;
+import com.authsignal.passkey.models.*;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
