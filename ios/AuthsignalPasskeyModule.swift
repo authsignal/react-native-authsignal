@@ -73,7 +73,7 @@ class AuthsignalPasskeyModule: NSObject {
       if (response.error != nil) {
         reject("signIn error", response.error, nil)
       } else {
-        let signInResponse: [String: String?] = [
+        let signInResponse: [String: Any?] = [
           "isVerified": response.data!.isVerified,
           "token": response.data!.token,
           "userId": response.data!.userId,
