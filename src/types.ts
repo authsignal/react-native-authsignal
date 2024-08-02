@@ -18,3 +18,16 @@ export interface TokenPayload {
   scope?: string;
   sub: string;
 }
+
+export interface SignUpResponse {
+  token: string;
+}
+
+export interface SignInResponse {
+  isVerified: boolean;
+  token?: string;
+  userId?: string;
+  userAuthenticatorI?: string;
+  userName?: string;
+  userDisplayName?: string;
+}
