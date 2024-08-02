@@ -6,10 +6,13 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.authsignal.passkey.AuthsignalPasskey;
+import com.authsignal.passkey.models.*;
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableMap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,7 +68,10 @@ public class AuthsignalPasskeyModule extends ReactContextBaseJavaModule {
           if (response.getError() != null) {
             promise.reject("signUp error", response.getError());
           } else {
-            promise.resolve(response.getData());
+            SignUpResponse signUpResponse = response.getData();
+            WritableMap map = Arguments.createMap();
+            map.putString("token", signUpResponse.getToken());
+            promise.resolve(map);
           }
         });
     } else {
@@ -84,7 +90,15 @@ public class AuthsignalPasskeyModule extends ReactContextBaseJavaModule {
           if (response.getError() != null) {
             promise.reject("signIn error", response.getError());
           } else {
-            promise.resolve(response.getData());
+            SignInResponse signInResponse = response.getData();
+            WritableMap map = Arguments.createMap();
+            map.putBoolean("isVerified", signInResponse.isVerified());
+            map.putString("token", signInResponse.getToken());
+            map.putString("userId", signInResponse.getUserId());
+            map.putString("userAuthenticatorId", signInResponse.getUserAuthenticatorId());
+            map.putString("userName", signInResponse.getUserName());
+            map.putString("userDisplayName", signInResponse.getUserDisplayName());
+            promise.resolve(map);
           }
         });
     } else {

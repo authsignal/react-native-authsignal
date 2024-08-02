@@ -43,7 +43,11 @@ class AuthsignalPasskeyModule: NSObject {
       if (response.error != nil) {
         reject("signUp error", response.error, nil)
       } else {
-        resolve(response.data)
+        let signUpResponse: [String: String?] = [
+          "token": response.data!.accessToken,
+        ]
+
+        resolve(signUpResponse)
       }
     }
   }
@@ -69,7 +73,16 @@ class AuthsignalPasskeyModule: NSObject {
       if (response.error != nil) {
         reject("signIn error", response.error, nil)
       } else {
-        resolve(response.data)
+        let signInResponse: [String: String?] = [
+          "isVerified": response.data!.isVerified,
+          "token": response.data!.accessToken,
+          "userId": response.data!.userId,
+          "userAuthenticatorId": response.data!.userAuthenticatorId,
+          "userName": response.data!.username,
+          "userDisplayName": response.data!.userDisplayName,
+        ]
+
+        resolve(signInResponse)
       }
     }
   }

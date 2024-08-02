@@ -1,6 +1,10 @@
 import { NativeModules, Platform } from 'react-native';
 import { LINKING_ERROR } from './error';
-import type { AuthsignalResponse } from './types';
+import type {
+  AuthsignalResponse,
+  SignInResponse,
+  SignUpResponse,
+} from './types';
 
 interface ConstructorArgs {
   tenantID: string;
@@ -49,7 +53,7 @@ export class AuthsignalPasskey {
     token,
     userName,
     displayName,
-  }: PasskeySignUpInput): Promise<AuthsignalResponse<string>> {
+  }: PasskeySignUpInput): Promise<AuthsignalResponse<SignUpResponse>> {
     await this.ensureModuleIsInitialized();
 
     try {
@@ -77,7 +81,7 @@ export class AuthsignalPasskey {
     action,
     token,
     autofill = false,
-  }: PasskeySignInInput = {}): Promise<AuthsignalResponse<string>> {
+  }: PasskeySignInInput = {}): Promise<AuthsignalResponse<SignInResponse>> {
     await this.ensureModuleIsInitialized();
 
     try {
