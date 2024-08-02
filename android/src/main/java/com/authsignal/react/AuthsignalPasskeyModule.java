@@ -69,7 +69,7 @@ public class AuthsignalPasskeyModule extends ReactContextBaseJavaModule {
           } else {
             SignUpResponse signUpResponse = response.getData();
             WritableMap map = Arguments.createMap();
-            map.putString("token", signUpResponse.getAccessToken());
+            map.putString("token", signUpResponse.getToken());
             promise.resolve(map);
           }
         });
@@ -92,10 +92,10 @@ public class AuthsignalPasskeyModule extends ReactContextBaseJavaModule {
             SignInResponse signInResponse = response.getData();
             WritableMap map = Arguments.createMap();
             map.putBoolean("isVerified", signInResponse.getIsVerified());
-            map.putString("token", signInResponse.getAccessToken());
+            map.putString("token", signInResponse.getToken());
             map.putString("userId", signInResponse.getUserId());
             map.putString("userAuthenticatorId", signInResponse.getUserAuthenticatorId());
-            map.putString("userName", signInResponse.getUsername());
+            map.putString("userName", signInResponse.getUserName());
             map.putString("userDisplayName", signInResponse.getUserDisplayName());
             promise.resolve(map);
           }
