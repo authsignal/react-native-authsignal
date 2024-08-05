@@ -41,7 +41,7 @@ class AuthsignalPasskeyModule: NSObject {
       let response = await authsignal!.signUp(token: tokenStr, userName: userNameStr, displayName: displayNameStr)
       
       if (response.error != nil) {
-        reject("signUp error", response.error, nil)
+        reject("signUpError", response.error, nil)
       } else {
         let signUpResponse: [String: String?] = [
           "token": response.data!.token,
@@ -56,6 +56,7 @@ class AuthsignalPasskeyModule: NSObject {
     _ action: NSString?,
     withToken token: NSString?,
     withAutofill autofill: Bool,
+    withPreferImmediatelyAvailableCredentials preferImmediatelyAvailableCredentials: Bool,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -68,10 +69,17 @@ class AuthsignalPasskeyModule: NSObject {
     let tokenStr = token as String?
     
     Task.init {
-      let response = await authsignal!.signIn(token: tokenStr, action: actionStr, autofill: autofill)
+      let response = await authsignal!.signIn(
+        token: tokenStr,
+        action: actionStr,
+        autofill: autofill,
+        preferImmediatelyAvailableCredentials: preferImmediatelyAvailableCredentials
+      )
       
-      if (response.error != nil) {
-        reject("signIn error", response.error, nil)
+      if (response.errorCode == .canceled) {
+        reject("signInCanceled", "SIGN_IN_CANCELED", nil)
+      } else if (response.error != nil) {
+        reject("signInError", response.error, nil)
       } else {
         let signInResponse: [String: Any?] = [
           "isVerified": response.data!.isVerified,

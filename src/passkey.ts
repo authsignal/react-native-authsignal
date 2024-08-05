@@ -1,5 +1,5 @@
 import { NativeModules, Platform } from 'react-native';
-import { LINKING_ERROR } from './error';
+import { LINKING_ERROR, ErrorCode } from './error';
 import type {
   AuthsignalResponse,
   SignInResponse,
@@ -22,6 +22,7 @@ interface PasskeySignInInput {
   action?: string;
   token?: string;
   autofill?: boolean;
+  preferImmediatelyAvailableCredentials?: boolean;
 }
 
 let initialized = false;
@@ -81,6 +82,7 @@ export class AuthsignalPasskey {
     action,
     token,
     autofill = false,
+    preferImmediatelyAvailableCredentials = true,
   }: PasskeySignInInput = {}): Promise<AuthsignalResponse<SignInResponse>> {
     await this.ensureModuleIsInitialized();
 
@@ -97,7 +99,8 @@ export class AuthsignalPasskey {
         const data = await AuthsignalPasskeyModule.signIn(
           action,
           token,
-          autofill
+          autofill,
+          preferImmediatelyAvailableCredentials
         );
 
         autofillRequestPending = false;
@@ -118,7 +121,12 @@ export class AuthsignalPasskey {
       autofillRequestPending = false;
 
       if (ex instanceof Error) {
-        return { error: ex.message };
+        return ex.message === 'SIGN_IN_CANCELED'
+          ? {
+              errorCode: ErrorCode.passkeySignInCanceled,
+              error: 'Passkey sign-in canceled',
+            }
+          : { error: ex.message };
       }
 
       throw ex;

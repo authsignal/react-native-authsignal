@@ -17,6 +17,7 @@ RCT_EXTERN_METHOD(signUp:(NSString)token
 RCT_EXTERN_METHOD(signIn:(NSString)action
                   withToken:(NSString)token
                   withAutofill:(BOOL)autofill
+                  withPreferImmediatelyAvailableCredentials:(BOOL)preferImmediatelyAvailableCredentials
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 

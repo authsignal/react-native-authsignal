@@ -1,6 +1,9 @@
+import { ErrorCode } from './error';
+
 export interface AuthsignalResponse<T> {
   data?: T;
   error?: string;
+  errorCode?: ErrorCode;
 }
 
 export interface TokenPayload {
