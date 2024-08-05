@@ -1,4 +1,4 @@
-import { ErrorCode } from './error';
+import type { ErrorCode } from './error';
 
 export interface AuthsignalResponse<T> {
   data?: T;
