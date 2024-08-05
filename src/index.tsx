@@ -4,6 +4,7 @@ import { AuthsignalPasskey } from './passkey';
 import { AuthsignalPush } from './push';
 
 export * from './types';
+export { ErrorCode } from './error';
 
 const AuthsignalModule = NativeModules.AuthsignalModule
   ? NativeModules.AuthsignalModule

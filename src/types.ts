@@ -1,6 +1,7 @@
 export interface AuthsignalResponse<T> {
   data?: T;
   error?: string;
+  errorCode?: any;
 }
 
 export interface TokenPayload {
