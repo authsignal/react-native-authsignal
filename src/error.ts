@@ -8,4 +8,5 @@ export const LINKING_ERROR =
 
 export enum ErrorCode {
   passkeySignInCanceled = 'passkeySignInCanceled',
+  noPasskeyCredentialAvailable = 'noPasskeyCredentialAvailable',
 }

@@ -121,12 +121,20 @@ export class AuthsignalPasskey {
       autofillRequestPending = false;
 
       if (ex instanceof Error) {
-        return ex.message === 'SIGN_IN_CANCELED'
-          ? {
+        switch (ex.message) {
+          case 'SIGN_IN_CANCELED':
+            return {
               errorCode: ErrorCode.passkeySignInCanceled,
               error: 'Passkey sign-in canceled',
-            }
-          : { error: ex.message };
+            };
+          case 'SIGN_IN_NO_CREDENTIAL':
+            return {
+              errorCode: ErrorCode.noPasskeyCredentialAvailable,
+              error: 'No passkey credential available',
+            };
+          default:
+            return { error: ex.message };
+        }
       }
 
       throw ex;
