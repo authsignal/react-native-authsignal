@@ -87,8 +87,16 @@ public class AuthsignalPasskeyModule extends ReactContextBaseJavaModule {
       authsignalPasskey
         .signInAsync(action, token)
         .thenAcceptAsync(response -> {
-          if (response.getError() != null) {
-            promise.reject("signIn error", response.getError());
+          if (response.getErrorType() != null) {
+            if (response.getErrorType().equals("android.credentials.GetCredentialException.TYPE_NO_CREDENTIAL")) {
+              promise.reject("signInNoCredential", "SIGN_IN_NO_CREDENTIAL");
+            }
+
+            if (response.getErrorType().equals("android.credentials.GetCredentialException.TYPE_USER_CANCELED")) {
+              promise.reject("signInCanceled", "SIGN_IN_CANCELED");
+            }
+          } else if (response.getError() != null) {
+            promise.reject("signInError", response.getError());
           } else {
             SignInResponse signInResponse = response.getData();
             WritableMap map = Arguments.createMap();
