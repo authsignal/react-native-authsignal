@@ -14,8 +14,11 @@ public class AuthsignalPackage implements ReactPackage {
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         return Arrays.asList(
           new AuthsignalModule(reactContext),
+          new AuthsignalEmailModule(reactContext),
           new AuthsignalPasskeyModule(reactContext),
-          new AuthsignalPushModule(reactContext)
+          new AuthsignalPushModule(reactContext),
+          new AuthsignalSMSModule(reactContext),
+          new AuthsignalTOTPModule(reactContext)
         );
     }
 

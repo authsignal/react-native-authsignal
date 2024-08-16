@@ -60,10 +60,10 @@ public class AuthsignalPasskeyModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void signUp(String token, String userName, String displayName, Promise promise) {
+  public void signUp(String token, String username, String displayName, Promise promise) {
     if (authsignalPasskey != null) {
       authsignalPasskey
-        .signUpAsync(token, userName, displayName)
+        .signUpAsync(token, username, displayName)
         .thenAcceptAsync(response -> {
           if (response.getError() != null) {
             promise.reject("signUp error", response.getError());
@@ -104,8 +104,8 @@ public class AuthsignalPasskeyModule extends ReactContextBaseJavaModule {
             map.putString("token", signInResponse.getToken());
             map.putString("userId", signInResponse.getUserId());
             map.putString("userAuthenticatorId", signInResponse.getUserAuthenticatorId());
-            map.putString("userName", signInResponse.getUserName());
-            map.putString("userDisplayName", signInResponse.getUserDisplayName());
+            map.putString("username", signInResponse.getUsername());
+            map.putString("displayName", signInResponse.getDisplayName());
             promise.resolve(map);
           }
         });

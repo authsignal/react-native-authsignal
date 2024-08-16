@@ -1,5 +1,6 @@
 import { NativeModules, Platform } from 'react-native';
 import { LINKING_ERROR } from './error';
+import { AuthsignalEmail } from './email';
 import { AuthsignalPasskey } from './passkey';
 import { AuthsignalPush } from './push';
 
@@ -28,6 +29,7 @@ export class Authsignal {
   baseURL: string;
   enableLogging: boolean;
 
+  email: AuthsignalEmail;
   passkey: AuthsignalPasskey;
   push: AuthsignalPush;
 
@@ -40,8 +42,13 @@ export class Authsignal {
     this.baseURL = baseURL;
     this.enableLogging = enableLogging;
 
+    this.email = new AuthsignalEmail({ tenantID, baseURL, enableLogging });
     this.passkey = new AuthsignalPasskey({ tenantID, baseURL, enableLogging });
     this.push = new AuthsignalPush({ tenantID, baseURL, enableLogging });
+  }
+
+  setToken(token: string) {
+    this.email.setToken(token);
   }
 }
 

@@ -37,7 +37,7 @@ class AuthsignalPushModule: NSObject {
         reject("getCredential error", error, nil)
       } else if let data = response.data {
         let credential: [String: String?] = [
-          "credentialID": response.data!.credentialID,
+          "credentialId": response.data!.credentialId,
           "createdAt": response.data!.createdAt,
           "lastAuthenticatedAt": response.data!.lastAuthenticatedAt,
         ]
@@ -113,7 +113,7 @@ class AuthsignalPushModule: NSObject {
   }
 
   @objc func updateChallenge(
-    _ challengeID: NSString,
+    _ challengeId: NSString,
     withApproval approved: Bool,
     withVerificationCode verificationCode: NSString,
     resolver resolve: @escaping RCTPromiseResolveBlock,
@@ -124,13 +124,13 @@ class AuthsignalPushModule: NSObject {
       return
     }
     
-    let challenge = challengeID as String
+    let challenge = challengeId as String
     let approval = approved as Bool
     let code = verificationCode as String?
     
     Task.init {
       let response = await authsignal.updateChallenge(
-        challengeID: challenge,
+        challengeId: challenge,
         approved: approval,
         verificationCode: code
       )

@@ -129,8 +129,7 @@ dependencies {
 
   implementation "androidx.browser:browser:1.2.0"
 
-  implementation("com.authsignal:authsignal-push-android:0.2.13")
-  implementation("com.authsignal:authsignal-passkey-android:0.2.2")
+  implementation("com.authsignal:authsignal-android:1.0.1")
 }
 
 if (isNewArchitectureEnabled()) {
