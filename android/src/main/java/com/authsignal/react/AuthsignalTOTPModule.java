@@ -64,8 +64,10 @@ public class AuthsignalTOTPModule extends ReactContextBaseJavaModule {
       authsignalTOTP
         .enrollAsync()
         .thenAcceptAsync(response -> {
-          if (response.getError() != null) {
-            promise.reject("enroll error", response.getError());
+          if (response.getErrorType() != null && response.getErrorType().equals("TYPE_TOKEN_NOT_SET")) {
+            promise.reject("tokenNotSetError", "TOKEN_NOT_SET");
+          } else if (response.getError() != null) {
+            promise.reject("enrollError", response.getError());
           } else {
             EnrollTOTPResponse enrollResponse = response.getData();
             WritableMap map = Arguments.createMap();
@@ -88,13 +90,15 @@ public class AuthsignalTOTPModule extends ReactContextBaseJavaModule {
       authsignalTOTP
         .verifyAsync(code)
         .thenAcceptAsync(response -> {
-          if (response.getError() != null) {
-            promise.reject("verify error", response.getError());
+          if (response.getErrorType() != null && response.getErrorType().equals("TYPE_TOKEN_NOT_SET")) {
+            promise.reject("tokenNotSetError", "TOKEN_NOT_SET");
+          } else if (response.getError() != null) {
+            promise.reject("verifyError", response.getError());
           } else {
             VerifyResponse verifyResponse = response.getData();
             WritableMap map = Arguments.createMap();
             map.putBoolean("isVerified", verifyResponse.isVerified());
-            map.putString("accessToken", verifyResponse.getAccessToken());
+            map.putString("token", verifyResponse.getToken());
             map.putString("failureReason", verifyResponse.getFailureReason());
             promise.resolve(map);
           }

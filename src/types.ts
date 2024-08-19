@@ -31,6 +31,16 @@ export interface SignInResponse {
   token?: string;
   userId?: string;
   userAuthenticatorI?: string;
-  userName?: string;
-  userDisplayName?: string;
+  username?: string;
+  displayName?: string;
+}
+
+export interface VerifyInput {
+  code: string;
+}
+
+export interface VerifyResponse {
+  isVerified: boolean;
+  token?: string;
+  failureReason?: string;
 }

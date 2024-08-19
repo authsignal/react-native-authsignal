@@ -13,8 +13,8 @@ interface ConstructorArgs {
 }
 
 interface PasskeySignUpInput {
-  token: string;
-  userName?: string;
+  token?: string;
+  username?: string;
   displayName?: string;
 }
 
@@ -52,15 +52,15 @@ export class AuthsignalPasskey {
 
   async signUp({
     token,
-    userName,
+    username,
     displayName,
-  }: PasskeySignUpInput): Promise<AuthsignalResponse<SignUpResponse>> {
+  }: PasskeySignUpInput = {}): Promise<AuthsignalResponse<SignUpResponse>> {
     await this.ensureModuleIsInitialized();
 
     try {
       const data = await AuthsignalPasskeyModule.signUp(
         token,
-        userName,
+        username,
         displayName
       );
 

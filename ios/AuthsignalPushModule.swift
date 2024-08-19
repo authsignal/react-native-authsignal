@@ -50,7 +50,7 @@ class AuthsignalPushModule: NSObject {
   }
 
   @objc func addCredential(
-    _ token: NSString,
+    _ token: NSString?,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -59,12 +59,14 @@ class AuthsignalPushModule: NSObject {
       return
     }
     
-    let tokenStr = token as String
+    let tokenStr = token as String?
     
     Task.init {
       let response = await authsignal.addCredential(token: tokenStr)
       
-      if let error = response.error {
+      if (response.errorCode == "TOKEN_NOT_SET") {
+        reject("tokenNotSetError", "TOKEN_NOT_SET", nil)
+      } else if let error = response.error {
         reject("addCredential error", error, nil)
       } else {
         resolve(response.data)

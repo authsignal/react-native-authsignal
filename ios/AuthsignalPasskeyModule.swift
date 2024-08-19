@@ -22,7 +22,7 @@ class AuthsignalPasskeyModule: NSObject {
   }
   
   @objc func signUp(
-    _ token: NSString,
+    _ token: NSString?,
     withUsername username: NSString?,
     withDisplayName displayName: NSString?,
     resolver resolve: @escaping RCTPromiseResolveBlock,
@@ -33,14 +33,16 @@ class AuthsignalPasskeyModule: NSObject {
       return
     }
     
-    let tokenStr = token as String
+    let tokenStr = token as String?
     let usernameStr = username as String?
     let displayNameStr = displayName as String?
     
     Task.init {
       let response = await authsignal!.signUp(token: tokenStr, username: usernameStr, displayName: displayNameStr)
       
-      if (response.error != nil) {
+      if (response.errorCode == "TOKEN_NOT_SET") {
+        reject("tokenNotSetError", "TOKEN_NOT_SET", nil)
+      } else if (response.error != nil) {
         reject("signUpError", response.error, nil)
       } else {
         let signUpResponse: [String: String?] = [
@@ -76,7 +78,7 @@ class AuthsignalPasskeyModule: NSObject {
         preferImmediatelyAvailableCredentials: preferImmediatelyAvailableCredentials
       )
       
-      if (response.errorCode == .canceled) {
+      if (response.errorCode == "SIGN_IN_CANCELED") {
         reject("signInCanceled", "SIGN_IN_CANCELED", nil)
       } else if (response.error != nil) {
         reject("signInError", response.error, nil)

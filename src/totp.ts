@@ -8,14 +8,15 @@ interface ConstructorArgs {
   enableLogging: boolean;
 }
 
-interface EnrollEmailInput {
-  email: string;
+interface EnrollTotpResponse {
+  uri: string;
+  secret: string;
 }
 
 let initialized = false;
 
-const AuthsignalEmailModule = NativeModules.AuthsignalEmailModule
-  ? NativeModules.AuthsignalEmailModule
+const AuthsignalTOTPModule = NativeModules.AuthsignalTOTPModule
+  ? NativeModules.AuthsignalTOTPModule
   : new Proxy(
       {},
       {
@@ -25,7 +26,7 @@ const AuthsignalEmailModule = NativeModules.AuthsignalEmailModule
       }
     );
 
-export class AuthsignalEmail {
+export class AuthsignalTotp {
   tenantID: string;
   baseURL: string;
   enableLogging: boolean;
@@ -36,23 +37,11 @@ export class AuthsignalEmail {
     this.enableLogging = enableLogging;
   }
 
-  async enroll({ email }: EnrollEmailInput): Promise<AuthsignalResponse<void>> {
+  async enroll(): Promise<AuthsignalResponse<EnrollTotpResponse>> {
     await this.ensureModuleIsInitialized();
 
     try {
-      await AuthsignalEmailModule.enroll(email);
-
-      return {};
-    } catch (ex) {
-      return this.handleError(ex);
-    }
-  }
-
-  async challenge(): Promise<AuthsignalResponse<void>> {
-    await this.ensureModuleIsInitialized();
-
-    try {
-      await AuthsignalEmailModule.challenge();
+      await AuthsignalTOTPModule.enroll();
 
       return {};
     } catch (ex) {
@@ -66,7 +55,7 @@ export class AuthsignalEmail {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalEmailModule.verify(code);
+      const data = await AuthsignalTOTPModule.verify(code);
 
       return { data };
     } catch (ex) {
@@ -79,7 +68,7 @@ export class AuthsignalEmail {
       return;
     }
 
-    await AuthsignalEmailModule.initialize(this.tenantID, this.baseURL);
+    await AuthsignalTOTPModule.initialize(this.tenantID, this.baseURL);
 
     initialized = true;
   }

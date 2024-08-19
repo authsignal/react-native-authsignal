@@ -36,7 +36,9 @@ class AuthsignalSMSModule: NSObject {
     Task.init {
       let response = await authsignal!.enroll(phoneNumber: phoneNumberStr)
       
-      if (response.error != nil) {
+      if (response.errorCode == "TOKEN_NOT_SET") {
+        reject("tokenNotSetError", "TOKEN_NOT_SET", nil)
+      } else if (response.error != nil) {
         reject("enrollError", response.error, nil)
       } else {
         let enrollResponse: [String: String?] = [
@@ -60,7 +62,9 @@ class AuthsignalSMSModule: NSObject {
     Task.init {
       let response = await authsignal!.challenge()
       
-      if (response.error != nil) {
+      if (response.errorCode == "TOKEN_NOT_SET") {
+        reject("tokenNotSetError", "TOKEN_NOT_SET", nil)
+      } else if (response.error != nil) {
         reject("challengeError", response.error, nil)
       } else {
         let challengeResponse: [String: String?] = [
@@ -87,12 +91,14 @@ class AuthsignalSMSModule: NSObject {
     Task.init {
       let response = await authsignal!.verify(code: codeStr)
       
-      if (response.error != nil) {
+      if (response.errorCode == "TOKEN_NOT_SET") {
+        reject("tokenNotSetError", "TOKEN_NOT_SET", nil)
+      } else if (response.error != nil) {
         reject("verifyError", response.error, nil)
       } else {
         let verifyResponse: [String: Any?] = [
           "isVerified": response.data!.isVerified,
-          "token": response.data!.accessToken,
+          "token": response.data!.token,
           "failureReason": response.data!.failureReason,
         ]
 

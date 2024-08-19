@@ -33,7 +33,9 @@ class AuthsignalTOTPModule: NSObject {
     Task.init {
       let response = await authsignal!.enroll()
       
-      if (response.error != nil) {
+      if (response.errorCode == "TOKEN_NOT_SET") {
+        reject("tokenNotSetError", "TOKEN_NOT_SET", nil)
+      } else if (response.error != nil) {
         reject("enrollError", response.error, nil)
       } else {
         let enrollResponse: [String: String?] = [
@@ -62,12 +64,14 @@ class AuthsignalTOTPModule: NSObject {
     Task.init {
       let response = await authsignal!.verify(code: codeStr)
       
-      if (response.error != nil) {
+      if (response.errorCode == "TOKEN_NOT_SET") {
+        reject("tokenNotSetError", "TOKEN_NOT_SET", nil)
+      } else if (response.error != nil) {
         reject("verifyError", response.error, nil)
       } else {
         let verifyResponse: [String: Any?] = [
           "isVerified": response.data!.isVerified,
-          "token": response.data!.accessToken,
+          "token": response.data!.token,
           "failureReason": response.data!.failureReason,
         ]
 

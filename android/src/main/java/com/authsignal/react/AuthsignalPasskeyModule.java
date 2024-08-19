@@ -65,8 +65,10 @@ public class AuthsignalPasskeyModule extends ReactContextBaseJavaModule {
       authsignalPasskey
         .signUpAsync(token, username, displayName)
         .thenAcceptAsync(response -> {
-          if (response.getError() != null) {
-            promise.reject("signUp error", response.getError());
+          if (response.getErrorType() != null && response.getErrorType().equals("TYPE_TOKEN_NOT_SET")) {
+            promise.reject("tokenNotSetError", "TOKEN_NOT_SET");
+          } else if (response.getError() != null) {
+            promise.reject("signUpError", response.getError());
           } else {
             SignUpResponse signUpResponse = response.getData();
             WritableMap map = Arguments.createMap();
