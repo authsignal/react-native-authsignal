@@ -21,7 +21,7 @@ RCT_EXTERN_METHOD(removeCredential:(RCTPromiseResolveBlock)resolve
 RCT_EXTERN_METHOD(getChallenge:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(updateChallenge:(NSString)challengeID
+RCT_EXTERN_METHOD(updateChallenge:(NSString)challengeId
                   withApproval:(BOOL)approved
                   withVerificationCode:(NSString)verificationCode
                   resolver:(RCTPromiseResolveBlock)resolve

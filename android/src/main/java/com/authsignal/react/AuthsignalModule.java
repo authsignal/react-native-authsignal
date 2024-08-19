@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException;
 import android.net.Uri;
 import androidx.annotation.NonNull;
 
+import com.authsignal.TokenCache;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
@@ -14,11 +15,9 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 
-import java.net.URL;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -43,6 +42,13 @@ public class AuthsignalModule extends ReactContextBaseJavaModule implements Acti
     @Override
     public String getName() {
         return "AuthsignalModule";
+    }
+
+    @ReactMethod
+    public void setToken(String token, Callback callback) {
+        TokenCache.Companion.getShared().setToken(token);
+
+        callback.invoke(null, "token_set");
     }
 
     @ReactMethod
@@ -92,6 +98,8 @@ public class AuthsignalModule extends ReactContextBaseJavaModule implements Acti
                     String value = URLDecoder.decode(pair.substring(index + 1), "UTF-8");
                     if (name.equals("token")) {
                         token = value;
+
+                        TokenCache.Companion.getShared().setToken(value);
                     }
                 }
                 cb.invoke(null, token);

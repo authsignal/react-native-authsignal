@@ -79,7 +79,9 @@ public class AuthsignalPushModule extends ReactContextBaseJavaModule {
       authsignalPush
         .addCredentialAsync(token, null)
         .thenAcceptAsync(response -> {
-          if (response.getError() != null) {
+          if (response.getErrorType() != null && response.getErrorType().equals("TYPE_TOKEN_NOT_SET")) {
+            promise.reject("tokenNotSetError", "TOKEN_NOT_SET");
+          } else if (response.getError() != null) {
             promise.reject("addCredential error", response.getError());
           } else {
             promise.resolve(response.getData());

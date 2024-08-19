@@ -7,6 +7,25 @@ export const LINKING_ERROR =
   '- You are not using Expo Go\n';
 
 export enum ErrorCode {
+  tokenRequired = 'tokenRequired',
+  tokenExpired = 'tokenExpired',
   passkeySignInCanceled = 'passkeySignInCanceled',
   noPasskeyCredentialAvailable = 'noPasskeyCredentialAvailable',
+}
+
+export function handleErrorCodes(ex: unknown) {
+  if (ex instanceof Error) {
+    if (ex.message === 'NO_TOKEN_SET') {
+      return {
+        error: 'Token is required. Call `setToken` first.',
+        errorCode: ErrorCode.tokenRequired,
+      };
+    } else {
+      return {
+        error: ex.message,
+      };
+    }
+  }
+
+  throw ex;
 }

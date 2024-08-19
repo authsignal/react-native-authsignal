@@ -1,7 +1,10 @@
 import { NativeModules, Platform } from 'react-native';
 import { LINKING_ERROR } from './error';
+import { AuthsignalEmail } from './email';
 import { AuthsignalPasskey } from './passkey';
 import { AuthsignalPush } from './push';
+import { AuthsignalSms } from './sms';
+import { AuthsignalTotp } from './totp';
 
 export * from './types';
 export { ErrorCode } from './error';
@@ -28,8 +31,11 @@ export class Authsignal {
   baseURL: string;
   enableLogging: boolean;
 
+  email: AuthsignalEmail;
   passkey: AuthsignalPasskey;
   push: AuthsignalPush;
+  sms: AuthsignalSms;
+  totp: AuthsignalTotp;
 
   constructor({
     tenantID,
@@ -40,8 +46,19 @@ export class Authsignal {
     this.baseURL = baseURL;
     this.enableLogging = enableLogging;
 
+    this.email = new AuthsignalEmail({ tenantID, baseURL, enableLogging });
     this.passkey = new AuthsignalPasskey({ tenantID, baseURL, enableLogging });
     this.push = new AuthsignalPush({ tenantID, baseURL, enableLogging });
+    this.sms = new AuthsignalSms({ tenantID, baseURL, enableLogging });
+    this.totp = new AuthsignalTotp({ tenantID, baseURL, enableLogging });
+  }
+
+  async setToken(token: string): Promise<void> {
+    await AuthsignalModule.setToken(token);
+  }
+
+  async launch(url: string): Promise<string | null> {
+    return await launch(url);
   }
 }
 

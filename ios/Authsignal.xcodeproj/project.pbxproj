@@ -20,8 +20,14 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libAuthsignal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAuthsignal.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B3E7B5891CC2AC0600A0062D /* AuthsignalModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuthsignalModule.m; sourceTree = "<group>"; };
-		D8CCAF332908C7A30040E0F0 /* AuthsignalModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuthsignalModule.h; sourceTree = "<group>"; };
+		D8AE39E42C729A88003759EB /* AuthsignalEmailModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuthsignalEmailModule.m; sourceTree = "<group>"; };
+		D8AE39E52C729A88003759EB /* AuthsignalSMSModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthsignalSMSModule.swift; sourceTree = "<group>"; };
+		D8AE39E62C729A88003759EB /* AuthsignalTOTPModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuthsignalTOTPModule.m; sourceTree = "<group>"; };
+		D8AE39E72C729A88003759EB /* AuthsignalEmailModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthsignalEmailModule.swift; sourceTree = "<group>"; };
+		D8AE39E82C729A88003759EB /* AuthsignalTOTPModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthsignalTOTPModule.swift; sourceTree = "<group>"; };
+		D8AE39E92C729A88003759EB /* AuthsignalSMSModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuthsignalSMSModule.m; sourceTree = "<group>"; };
+		D8AE39EA2C729B67003759EB /* AuthsignalModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthsignalModule.swift; sourceTree = "<group>"; };
+		D8AE39EB2C729BF4003759EB /* AuthsignalModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuthsignalModule.m; sourceTree = "<group>"; };
 		D8EC5CD32A4D1EE00085B442 /* AuthsignalPasskeyModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthsignalPasskeyModule.swift; sourceTree = "<group>"; };
 		D8EC5CD42A4D1EE00085B442 /* AuthsignalPushModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthsignalPushModule.swift; sourceTree = "<group>"; };
 		D8EC5CD52A4D1EE00085B442 /* AuthsignalPushModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuthsignalPushModule.m; sourceTree = "<group>"; };
@@ -51,13 +57,19 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				D8AE39EB2C729BF4003759EB /* AuthsignalModule.m */,
+				D8AE39EA2C729B67003759EB /* AuthsignalModule.swift */,
+				D8AE39E42C729A88003759EB /* AuthsignalEmailModule.m */,
+				D8AE39E72C729A88003759EB /* AuthsignalEmailModule.swift */,
+				D8AE39E92C729A88003759EB /* AuthsignalSMSModule.m */,
+				D8AE39E52C729A88003759EB /* AuthsignalSMSModule.swift */,
+				D8AE39E62C729A88003759EB /* AuthsignalTOTPModule.m */,
+				D8AE39E82C729A88003759EB /* AuthsignalTOTPModule.swift */,
 				D8EC5CD72A4D1EE90085B442 /* Authsignal-Bridging-Header.h */,
 				D8EC5CD62A4D1EE00085B442 /* AuthsignalPasskeyModule.m */,
 				D8EC5CD32A4D1EE00085B442 /* AuthsignalPasskeyModule.swift */,
 				D8EC5CD52A4D1EE00085B442 /* AuthsignalPushModule.m */,
 				D8EC5CD42A4D1EE00085B442 /* AuthsignalPushModule.swift */,
-				D8CCAF332908C7A30040E0F0 /* AuthsignalModule.h */,
-				B3E7B5891CC2AC0600A0062D /* AuthsignalModule.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			sourceTree = "<group>";

@@ -22,8 +22,8 @@ class AuthsignalPasskeyModule: NSObject {
   }
   
   @objc func signUp(
-    _ token: NSString,
-    withUserName userName: NSString?,
+    _ token: NSString?,
+    withUsername username: NSString?,
     withDisplayName displayName: NSString?,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
@@ -33,14 +33,16 @@ class AuthsignalPasskeyModule: NSObject {
       return
     }
     
-    let tokenStr = token as String
-    let userNameStr = userName as String?
+    let tokenStr = token as String?
+    let usernameStr = username as String?
     let displayNameStr = displayName as String?
     
     Task.init {
-      let response = await authsignal!.signUp(token: tokenStr, userName: userNameStr, displayName: displayNameStr)
+      let response = await authsignal!.signUp(token: tokenStr, username: usernameStr, displayName: displayNameStr)
       
-      if (response.error != nil) {
+      if (response.errorCode == "TOKEN_NOT_SET") {
+        reject("tokenNotSetError", "TOKEN_NOT_SET", nil)
+      } else if (response.error != nil) {
         reject("signUpError", response.error, nil)
       } else {
         let signUpResponse: [String: String?] = [
@@ -76,7 +78,7 @@ class AuthsignalPasskeyModule: NSObject {
         preferImmediatelyAvailableCredentials: preferImmediatelyAvailableCredentials
       )
       
-      if (response.errorCode == .canceled) {
+      if (response.errorCode == "SIGN_IN_CANCELED") {
         reject("signInCanceled", "SIGN_IN_CANCELED", nil)
       } else if (response.error != nil) {
         reject("signInError", response.error, nil)
@@ -86,8 +88,8 @@ class AuthsignalPasskeyModule: NSObject {
           "token": response.data!.token,
           "userId": response.data!.userId,
           "userAuthenticatorId": response.data!.userAuthenticatorId,
-          "userName": response.data!.userName,
-          "userDisplayName": response.data!.userDisplayName,
+          "username": response.data!.username,
+          "displayName": response.data!.displayName,
         ]
 
         resolve(signInResponse)
