@@ -12,14 +12,24 @@ class AuthsignalModule: NSObject, ASWebAuthenticationPresentationContextProvidin
     return true
   }
   
+  @objc func methodQueue() -> DispatchQueue {
+      return DispatchQueue.main
+  }
+  
   @objc func launch(
     _ url: NSString,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
-    let authUrl = URL(string: url as String)!
     let scheme = "authsignal"
-
+    let urlStr = url as String?
+    
+    guard let authUrl = URL(string: urlStr!) else {
+      reject("AS_ERROR", "Invalid URL", nil)
+      
+      return
+    }
+    
     let authenticationSession = ASWebAuthenticationSession(url: authUrl, callbackURLScheme: scheme) { callbackURL, error in
       if let error {
         if self.isCanceledLoginError(error) {
