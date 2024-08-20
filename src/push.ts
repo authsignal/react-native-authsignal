@@ -9,7 +9,7 @@ interface ConstructorArgs {
 }
 
 interface PushCredential {
-  credentialID: string;
+  credentialId: string;
   createdAt: string;
   lastAuthenticatedAt?: string;
 }
