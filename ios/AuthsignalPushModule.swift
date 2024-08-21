@@ -37,9 +37,9 @@ class AuthsignalPushModule: NSObject {
         reject("getCredential error", error, nil)
       } else if let data = response.data {
         let credential: [String: String?] = [
-          "credentialId": response.data!.credentialId,
-          "createdAt": response.data!.createdAt,
-          "lastAuthenticatedAt": response.data!.lastAuthenticatedAt,
+          "credentialId": data.credentialId,
+          "createdAt": data.createdAt,
+          "lastAuthenticatedAt": data.lastAuthenticatedAt,
         ]
         
         resolve(credential)
@@ -110,12 +110,12 @@ class AuthsignalPushModule: NSObject {
         reject("getChallengeError", error, nil)
       } else if let data = response.data {
         let challenge: [String: String?] = [
-          "challengeId": response.data!.challengeId,
-          "actionCode": response.data!.actionCode,
-          "idempotencyKey": response.data!.idempotencyKey,
-          "userAgent": response.data!.userAgent,
-          "deviceId": response.data!.deviceId,
-          "ipAddress": response.data!.ipAddress,
+          "challengeId": data!.challengeId,
+          "actionCode": data!.actionCode,
+          "idempotencyKey": data!.idempotencyKey,
+          "userAgent": data!.userAgent,
+          "deviceId": data!.deviceId,
+          "ipAddress": data!.ipAddress,
         ]
         
         resolve(challenge)
