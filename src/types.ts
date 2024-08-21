@@ -55,7 +55,7 @@ export interface PushChallenge {
   challengeId: string;
   actionCode?: string;
   idempotencyKey?: string;
-  userAgent: string;
+  userAgent?: string;
   deviceId?: string;
   ipAddress?: string;
 }
