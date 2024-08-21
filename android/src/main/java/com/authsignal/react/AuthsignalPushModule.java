@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.authsignal.push.AuthsignalPush;
+import com.authsignal.push.models.PushChallenge;
 import com.authsignal.push.models.PushCredential;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -56,11 +57,11 @@ public class AuthsignalPushModule extends ReactContextBaseJavaModule {
         .getCredentialAsync()
         .thenAcceptAsync((response) -> {
           if (response.getError() != null) {
-            promise.reject("getCredential error", response.getError());
+            promise.reject("getCredentialError", response.getError());
           } else {
             PushCredential credential = response.getData();
             WritableMap map = Arguments.createMap();
-            map.putString("credentialID", credential.getCredentialID());
+            map.putString("credentialId", credential.getCredentialId());
             map.putString("createdAt", credential.getCreatedAt());
             map.putString("lastAuthenticatedAt", credential.getLastAuthenticatedAt());
             promise.resolve(map);
@@ -82,7 +83,7 @@ public class AuthsignalPushModule extends ReactContextBaseJavaModule {
           if (response.getErrorType() != null && response.getErrorType().equals("TYPE_TOKEN_NOT_SET")) {
             promise.reject("tokenNotSetError", "TOKEN_NOT_SET");
           } else if (response.getError() != null) {
-            promise.reject("addCredential error", response.getError());
+            promise.reject("addCredentialError", response.getError());
           } else {
             promise.resolve(response.getData());
           }
@@ -101,7 +102,7 @@ public class AuthsignalPushModule extends ReactContextBaseJavaModule {
         .removeCredentialAsync()
         .thenAcceptAsync(response -> {
           if (response.getError() != null) {
-            promise.reject("removeCredential error", response.getError());
+            promise.reject("removeCredentialError", response.getError());
           } else {
             promise.resolve(response.getData());
           }
@@ -120,9 +121,22 @@ public class AuthsignalPushModule extends ReactContextBaseJavaModule {
         .getChallengeAsync()
         .thenAcceptAsync(response -> {
           if (response.getError() != null) {
-            promise.reject("getChallenge error", response.getError());
+            promise.reject("getChallengeError", response.getError());
           } else {
-            promise.resolve(response.getData());
+            PushChallenge challenge = response.getData();
+
+            if (challenge == null) {
+              promise.resolve(null);
+            } else {
+              WritableMap map = Arguments.createMap();
+              map.putString("challengeId", challenge.getChallengeId());
+              map.putString("actionCode", challenge.getActionCode());
+              map.putString("idempotencyKey", challenge.getIdempotencyKey());
+              map.putString("ipAddress", challenge.getIpAddress());
+              map.putString("deviceId", challenge.getDeviceId());
+              map.putString("userAgent", challenge.getUserAgent());
+              promise.resolve(map);
+            }
           }
         });
     } else {
@@ -144,7 +158,7 @@ public class AuthsignalPushModule extends ReactContextBaseJavaModule {
         .updateChallengeAsync(challengeId, approved, verificationCode)
         .thenAcceptAsync(response -> {
           if (response.getError() != null) {
-            promise.reject("updateChallenge error", response.getError());
+            promise.reject("updateChallengeError", response.getError());
           } else {
             promise.resolve(response.getData());
           }

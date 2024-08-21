@@ -37,9 +37,9 @@ class AuthsignalPushModule: NSObject {
         reject("getCredential error", error, nil)
       } else if let data = response.data {
         let credential: [String: String?] = [
-          "credentialId": response.data!.credentialId,
-          "createdAt": response.data!.createdAt,
-          "lastAuthenticatedAt": response.data!.lastAuthenticatedAt,
+          "credentialId": data.credentialId,
+          "createdAt": data.createdAt,
+          "lastAuthenticatedAt": data.lastAuthenticatedAt,
         ]
         
         resolve(credential)
@@ -67,7 +67,7 @@ class AuthsignalPushModule: NSObject {
       if (response.errorCode == "TOKEN_NOT_SET") {
         reject("tokenNotSetError", "TOKEN_NOT_SET", nil)
       } else if let error = response.error {
-        reject("addCredential error", error, nil)
+        reject("addCredentialError", error, nil)
       } else {
         resolve(response.data)
       }
@@ -87,7 +87,7 @@ class AuthsignalPushModule: NSObject {
       let response = await authsignal.removeCredential()
       
       if let error = response.error {
-        reject("removeCredential error", error, nil)
+        reject("removeCredentialError", error, nil)
       } else {
         resolve(response.data)
       }
@@ -107,9 +107,20 @@ class AuthsignalPushModule: NSObject {
       let response = await authsignal.getChallenge()
       
       if let error = response.error {
-        reject("getChallenge error", error, nil)
+        reject("getChallengeError", error, nil)
+      } else if let data = response.data as? PushChallenge {
+        let challenge: [String: String?] = [
+          "challengeId": data.challengeId,
+          "actionCode": data.actionCode,
+          "idempotencyKey": data.idempotencyKey,
+          "userAgent": data.userAgent,
+          "deviceId": data.deviceId,
+          "ipAddress": data.ipAddress,
+        ]
+        
+        resolve(challenge)
       } else {
-        resolve(response.data)
+        resolve(nil)
       }
     }
   }
@@ -138,7 +149,7 @@ class AuthsignalPushModule: NSObject {
       )
       
       if let error = response.error {
-        reject("updateChallenge error", error, nil)
+        reject("updateChallengeError", error, nil)
       } else {
         resolve(response.data)
       }

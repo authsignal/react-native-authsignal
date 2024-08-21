@@ -44,3 +44,18 @@ export interface VerifyResponse {
   token?: string;
   failureReason?: string;
 }
+
+export interface PushCredential {
+  credentialId: string;
+  createdAt: string;
+  lastAuthenticatedAt?: string;
+}
+
+export interface PushChallenge {
+  challengeId: string;
+  actionCode?: string;
+  idempotencyKey?: string;
+  userAgent?: string;
+  deviceId?: string;
+  ipAddress?: string;
+}

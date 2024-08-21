@@ -1,17 +1,15 @@
 import { NativeModules } from 'react-native';
 import { LINKING_ERROR } from './error';
-import type { AuthsignalResponse } from './types';
+import type {
+  AuthsignalResponse,
+  PushChallenge,
+  PushCredential,
+} from './types';
 
 interface ConstructorArgs {
   tenantID: string;
   baseURL: string;
   enableLogging: boolean;
-}
-
-interface PushCredential {
-  credentialId: string;
-  createdAt: string;
-  lastAuthenticatedAt?: string;
 }
 
 let initialized = false;
@@ -97,7 +95,7 @@ export class AuthsignalPush {
     }
   }
 
-  async getChallenge(): Promise<AuthsignalResponse<string>> {
+  async getChallenge(): Promise<AuthsignalResponse<PushChallenge | undefined>> {
     await this.ensureModuleIsInitialized();
 
     try {
