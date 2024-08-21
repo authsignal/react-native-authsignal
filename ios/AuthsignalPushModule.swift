@@ -108,14 +108,14 @@ class AuthsignalPushModule: NSObject {
       
       if let error = response.error {
         reject("getChallengeError", error, nil)
-      } else if let data = response.data {
+      } else if let data = response.data as? PushChallenge {
         let challenge: [String: String?] = [
-          "challengeId": data!.challengeId,
-          "actionCode": data!.actionCode,
-          "idempotencyKey": data!.idempotencyKey,
-          "userAgent": data!.userAgent,
-          "deviceId": data!.deviceId,
-          "ipAddress": data!.ipAddress,
+          "challengeId": data.challengeId,
+          "actionCode": data.actionCode,
+          "idempotencyKey": data.idempotencyKey,
+          "userAgent": data.userAgent,
+          "deviceId": data.deviceId,
+          "ipAddress": data.ipAddress,
         ]
         
         resolve(challenge)
