@@ -25,6 +25,17 @@ const AuthsignalPushModule = NativeModules.AuthsignalPushModule
       }
     );
 
+interface AddCredentialInput {
+  token?: string;
+  userAuthenticationRequired?: boolean;
+}
+
+interface UpdateChallengeInput {
+  challengeId: string;
+  approved: boolean;
+  verificationCode?: string | null;
+}
+
 export class AuthsignalPush {
   tenantID: string;
   baseURL: string;
@@ -56,11 +67,17 @@ export class AuthsignalPush {
     }
   }
 
-  async addCredential(token: string): Promise<AuthsignalResponse<boolean>> {
+  async addCredential({
+    token,
+    userAuthenticationRequired = false,
+  }: AddCredentialInput): Promise<AuthsignalResponse<boolean>> {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalPushModule.addCredential(token);
+      const data = await AuthsignalPushModule.addCredential(
+        token,
+        userAuthenticationRequired
+      );
 
       return { data };
     } catch (ex) {
@@ -115,11 +132,11 @@ export class AuthsignalPush {
     }
   }
 
-  async updateChallenge(
-    challengeId: string,
-    approved: boolean,
-    verificationCode: string | null = null
-  ): Promise<AuthsignalResponse<boolean>> {
+  async updateChallenge({
+    challengeId,
+    approved,
+    verificationCode = null,
+  }: UpdateChallengeInput): Promise<AuthsignalResponse<boolean>> {
     await this.ensureModuleIsInitialized();
 
     try {

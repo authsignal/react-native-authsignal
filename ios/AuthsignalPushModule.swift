@@ -51,6 +51,7 @@ class AuthsignalPushModule: NSObject {
 
   @objc func addCredential(
     _ token: NSString?,
+    withUserAuthenticationRequired userAuthenticationRequired: Bool,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -60,9 +61,12 @@ class AuthsignalPushModule: NSObject {
     }
     
     let tokenStr = token as String?
+    let keychainAccess: KeychainAccess = userAuthenticationRequired ?
+      .whenPasscodeSetThisDeviceOnly :
+      .whenUnlockedThisDeviceOnly
     
     Task.init {
-      let response = await authsignal.addCredential(token: tokenStr)
+      let response = await authsignal.addCredential(token: tokenStr, keychainAccess: keychainAccess)
       
       if (response.errorCode == "TOKEN_NOT_SET") {
         reject("tokenNotSetError", "TOKEN_NOT_SET", nil)
