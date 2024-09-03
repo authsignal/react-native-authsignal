@@ -1,4 +1,4 @@
-import { NativeModules, Platform } from 'react-native';
+import { NativeModules } from 'react-native';
 import { LINKING_ERROR } from './error';
 import type {
   AuthsignalResponse,
@@ -27,7 +27,6 @@ const AuthsignalPushModule = NativeModules.AuthsignalPushModule
 
 interface AddCredentialInput {
   token?: string;
-  userAuthenticationRequired?: boolean;
 }
 
 interface UpdateChallengeInput {
@@ -69,26 +68,11 @@ export class AuthsignalPush {
 
   async addCredential({
     token,
-    userAuthenticationRequired = false,
   }: AddCredentialInput): Promise<AuthsignalResponse<boolean>> {
     await this.ensureModuleIsInitialized();
 
-    const timeout = userAuthenticationRequired ? 60 : 0;
-    const authorizationType = 0;
-
     try {
-      const data =
-        Platform.OS === 'android'
-          ? await AuthsignalPushModule.addCredential(
-              token,
-              userAuthenticationRequired,
-              timeout,
-              authorizationType
-            )
-          : await AuthsignalPushModule.addCredential(
-              token,
-              userAuthenticationRequired
-            );
+      const data = await AuthsignalPushModule.addCredential(token);
 
       return { data };
     } catch (ex) {

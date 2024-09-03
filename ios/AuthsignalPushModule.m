@@ -12,7 +12,6 @@ RCT_EXTERN_METHOD(getCredential:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(addCredential:(NSString)token
-                  withUserAuthenticationRequired:(BOOL)userAuthenticationRequired
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
