@@ -41,9 +41,9 @@ export class AuthsignalTotp {
     await this.ensureModuleIsInitialized();
 
     try {
-      await AuthsignalTOTPModule.enroll();
+      const data = await AuthsignalTOTPModule.enroll();
 
-      return {};
+      return { data };
     } catch (ex) {
       return this.handleError(ex);
     }
