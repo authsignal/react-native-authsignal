@@ -65,8 +65,8 @@ class AuthsignalPushModule: NSObject {
     Task.init {
       let response = await authsignal.addCredential(token: tokenStr, keychainAccess: keychainAccess)
       
-      if (response.errorCode == "TOKEN_NOT_SET") {
-        reject("tokenNotSetError", "TOKEN_NOT_SET", nil)
+      if let errorCode = response.errorCode {
+        reject("addCredentialError", errorCode, nil)
       } else if let error = response.error {
         reject("addCredentialError", error, nil)
       } else {
@@ -87,7 +87,9 @@ class AuthsignalPushModule: NSObject {
     Task.init {
       let response = await authsignal.removeCredential()
       
-      if let error = response.error {
+      if let errorCode = response.errorCode {
+        reject("removeCredentialError", errorCode, nil)
+      } else if let error = response.error {
         reject("removeCredentialError", error, nil)
       } else {
         resolve(response.data)
@@ -107,7 +109,9 @@ class AuthsignalPushModule: NSObject {
     Task.init {
       let response = await authsignal.getChallenge()
       
-      if let error = response.error {
+      if let errorCode = response.errorCode {
+        reject("getChallengeError", errorCode, nil)
+      } else if let error = response.error {
         reject("getChallengeError", error, nil)
       } else if let data = response.data as? PushChallenge {
         let challenge: [String: String?] = [
@@ -149,7 +153,9 @@ class AuthsignalPushModule: NSObject {
         verificationCode: code
       )
       
-      if let error = response.error {
+      if let errorCode = response.errorCode {
+        reject("updateChallengeError", errorCode, nil)
+      } else if let error = response.error {
         reject("updateChallengeError", error, nil)
       } else {
         resolve(response.data)

@@ -122,12 +122,12 @@ export class AuthsignalPasskey {
 
       if (ex instanceof Error) {
         switch (ex.message) {
-          case 'SIGN_IN_CANCELED':
+          case 'user_canceled':
             return {
               errorCode: ErrorCode.passkeySignInCanceled,
               error: 'Passkey sign-in canceled',
             };
-          case 'SIGN_IN_NO_CREDENTIAL':
+          case 'no_credential':
             return {
               errorCode: ErrorCode.noPasskeyCredentialAvailable,
               error: 'No passkey credential available',

@@ -65,8 +65,8 @@ public class AuthsignalPasskeyModule extends ReactContextBaseJavaModule {
       authsignalPasskey
         .signUpAsync(token, username, displayName)
         .thenAcceptAsync(response -> {
-          if (response.getErrorType() != null && response.getErrorType().equals("TYPE_TOKEN_NOT_SET")) {
-            promise.reject("tokenNotSetError", "TOKEN_NOT_SET");
+          if (response.getErrorType() != null) {
+            promise.reject("signUpError", response.getErrorType());
           } else if (response.getError() != null) {
             promise.reject("signUpError", response.getError());
           } else {
@@ -90,13 +90,7 @@ public class AuthsignalPasskeyModule extends ReactContextBaseJavaModule {
         .signInAsync(action, token)
         .thenAcceptAsync(response -> {
           if (response.getErrorType() != null) {
-            if (response.getErrorType().equals("android.credentials.GetCredentialException.TYPE_NO_CREDENTIAL")) {
-              promise.reject("signInNoCredential", "SIGN_IN_NO_CREDENTIAL");
-            }
-
-            if (response.getErrorType().equals("android.credentials.GetCredentialException.TYPE_USER_CANCELED")) {
-              promise.reject("signInCanceled", "SIGN_IN_CANCELED");
-            }
+            promise.reject("signInError", getErrorType());
           } else if (response.getError() != null) {
             promise.reject("signInError", response.getError());
           } else {
