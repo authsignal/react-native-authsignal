@@ -90,7 +90,7 @@ public class AuthsignalPasskeyModule extends ReactContextBaseJavaModule {
         .signInAsync(action, token)
         .thenAcceptAsync(response -> {
           if (response.getErrorType() != null) {
-            promise.reject("signInError", getErrorType());
+            promise.reject("signInError", response.getErrorType());
           } else if (response.getError() != null) {
             promise.reject("signInError", response.getError());
           } else {
