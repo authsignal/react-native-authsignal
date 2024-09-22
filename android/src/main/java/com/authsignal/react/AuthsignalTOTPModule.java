@@ -64,8 +64,8 @@ public class AuthsignalTOTPModule extends ReactContextBaseJavaModule {
       authsignalTOTP
         .enrollAsync()
         .thenAcceptAsync(response -> {
-          if (response.getErrorType() != null && response.getErrorType().equals("TYPE_TOKEN_NOT_SET")) {
-            promise.reject("tokenNotSetError", "TOKEN_NOT_SET");
+          if (response.getErrorType() != null) {
+            promise.reject("enrollError", response.getErrorType());
           } else if (response.getError() != null) {
             promise.reject("enrollError", response.getError());
           } else {
@@ -90,8 +90,8 @@ public class AuthsignalTOTPModule extends ReactContextBaseJavaModule {
       authsignalTOTP
         .verifyAsync(code)
         .thenAcceptAsync(response -> {
-          if (response.getErrorType() != null && response.getErrorType().equals("TYPE_TOKEN_NOT_SET")) {
-            promise.reject("tokenNotSetError", "TOKEN_NOT_SET");
+          if (response.getErrorType() != null) {
+            promise.reject("verifyError", response.getErrorType());
           } else if (response.getError() != null) {
             promise.reject("verifyError", response.getError());
           } else {

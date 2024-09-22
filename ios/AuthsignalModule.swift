@@ -25,7 +25,7 @@ class AuthsignalModule: NSObject, ASWebAuthenticationPresentationContextProvidin
     let urlStr = url as String?
     
     guard let authUrl = URL(string: urlStr!) else {
-      reject("AS_ERROR", "Invalid URL", nil)
+      reject("launchError", "Invalid URL", nil)
       
       return
     }
@@ -35,7 +35,7 @@ class AuthsignalModule: NSObject, ASWebAuthenticationPresentationContextProvidin
         if self.isCanceledLoginError(error) {
           resolve(nil)
         } else {
-          reject("AS_ERROR", error.localizedDescription, nil)
+          reject("launchError", error.localizedDescription, nil)
         }
       } else if let callbackURL = callbackURL {
         let components = URLComponents(string: callbackURL.absoluteString)

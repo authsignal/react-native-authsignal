@@ -40,8 +40,8 @@ class AuthsignalPasskeyModule: NSObject {
     Task.init {
       let response = await authsignal!.signUp(token: tokenStr, username: usernameStr, displayName: displayNameStr)
       
-      if (response.errorCode == "TOKEN_NOT_SET") {
-        reject("tokenNotSetError", "TOKEN_NOT_SET", nil)
+      if (response.errorCode != nil) {
+        reject("signUpError", response.errorCode, nil)
       } else if (response.error != nil) {
         reject("signUpError", response.error, nil)
       } else {
@@ -78,8 +78,8 @@ class AuthsignalPasskeyModule: NSObject {
         preferImmediatelyAvailableCredentials: preferImmediatelyAvailableCredentials
       )
       
-      if (response.errorCode == "SIGN_IN_CANCELED") {
-        reject("signInCanceled", "SIGN_IN_CANCELED", nil)
+      if (response.errorCode != nil) {
+        reject("signInError", response.errorCode, nil)
       } else if (response.error != nil) {
         reject("signInError", response.error, nil)
       } else {

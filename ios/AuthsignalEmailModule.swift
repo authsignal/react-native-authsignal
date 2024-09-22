@@ -36,8 +36,8 @@ class AuthsignalEmailModule: NSObject {
     Task.init {
       let response = await authsignal!.enroll(email: emailStr)
       
-      if (response.errorCode == "TOKEN_NOT_SET") {
-        reject("tokenNotSetError", "TOKEN_NOT_SET", nil)
+      if (response.errorCode != nil) {
+        reject("enrollError", response.errorCode, nil)
       } else if (response.error != nil) {
         reject("enrollError", response.error, nil)
       } else {
@@ -62,8 +62,8 @@ class AuthsignalEmailModule: NSObject {
     Task.init {
       let response = await authsignal!.challenge()
       
-      if (response.errorCode == "TOKEN_NOT_SET") {
-        reject("tokenNotSetError", "TOKEN_NOT_SET", nil)
+      if (response.errorCode != nil) {
+        reject("challengeError", response.errorCode, nil)
       } else if (response.error != nil) {
         reject("challengeError", response.error, nil)
       } else {
@@ -91,8 +91,8 @@ class AuthsignalEmailModule: NSObject {
     Task.init {
       let response = await authsignal!.verify(code: codeStr)
       
-      if (response.errorCode == "TOKEN_NOT_SET") {
-        reject("tokenNotSetError", "TOKEN_NOT_SET", nil)
+      if (response.errorCode != nil) {
+        reject("verifyError", response.errorCode, nil)
       } else if (response.error != nil) {
         reject("verifyError", response.error, nil)
       } else {
