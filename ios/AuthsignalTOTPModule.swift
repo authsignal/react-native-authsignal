@@ -33,8 +33,8 @@ class AuthsignalTOTPModule: NSObject {
     Task.init {
       let response = await authsignal!.enroll()
       
-      if (response.errorCode == "token_not_set") {
-        reject("tokenNotSetError", "token_not_set", nil)
+      if (response.errorCode != nil) {
+        reject("enrollError", response.errorCode, nil)
       } else if (response.error != nil) {
         reject("enrollError", response.error, nil)
       } else {
@@ -64,8 +64,8 @@ class AuthsignalTOTPModule: NSObject {
     Task.init {
       let response = await authsignal!.verify(code: codeStr)
       
-      if (response.errorCode == "token_not_set") {
-        reject("tokenNotSetError", "token_not_set", nil)
+      if (response.errorCode != nil) {
+        reject("verifyError", response.errorCode, nil)
       } else if (response.error != nil) {
         reject("verifyError", response.error, nil)
       } else {
