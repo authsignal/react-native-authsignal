@@ -40,10 +40,8 @@ class AuthsignalPasskeyModule: NSObject {
     Task.init {
       let response = await authsignal!.signUp(token: tokenStr, username: usernameStr, displayName: displayNameStr)
       
-      if (response.errorCode != nil) {
-        reject("signUpError", response.errorCode, nil)
-      } else if (response.error != nil) {
-        reject("signUpError", response.error, nil)
+      if (response.error != nil) {
+        reject(response.errorCode ?? "sign_up_error", response.error, nil)
       } else {
         let signUpResponse: [String: String?] = [
           "token": response.data!.token,
@@ -78,10 +76,8 @@ class AuthsignalPasskeyModule: NSObject {
         preferImmediatelyAvailableCredentials: preferImmediatelyAvailableCredentials
       )
       
-      if (response.errorCode != nil) {
-        reject("signInError", response.errorCode, nil)
-      } else if (response.error != nil) {
-        reject("signInError", response.error, nil)
+      if (response.error != nil) {
+        reject(response.errorCode ?? "sign_in_error", response.error, nil)
       } else {
         let signInResponse: [String: Any?] = [
           "isVerified": response.data!.isVerified,
