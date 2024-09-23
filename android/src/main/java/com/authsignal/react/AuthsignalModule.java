@@ -45,10 +45,10 @@ public class AuthsignalModule extends ReactContextBaseJavaModule implements Acti
     }
 
     @ReactMethod
-    public void setToken(String token, Callback callback) {
+    public void setToken(String token, Promise promise) {
         TokenCache.Companion.getShared().setToken(token);
 
-        callback.invoke(null, "token_set");
+        promise.resolve("token_set");
     }
 
     @ReactMethod
