@@ -1,5 +1,5 @@
 import { NativeModules } from 'react-native';
-import { LINKING_ERROR } from './error';
+import { handleErrorCodes, LINKING_ERROR } from './error';
 import type {
   AuthsignalResponse,
   PushChallenge,
@@ -58,17 +58,13 @@ export class AuthsignalPush {
         console.log(ex);
       }
 
-      if (ex instanceof Error) {
-        return { error: ex.message };
-      }
-
-      throw ex;
+      return handleErrorCodes(ex);
     }
   }
 
-  async addCredential({
-    token,
-  }: AddCredentialInput): Promise<AuthsignalResponse<boolean>> {
+  async addCredential({ token }: AddCredentialInput = {}): Promise<
+    AuthsignalResponse<boolean>
+  > {
     await this.ensureModuleIsInitialized();
 
     try {
@@ -80,11 +76,7 @@ export class AuthsignalPush {
         console.log(ex);
       }
 
-      if (ex instanceof Error) {
-        return { error: ex.message };
-      }
-
-      throw ex;
+      return handleErrorCodes(ex);
     }
   }
 
@@ -99,11 +91,7 @@ export class AuthsignalPush {
         console.log(ex);
       }
 
-      if (ex instanceof Error) {
-        return { error: ex.message };
-      }
-
-      throw ex;
+      return handleErrorCodes(ex);
     }
   }
 
@@ -119,11 +107,7 @@ export class AuthsignalPush {
         console.log(ex);
       }
 
-      if (ex instanceof Error) {
-        return { error: ex.message };
-      }
-
-      throw ex;
+      return handleErrorCodes(ex);
     }
   }
 
@@ -147,11 +131,7 @@ export class AuthsignalPush {
         console.log(ex);
       }
 
-      if (ex instanceof Error) {
-        return { error: ex.message };
-      }
-
-      throw ex;
+      return handleErrorCodes(ex);
     }
   }
 
