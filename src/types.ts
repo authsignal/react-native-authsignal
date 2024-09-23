@@ -3,7 +3,7 @@ import type { ErrorCode } from './error';
 export interface AuthsignalResponse<T> {
   data?: T;
   error?: string;
-  errorCode?: ErrorCode;
+  errorCode?: ErrorCode | string;
 }
 
 export interface TokenPayload {

@@ -65,10 +65,8 @@ class AuthsignalPushModule: NSObject {
     Task.init {
       let response = await authsignal.addCredential(token: tokenStr, keychainAccess: keychainAccess)
       
-      if let errorCode = response.errorCode {
-        reject("addCredentialError", errorCode, nil)
-      } else if let error = response.error {
-        reject("addCredentialError", error, nil)
+      if let error = response.error {
+        reject(response.errorCode ?? "add_credential_error", error, nil)
       } else {
         resolve(response.data)
       }
@@ -87,10 +85,8 @@ class AuthsignalPushModule: NSObject {
     Task.init {
       let response = await authsignal.removeCredential()
       
-      if let errorCode = response.errorCode {
-        reject("removeCredentialError", errorCode, nil)
-      } else if let error = response.error {
-        reject("removeCredentialError", error, nil)
+      if let error = response.error {
+        reject(response.errorCode ?? "remove_credential_error", error, nil)
       } else {
         resolve(response.data)
       }
@@ -109,10 +105,8 @@ class AuthsignalPushModule: NSObject {
     Task.init {
       let response = await authsignal.getChallenge()
       
-      if let errorCode = response.errorCode {
-        reject("getChallengeError", errorCode, nil)
-      } else if let error = response.error {
-        reject("getChallengeError", error, nil)
+      if let error = response.error {
+        reject(response.errorCode ?? "get_challenge_error", error, nil)
       } else if let data = response.data as? PushChallenge {
         let challenge: [String: String?] = [
           "challengeId": data.challengeId,
@@ -153,10 +147,8 @@ class AuthsignalPushModule: NSObject {
         verificationCode: code
       )
       
-      if let errorCode = response.errorCode {
-        reject("updateChallengeError", errorCode, nil)
-      } else if let error = response.error {
-        reject("updateChallengeError", error, nil)
+      if let error = response.error {
+        reject(response.errorCode ?? "update_challenge_error", error, nil)
       } else {
         resolve(response.data)
       }

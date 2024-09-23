@@ -63,10 +63,12 @@ public class AuthsignalSMSModule extends ReactContextBaseJavaModule {
       authsignalSMS
         .enrollAsync(phoneNumber)
         .thenAcceptAsync(response -> {
-          if (response.getErrorType() != null) {
-            promise.reject("enrollError", response.getErrorType());
-          } else if (response.getError() != null) {
-            promise.reject("enrollError", response.getError());
+          if (response.getError() != null) {
+            String errorCode = response.getErrorType() != null ?
+              response.getErrorType() :
+              "enroll_error";
+
+            promise.reject(errorCode, response.getError());
           } else {
             EnrollResponse enrollResponse = response.getData();
             WritableMap map = Arguments.createMap();
@@ -87,10 +89,12 @@ public class AuthsignalSMSModule extends ReactContextBaseJavaModule {
       authsignalSMS
         .challengeAsync()
         .thenAcceptAsync(response -> {
-          if (response.getErrorType() != null) {
-            promise.reject("challengeError", response.getErrorType());
-          } else if (response.getError() != null) {
-            promise.reject("challengeError", response.getError());
+          if (response.getError() != null) {
+            String errorCode = response.getErrorType() != null ?
+              response.getErrorType() :
+              "challenge_error";
+
+            promise.reject(errorCode, response.getError());
           } else {
             ChallengeResponse challengeResponse = response.getData();
             WritableMap map = Arguments.createMap();
@@ -111,10 +115,12 @@ public class AuthsignalSMSModule extends ReactContextBaseJavaModule {
       authsignalSMS
         .verifyAsync(code)
         .thenAcceptAsync(response -> {
-          if (response.getErrorType() != null) {
-            promise.reject("verifyError", response.getErrorType());
-          } else if (response.getError() != null) {
-            promise.reject("verifyError", response.getError());
+          if (response.getError() != null) {
+            String errorCode = response.getErrorType() != null ?
+              response.getErrorType() :
+              "verify_error";
+
+            promise.reject(errorCode, response.getError());
           } else {
             VerifyResponse verifyResponse = response.getData();
             WritableMap map = Arguments.createMap();

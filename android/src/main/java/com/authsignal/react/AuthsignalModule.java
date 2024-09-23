@@ -10,6 +10,7 @@ import com.authsignal.TokenCache;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -45,10 +46,10 @@ public class AuthsignalModule extends ReactContextBaseJavaModule implements Acti
     }
 
     @ReactMethod
-    public void setToken(String token, Callback callback) {
+    public void setToken(String token, Promise promise) {
         TokenCache.Companion.getShared().setToken(token);
 
-        callback.invoke(null, "token_set");
+        promise.resolve("token_set");
     }
 
     @ReactMethod

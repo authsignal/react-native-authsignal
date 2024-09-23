@@ -1,5 +1,5 @@
 import { NativeModules, Platform } from 'react-native';
-import { LINKING_ERROR, ErrorCode } from './error';
+import { LINKING_ERROR, handleErrorCodes } from './error';
 import type {
   AuthsignalResponse,
   SignInResponse,
@@ -70,11 +70,7 @@ export class AuthsignalPasskey {
         console.log(ex);
       }
 
-      if (ex instanceof Error) {
-        return { error: ex.message };
-      }
-
-      throw ex;
+      return handleErrorCodes(ex);
     }
   }
 
@@ -120,24 +116,7 @@ export class AuthsignalPasskey {
 
       autofillRequestPending = false;
 
-      if (ex instanceof Error) {
-        switch (ex.message) {
-          case 'user_canceled':
-            return {
-              errorCode: ErrorCode.passkeySignInCanceled,
-              error: 'Passkey sign-in canceled',
-            };
-          case 'no_credential':
-            return {
-              errorCode: ErrorCode.noPasskeyCredentialAvailable,
-              error: 'No passkey credential available',
-            };
-          default:
-            return { error: ex.message };
-        }
-      }
-
-      throw ex;
+      return handleErrorCodes(ex);
     }
   }
 

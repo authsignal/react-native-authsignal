@@ -65,10 +65,12 @@ public class AuthsignalPasskeyModule extends ReactContextBaseJavaModule {
       authsignalPasskey
         .signUpAsync(token, username, displayName)
         .thenAcceptAsync(response -> {
-          if (response.getErrorType() != null) {
-            promise.reject("signUpError", response.getErrorType());
-          } else if (response.getError() != null) {
-            promise.reject("signUpError", response.getError());
+          if (response.getError() != null) {
+            String errorCode = response.getErrorType() != null ?
+              response.getErrorType() :
+              "sign_up_error";
+
+            promise.reject(errorCode, response.getError());
           } else {
             SignUpResponse signUpResponse = response.getData();
             WritableMap map = Arguments.createMap();
@@ -89,10 +91,12 @@ public class AuthsignalPasskeyModule extends ReactContextBaseJavaModule {
       authsignalPasskey
         .signInAsync(action, token)
         .thenAcceptAsync(response -> {
-          if (response.getErrorType() != null) {
-            promise.reject("signInError", response.getErrorType());
-          } else if (response.getError() != null) {
-            promise.reject("signInError", response.getError());
+          if (response.getError() != null) {
+            String errorCode = response.getErrorType() != null ?
+              response.getErrorType() :
+              "sign_in_error";
+
+            promise.reject(errorCode, response.getError());
           } else {
             SignInResponse signInResponse = response.getData();
             WritableMap map = Arguments.createMap();
