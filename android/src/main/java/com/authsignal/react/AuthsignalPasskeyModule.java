@@ -51,7 +51,7 @@ public class AuthsignalPasskeyModule extends ReactContextBaseJavaModule {
       authsignalPasskey = new AuthsignalPasskey(
         tenantID,
         baseURL,
-        reactContext,
+        reactContext.getCurrentActivity(),
         reactContext.getCurrentActivity()
       );
     }
