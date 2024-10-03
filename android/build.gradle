@@ -77,8 +77,6 @@ dependencies {
 
   implementation "androidx.browser:browser:1.2.0"
 
-//  implementation 'androidx.core:core-ktx:1.13.1'
-
   implementation("io.ktor:ktor-client-android:2.2.0")
   implementation("io.ktor:ktor-client-core:2.2.0")
   implementation("io.ktor:ktor-client-content-negotiation:2.2.0")
