@@ -53,7 +53,7 @@ class AuthsignalSMSModule(private val reactContext: ReactApplicationContext) :
       val response = it.enroll(phoneNumber)
 
       if (response.error != null) {
-        val errorCode = response.errorType ?: defaultError
+        val errorCode = response.errorCode ?: defaultError
 
         promise.reject(errorCode, response.error)
       } else {
@@ -71,7 +71,7 @@ class AuthsignalSMSModule(private val reactContext: ReactApplicationContext) :
       val response = it.challenge()
 
       if (response.error != null) {
-        val errorCode = response.errorType ?: defaultError
+        val errorCode = response.errorCode ?: defaultError
 
         promise.reject(errorCode, response.error)
       } else {
@@ -89,7 +89,7 @@ class AuthsignalSMSModule(private val reactContext: ReactApplicationContext) :
       val response = it.verify(code)
 
       if (response.error != null) {
-        val errorCode = response.errorType ?: defaultError
+        val errorCode = response.errorCode ?: defaultError
 
         promise.reject(errorCode, response.error)
       } else {

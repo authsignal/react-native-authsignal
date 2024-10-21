@@ -34,7 +34,7 @@ class AuthsignalPushModule: NSObject {
       let response = await authsignal.getCredential()
       
       if let error = response.error {
-        reject("getCredential error", error, nil)
+        reject(response.errorCode ?? "unexpected_error", error, nil)
       } else if let data = response.data {
         let credential: [String: String?] = [
           "credentialId": data.credentialId,
@@ -66,7 +66,7 @@ class AuthsignalPushModule: NSObject {
       let response = await authsignal.addCredential(token: tokenStr, keychainAccess: keychainAccess)
       
       if let error = response.error {
-        reject(response.errorCode ?? "add_credential_error", error, nil)
+        reject(response.errorCode ?? "unexpected_error", error, nil)
       } else {
         resolve(response.data)
       }
@@ -86,7 +86,7 @@ class AuthsignalPushModule: NSObject {
       let response = await authsignal.removeCredential()
       
       if let error = response.error {
-        reject(response.errorCode ?? "remove_credential_error", error, nil)
+        reject(response.errorCode ?? "unexpected_error", error, nil)
       } else {
         resolve(response.data)
       }
@@ -106,7 +106,7 @@ class AuthsignalPushModule: NSObject {
       let response = await authsignal.getChallenge()
       
       if let error = response.error {
-        reject(response.errorCode ?? "get_challenge_error", error, nil)
+        reject(response.errorCode ?? "unexpected_error", error, nil)
       } else if let data = response.data as? PushChallenge {
         let challenge: [String: String?] = [
           "challengeId": data.challengeId,
@@ -148,7 +148,7 @@ class AuthsignalPushModule: NSObject {
       )
       
       if let error = response.error {
-        reject(response.errorCode ?? "update_challenge_error", error, nil)
+        reject(response.errorCode ?? "unexpected_error", error, nil)
       } else {
         resolve(response.data)
       }

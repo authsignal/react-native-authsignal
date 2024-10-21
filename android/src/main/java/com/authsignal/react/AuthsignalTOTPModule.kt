@@ -47,7 +47,7 @@ class AuthsignalTOTPModule(private val reactContext: ReactApplicationContext) :
       val response = it.enroll()
 
       if (response.error != null) {
-        val errorCode = response.errorType ?: defaultError
+        val errorCode = response.errorCode ?: defaultError
 
         promise.reject(errorCode, response.error)
       } else {
@@ -67,7 +67,7 @@ class AuthsignalTOTPModule(private val reactContext: ReactApplicationContext) :
       val response = it.verify(code)
 
       if (response.error != null) {
-        val errorCode = response.errorType ?: "verify_error"
+        val errorCode = response.errorCode ?: defaultError
 
         promise.reject(errorCode, response.error)
       } else {

@@ -49,7 +49,7 @@ class AuthsignalEmailModule(private val reactContext: ReactApplicationContext) :
       val response = it.enroll(email)
 
       if (response.error != null) {
-        val errorCode = response.errorType ?: defaultError
+        val errorCode = response.errorCode ?: defaultError
 
         promise.reject(errorCode, response.error)
       } else {
@@ -67,7 +67,7 @@ class AuthsignalEmailModule(private val reactContext: ReactApplicationContext) :
       val response = it.challenge()
 
       if (response.error != null) {
-        val errorCode = response.errorType ?: defaultError
+        val errorCode = response.errorCode ?: defaultError
 
         promise.reject(errorCode, response.error)
       } else {
@@ -85,7 +85,7 @@ class AuthsignalEmailModule(private val reactContext: ReactApplicationContext) :
       val response = it.verify(code)
 
       if (response.error != null) {
-        val errorCode = response.errorType ?: defaultError
+        val errorCode = response.errorCode ?: defaultError
 
         promise.reject(errorCode, response.error)
       } else {

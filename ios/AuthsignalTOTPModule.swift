@@ -34,7 +34,7 @@ class AuthsignalTOTPModule: NSObject {
       let response = await authsignal!.enroll()
       
       if (response.error != nil) {
-        reject(response.errorCode ?? "enroll_error", response.error, nil)
+        reject(response.errorCode ?? "unexpected_error", response.error, nil)
       } else {
         let enrollResponse: [String: String?] = [
           "userAuthenticatorId": response.data!.userAuthenticatorId,
@@ -63,7 +63,7 @@ class AuthsignalTOTPModule: NSObject {
       let response = await authsignal!.verify(code: codeStr)
       
       if (response.error != nil) {
-        reject(response.errorCode ?? "verify_error", response.error, nil)
+        reject(response.errorCode ?? "unexpected_error", response.error, nil)
       } else {
         let verifyResponse: [String: Any?] = [
           "isVerified": response.data!.isVerified,
