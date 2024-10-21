@@ -30,7 +30,7 @@ export interface SignInResponse {
   isVerified: boolean;
   token?: string;
   userId?: string;
-  userAuthenticatorI?: string;
+  userAuthenticatorId?: string;
   username?: string;
   displayName?: string;
 }
