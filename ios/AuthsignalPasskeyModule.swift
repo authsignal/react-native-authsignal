@@ -41,7 +41,7 @@ class AuthsignalPasskeyModule: NSObject {
       let response = await authsignal!.signUp(token: tokenStr, username: usernameStr, displayName: displayNameStr)
       
       if (response.error != nil) {
-        reject(response.errorCode ?? "sign_up_error", response.error, nil)
+        reject(response.errorCode ?? "unexpected_error", response.error, nil)
       } else {
         let signUpResponse: [String: String?] = [
           "token": response.data!.token,
@@ -77,7 +77,7 @@ class AuthsignalPasskeyModule: NSObject {
       )
       
       if (response.error != nil) {
-        reject(response.errorCode ?? "sign_in_error", response.error, nil)
+        reject(response.errorCode ?? "unexpected_error", response.error, nil)
       } else {
         let signInResponse: [String: Any?] = [
           "isVerified": response.data!.isVerified,

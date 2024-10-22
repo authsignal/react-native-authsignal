@@ -37,7 +37,7 @@ class AuthsignalSMSModule: NSObject {
       let response = await authsignal!.enroll(phoneNumber: phoneNumberStr)
       
       if (response.error != nil) {
-        reject(response.errorCode ?? "enroll_error", response.error, nil)
+        reject(response.errorCode ?? "unexpected_error", response.error, nil)
       } else {
         let enrollResponse: [String: String?] = [
           "userAuthenticatorId": response.data!.userAuthenticatorId,
@@ -61,7 +61,7 @@ class AuthsignalSMSModule: NSObject {
       let response = await authsignal!.challenge()
       
       if (response.error != nil) {
-        reject(response.errorCode ?? "challenge_error", response.error, nil)
+        reject(response.errorCode ?? "unexpected_error", response.error, nil)
       } else {
         let challengeResponse: [String: String?] = [
           "challengeId": response.data!.challengeId,
@@ -88,7 +88,7 @@ class AuthsignalSMSModule: NSObject {
       let response = await authsignal!.verify(code: codeStr)
       
       if (response.error != nil) {
-        reject(response.errorCode ?? "verify_error", response.error, nil)
+        reject(response.errorCode ?? "unexpected_error", response.error, nil)
       } else {
         let verifyResponse: [String: Any?] = [
           "isVerified": response.data!.isVerified,

@@ -43,7 +43,7 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
       val response = it.getCredential()
 
       if (response.error != null) {
-        val errorCode = response.errorType ?: defaultError
+        val errorCode = response.errorCode ?: defaultError
 
         promise.reject(errorCode, response.error)
       } else {
@@ -66,7 +66,7 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
       val response = it.addCredential(token, null)
 
       if (response.error != null) {
-        val errorCode = response.errorType ?: defaultError
+        val errorCode = response.errorCode ?: defaultError
 
         promise.reject(errorCode, response.error)
       } else {
@@ -81,7 +81,7 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
       val response = it.removeCredential()
 
       if (response.error != null) {
-        val errorCode = response.errorType ?: defaultError
+        val errorCode = response.errorCode ?: defaultError
 
         promise.reject(errorCode, response.error)
       } else {
@@ -96,7 +96,7 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
       val response = it.getChallenge()
 
       if (response.error != null) {
-        val errorCode = response.errorType ?: defaultError
+        val errorCode = response.errorCode ?: defaultError
 
         promise.reject(errorCode, response.error)
       } else {
@@ -129,7 +129,7 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
       val response = it.updateChallenge(challengeId, approved, verificationCode)
 
       if (response.error != null) {
-        val errorCode = response.errorType ?: defaultError
+        val errorCode = response.errorCode ?: defaultError
 
         promise.reject(errorCode, response.error)
       } else {

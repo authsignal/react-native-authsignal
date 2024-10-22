@@ -45,7 +45,7 @@ class AuthsignalPasskeyModule(private val reactContext: ReactApplicationContext)
       val response = it.signUp(token, username, displayName)
 
       if (response.error != null) {
-        val errorCode = response.errorType ?: defaultError
+        val errorCode = response.errorCode ?: defaultError
 
         promise.reject(errorCode, response.error)
       } else {
@@ -63,7 +63,7 @@ class AuthsignalPasskeyModule(private val reactContext: ReactApplicationContext)
       val response = it.signIn(action, token)
 
       if (response.error != null) {
-        val errorCode = response.errorType ?: defaultError
+        val errorCode = response.errorCode ?: defaultError
 
         promise.reject(errorCode, response.error)
       } else {
