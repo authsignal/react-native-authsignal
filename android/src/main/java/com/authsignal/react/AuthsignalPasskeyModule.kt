@@ -58,9 +58,9 @@ class AuthsignalPasskeyModule(private val reactContext: ReactApplicationContext)
   }
 
   @ReactMethod
-  fun signIn(action: String?, token: String?, promise: Promise) {
+  fun signIn(action: String?, token: String?, preferImmediatelyAvailableCredentials: Boolean, promise: Promise) {
     launch(promise) {
-      val response = it.signIn(action, token)
+      val response = it.signIn(action, token, preferImmediatelyAvailableCredentials)
 
       if (response.error != null) {
         val errorCode = response.errorCode ?: defaultError
@@ -94,7 +94,7 @@ class AuthsignalPasskeyModule(private val reactContext: ReactApplicationContext)
       authsignal?.let {
         fn(it)
       }  ?: run {
-        Log.w("init_error", "AuthsignalTOTPModule is not initialized.")
+        Log.w("init_error", "AuthsignalPasskeyModule is not initialized.")
 
         promise.resolve(null)
       }
