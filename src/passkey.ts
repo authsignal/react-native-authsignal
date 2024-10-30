@@ -103,7 +103,11 @@ export class AuthsignalPasskey {
 
         return { data };
       } else {
-        const data = await AuthsignalPasskeyModule.signIn(action, token);
+        const data = await AuthsignalPasskeyModule.signIn(
+          action,
+          token,
+          preferImmediatelyAvailableCredentials
+        );
 
         autofillRequestPending = false;
 
