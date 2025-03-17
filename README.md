@@ -1,4 +1,6 @@
-# react-native-authsignal
+<img width="1070" alt="Authsignal" src="https://raw.githubusercontent.com/authsignal/react-native-authsignal/main/.github/images/authsignal.png">
+
+# Authsignal React Native SDK
 
 Check out our [official React Native documentation](https://docs.authsignal.com/sdks/client/react-native).
 
