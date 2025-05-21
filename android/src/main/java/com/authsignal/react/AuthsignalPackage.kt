@@ -12,6 +12,7 @@ class AuthsignalPackage : ReactPackage {
       AuthsignalEmailModule(reactContext),
       AuthsignalPasskeyModule(reactContext),
       AuthsignalPushModule(reactContext),
+      AuthsignalDeviceModule(reactContext),
       AuthsignalSMSModule(reactContext),
       AuthsignalTOTPModule(reactContext)
     )
