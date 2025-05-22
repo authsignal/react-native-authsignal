@@ -59,3 +59,18 @@ export interface PushChallenge {
   deviceId?: string;
   ipAddress?: string;
 }
+
+export interface DeviceCredential {
+  credentialId: string;
+  createdAt: string;
+  lastAuthenticatedAt?: string;
+}
+
+export interface DeviceChallenge {
+  challengeId: string;
+  actionCode?: string;
+  idempotencyKey?: string;
+  userAgent?: string;
+  deviceId?: string;
+  ipAddress?: string;
+}
