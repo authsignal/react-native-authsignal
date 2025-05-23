@@ -55,6 +55,5 @@ To see how to add push authentication to your app using Authsignal, see our [off
 
 ### Passkeys
 
-You can check out [this Github repo](https://github.com/authsignal/react-native-passkey-example) to see an example app which implements a sign-in with passkey flow using the Authsignal React Native SDK.
+You can check out [this Github repo](https://github.com/authsignal/cognito-react-native-example) to see an example app which implements a sign-in with passkey flow using the Authsignal React Native SDK, Amazon Cognito and AWS SDK.
 
-To see an example app which demonstrates integration with AWS Cognito + Amplify, take a look at this [this branch](https://github.com/authsignal/react-native-passkey-example/tree/with-aws-cognito).
