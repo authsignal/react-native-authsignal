@@ -58,6 +58,7 @@
     "eslint": "^8.4.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "expo-module-scripts": "^4.1.7",
     "pod-install": "^0.1.0",
     "prettier": "^2.0.5",
     "react": "18.1.0",
@@ -115,5 +116,17 @@
         }
       ]
     ]
+  },
+  "expo-module": {
+    "android": {
+      "modulesClassNames": [
+        "com.authsignal.react.AuthsignalModule"
+      ]
+    },
+    "ios": {
+      "modules": [
+        "AuthsignalModule"
+      ]
+    }
   }
 }
