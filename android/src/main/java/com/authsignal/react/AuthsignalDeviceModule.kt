@@ -120,6 +120,33 @@ class AuthsignalDeviceModule(private val reactContext: ReactApplicationContext) 
   }
 
   @ReactMethod
+  fun claimChallenge(
+    challengeId: String,
+    promise: Promise
+  ) {
+    launch(promise) {
+      val response = it.claimChallenge(challengeId)
+
+      if (response.error != null) {
+        val errorCode = response.errorCode ?: defaultError
+
+        promise.reject(errorCode, response.error)
+      } else {
+        val data = response.data
+        if (data == null) {
+          promise.resolve(null)
+        } else {
+          val map = Arguments.createMap()
+          map.putBoolean("success", data.success)
+          data.userAgent?.let { map.putString("userAgent", it) }
+          data.ipAddress?.let { map.putString("ipAddress", it) }
+          promise.resolve(map)
+        }
+      }
+    }
+  }
+
+  @ReactMethod
   fun updateChallenge(
     challengeId: String,
     approved: Boolean,

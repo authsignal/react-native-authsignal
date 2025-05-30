@@ -124,6 +124,37 @@ class AuthsignalDeviceModule: NSObject {
     }
   }
 
+  @objc func claimChallenge(
+    _ challengeId: NSString,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock
+  ) -> Void {
+    guard let authsignal = authsignal else {
+      resolve(nil)
+      return
+    }
+    
+    let challenge = challengeId as String
+    
+    Task.init {
+      let response = await authsignal.claimChallenge(challengeId: challenge)
+      
+      if let error = response.error {
+        reject(response.errorCode ?? "unexpected_error", error, nil)
+      } else if let data = response.data {
+        let result: [String: String?] = [
+          "success": data.success,
+          "userAgent": data.userAgent,
+          "ipAddress": data.ipAddress,
+        ]
+        
+        resolve(result)
+      } else {
+        resolve(nil)
+      }
+    }
+  }
+
   @objc func updateChallenge(
     _ challengeId: NSString,
     withApproval approved: Bool,

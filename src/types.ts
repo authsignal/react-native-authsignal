@@ -74,3 +74,9 @@ export interface DeviceChallenge {
   deviceId?: string;
   ipAddress?: string;
 }
+
+export interface ClaimChallengeResponse {
+  success: boolean;
+  userAgent?: string;
+  ipAddress?: string;
+}
