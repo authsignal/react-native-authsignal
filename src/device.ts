@@ -2,6 +2,7 @@ import { NativeModules } from 'react-native';
 import { handleErrorCodes, LINKING_ERROR } from './error';
 import type {
   AuthsignalResponse,
+  ClaimChallengeResponse,
   DeviceChallenge,
   DeviceCredential,
 } from './types';
@@ -27,6 +28,10 @@ const AuthsignalDeviceModule = NativeModules.AuthsignalDeviceModule
 
 interface AddCredentialInput {
   token?: string;
+}
+
+interface ClaimChallengeInput {
+  challengeId: string;
 }
 
 interface UpdateChallengeInput {
@@ -102,6 +107,24 @@ export class AuthsignalDevice {
 
     try {
       const data = await AuthsignalDeviceModule.getChallenge();
+
+      return { data };
+    } catch (ex) {
+      if (this.enableLogging) {
+        console.log(ex);
+      }
+
+      return handleErrorCodes(ex);
+    }
+  }
+
+  async claimChallenge({
+    challengeId,
+  }: ClaimChallengeInput): Promise<AuthsignalResponse<ClaimChallengeResponse>> {
+    await this.ensureModuleIsInitialized();
+
+    try {
+      const data = await AuthsignalDeviceModule.claimChallenge(challengeId);
 
       return { data };
     } catch (ex) {
