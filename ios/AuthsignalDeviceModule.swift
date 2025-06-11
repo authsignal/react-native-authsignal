@@ -142,7 +142,7 @@ class AuthsignalDeviceModule: NSObject {
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
       } else if let data = response.data {
-        let result: [String: String?] = [
+        let result: [String: Any?] = [
           "success": data.success,
           "userAgent": data.userAgent,
           "ipAddress": data.ipAddress,
