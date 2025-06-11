@@ -80,3 +80,10 @@ export interface ClaimChallengeResponse {
   userAgent?: string;
   ipAddress?: string;
 }
+
+export interface VerifyDeviceResponse {
+  token: string;
+  userId: string;
+  userAuthenticatorId: string;
+  username?: string;
+}

@@ -5,6 +5,7 @@ import type {
   ClaimChallengeResponse,
   DeviceChallenge,
   DeviceCredential,
+  VerifyDeviceResponse,
 } from './types';
 
 interface ConstructorArgs {
@@ -149,6 +150,22 @@ export class AuthsignalDevice {
         approved,
         verificationCode
       );
+
+      return { data };
+    } catch (ex) {
+      if (this.enableLogging) {
+        console.log(ex);
+      }
+
+      return handleErrorCodes(ex);
+    }
+  }
+
+  async verify(): Promise<AuthsignalResponse<VerifyDeviceResponse>> {
+    await this.ensureModuleIsInitialized();
+
+    try {
+      const data = await AuthsignalDeviceModule.verify();
 
       return { data };
     } catch (ex) {

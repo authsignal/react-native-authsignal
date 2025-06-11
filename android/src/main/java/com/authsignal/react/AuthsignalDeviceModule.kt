@@ -166,6 +166,27 @@ class AuthsignalDeviceModule(private val reactContext: ReactApplicationContext) 
     }
   }
 
+  @ReactMethod
+  fun verify(promise: Promise) {
+    launch(promise) {
+      val response = it.verify()
+
+      if (response.error != null) {
+        val errorCode = response.errorCode ?: defaultError
+
+        promise.reject(errorCode, response.error)
+      } else {
+        val data = response.data!!
+        val map = Arguments.createMap()
+        map.putString("token", data.token)
+        map.putString("userId", data.userId)
+        map.putString("userAuthenticatorId", data.userAuthenticatorId)
+        map.putString("username", data.username)
+        promise.resolve(map)
+      }
+    }
+  }
+
   private fun launch(promise: Promise, fn: suspend (client: AuthsignalDevice) -> Unit) {
     coroutineScope.launch {
       authsignal?.let {
