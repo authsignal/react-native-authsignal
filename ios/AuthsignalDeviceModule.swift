@@ -185,4 +185,33 @@ class AuthsignalDeviceModule: NSObject {
       }
     }
   }
+
+  @objc func verify(
+    _ resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock
+  ) -> Void {
+    guard let authsignal = authsignal else {
+      resolve(nil)
+      return
+    }
+    
+    Task.init {
+      let response = await authsignal.verify()
+      
+      if let error = response.error {
+        reject(response.errorCode ?? "unexpected_error", error, nil)
+      } else if let data = response.data {
+        let result: [String: String?] = [
+          "token": data.token,
+          "userId": data.userId,
+          "userAuthenticatorId": data.userAuthenticatorId,
+          "username": data.username,
+        ]
+        
+        resolve(result)
+      } else {
+        resolve(nil)
+      }
+    }
+  }
 }
