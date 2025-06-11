@@ -2,7 +2,7 @@ name: Release the Authsignal React Native package
 
 on:
   release:
-    types: [created]
+    types: [published]
 
 jobs:
   publish:
