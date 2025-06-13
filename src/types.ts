@@ -87,3 +87,11 @@ export interface VerifyDeviceResponse {
   userAuthenticatorId: string;
   username?: string;
 }
+
+export enum KeychainAccess {
+  afterFirstUnlock = 'afterFirstUnlock',
+  afterFirstUnlockThisDeviceOnly = 'afterFirstUnlockThisDeviceOnly',
+  whenUnlocked = 'whenUnlocked',
+  whenUnlockedThisDeviceOnly = 'whenUnlockedThisDeviceOnly',
+  whenPasscodeSetThisDeviceOnly = 'whenPasscodeSetThisDeviceOnly',
+}
