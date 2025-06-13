@@ -12,6 +12,7 @@ RCT_EXTERN_METHOD(getCredential:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(addCredential:(NSString)token
+                  withKeychainAccess:(NSString)keychainAccess
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 

@@ -51,6 +51,7 @@ class AuthsignalPushModule: NSObject {
 
   @objc func addCredential(
     _ token: NSString?,
+    withKeychainAccess keychainAccess: NSString,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -60,7 +61,8 @@ class AuthsignalPushModule: NSObject {
     }
     
     let tokenStr = token as String?
-    let keychainAccess: KeychainAccess = .whenUnlockedThisDeviceOnly
+    
+    let keychainAccess = getKeychainAccess(value: keychainAccess as String?)
     
     Task.init {
       let response = await authsignal.addCredential(token: tokenStr, keychainAccess: keychainAccess)
@@ -152,6 +154,28 @@ class AuthsignalPushModule: NSObject {
       } else {
         resolve(response.data)
       }
+    }
+  }
+  
+  func getKeychainAccess(value: String?) -> KeychainAccess {
+    switch value {
+    case "afterFirstUnlock":
+      return .afterFirstUnlock
+      
+    case "afterFirstUnlockThisDeviceOnly":
+      return .afterFirstUnlockThisDeviceOnly
+        
+    case "whenUnlocked":
+      return .whenUnlocked
+        
+    case "whenUnlockedThisDeviceOnly":
+      return .whenUnlockedThisDeviceOnly
+        
+    case "afterFirstUnlock":
+      return .whenPasscodeSetThisDeviceOnly
+      
+    default:
+      return .whenUnlockedThisDeviceOnly
     }
   }
 }
