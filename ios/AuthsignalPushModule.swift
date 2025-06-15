@@ -51,6 +51,7 @@ class AuthsignalPushModule: NSObject {
 
   @objc func addCredential(
     _ token: NSString?,
+    withRequireUserAuthentication requireUserAuthentication: Bool,
     withKeychainAccess keychainAccess: NSString,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
@@ -61,11 +62,15 @@ class AuthsignalPushModule: NSObject {
     }
     
     let tokenStr = token as String?
-    
+    let requireAuthentication = requireUserAuthentication as Bool
     let keychainAccess = getKeychainAccess(value: keychainAccess as String?)
     
     Task.init {
-      let response = await authsignal.addCredential(token: tokenStr, keychainAccess: keychainAccess)
+      let response = await authsignal.addCredential(
+        token: tokenStr,
+        keychainAccess: keychainAccess,
+        userPresenceRequired: requireAuthentication
+      )
       
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
