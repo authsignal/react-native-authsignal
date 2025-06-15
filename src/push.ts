@@ -28,6 +28,7 @@ const AuthsignalPushModule = NativeModules.AuthsignalPushModule
 
 interface AddCredentialInput {
   token?: string;
+  requireUserAuthentication?: boolean;
   keychainAccess?: KeychainAccess;
 }
 
@@ -66,6 +67,7 @@ export class AuthsignalPush {
 
   async addCredential({
     token,
+    requireUserAuthentication = false,
     keychainAccess,
   }: AddCredentialInput = {}): Promise<AuthsignalResponse<boolean>> {
     await this.ensureModuleIsInitialized();
@@ -73,7 +75,11 @@ export class AuthsignalPush {
     try {
       const data =
         Platform.OS === 'ios'
-          ? await AuthsignalPushModule.addCredential(token, keychainAccess)
+          ? await AuthsignalPushModule.addCredential(
+              token,
+              requireUserAuthentication,
+              keychainAccess
+            )
           : await AuthsignalPushModule.addCredential(token);
 
       return { data };
