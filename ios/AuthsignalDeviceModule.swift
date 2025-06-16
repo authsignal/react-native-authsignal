@@ -246,7 +246,7 @@ class AuthsignalDeviceModule: NSObject {
     case "whenUnlockedThisDeviceOnly":
       return .whenUnlockedThisDeviceOnly
         
-    case "afterFirstUnlock":
+    case "whenPasscodeSetThisDeviceOnly":
       return .whenPasscodeSetThisDeviceOnly
       
     default:
