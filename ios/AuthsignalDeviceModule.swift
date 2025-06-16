@@ -63,14 +63,14 @@ class AuthsignalDeviceModule: NSObject {
     }
     
     let tokenStr = token as String?
-    let requireAuthentication = requireUserAuthentication as Bool
+    let userPresenceRequired = requireUserAuthentication as Bool
     let keychainAccess = getKeychainAccess(value: keychainAccess as String?)
     
     Task.init {
       let response = await authsignal.addCredential(
         token: tokenStr,
         keychainAccess: keychainAccess,
-        userPresenceRequired: requireAuthentication
+        userPresenceRequired: userPresenceRequired
       )
       
       if let error = response.error {
