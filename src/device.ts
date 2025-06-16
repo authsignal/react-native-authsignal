@@ -1,10 +1,11 @@
-import { NativeModules } from 'react-native';
+import { NativeModules, Platform } from 'react-native';
 import { handleErrorCodes, LINKING_ERROR } from './error';
 import type {
   AuthsignalResponse,
   ClaimChallengeResponse,
   DeviceChallenge,
   DeviceCredential,
+  KeychainAccess,
   VerifyDeviceResponse,
 } from './types';
 
@@ -29,6 +30,8 @@ const AuthsignalDeviceModule = NativeModules.AuthsignalDeviceModule
 
 interface AddCredentialInput {
   token?: string;
+  requireUserAuthentication?: boolean;
+  keychainAccess?: KeychainAccess;
 }
 
 interface ClaimChallengeInput {
@@ -68,13 +71,22 @@ export class AuthsignalDevice {
     }
   }
 
-  async addCredential({ token }: AddCredentialInput = {}): Promise<
-    AuthsignalResponse<boolean>
-  > {
+  async addCredential({
+    token,
+    requireUserAuthentication = false,
+    keychainAccess,
+  }: AddCredentialInput = {}): Promise<AuthsignalResponse<DeviceCredential>> {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalDeviceModule.addCredential(token);
+      const data =
+        Platform.OS === 'ios'
+          ? await AuthsignalDeviceModule.addCredential(
+              token,
+              requireUserAuthentication,
+              keychainAccess
+            )
+          : await AuthsignalDeviceModule.addCredential(token);
 
       return { data };
     } catch (ex) {

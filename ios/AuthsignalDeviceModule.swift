@@ -39,6 +39,7 @@ class AuthsignalDeviceModule: NSObject {
         let credential: [String: String?] = [
           "credentialId": data.credentialId,
           "createdAt": data.createdAt,
+          "userId": data.userId,
           "lastAuthenticatedAt": data.lastAuthenticatedAt,
         ]
         
@@ -51,6 +52,8 @@ class AuthsignalDeviceModule: NSObject {
 
   @objc func addCredential(
     _ token: NSString?,
+    withRequireUserAuthentication requireUserAuthentication: Bool,
+    withKeychainAccess keychainAccess: NSString,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -60,15 +63,29 @@ class AuthsignalDeviceModule: NSObject {
     }
     
     let tokenStr = token as String?
-    let keychainAccess: KeychainAccess = .whenUnlockedThisDeviceOnly
+    let requireAuthentication = requireUserAuthentication as Bool
+    let keychainAccess = getKeychainAccess(value: keychainAccess as String?)
     
     Task.init {
-      let response = await authsignal.addCredential(token: tokenStr, keychainAccess: keychainAccess)
+      let response = await authsignal.addCredential(
+        token: tokenStr,
+        keychainAccess: keychainAccess,
+        userPresenceRequired: requireAuthentication
+      )
       
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
+      } else if let data = response.data {
+        let credential: [String: String?] = [
+          "credentialId": data.credentialId,
+          "createdAt": data.createdAt,
+          "userId": data.userId,
+          "lastAuthenticatedAt": data.lastAuthenticatedAt,
+        ]
+        
+        resolve(credential)
       } else {
-        resolve(response.data)
+        resolve(nil)
       }
     }
   }

@@ -63,6 +63,7 @@ export interface PushChallenge {
 export interface DeviceCredential {
   credentialId: string;
   createdAt: string;
+  userId: string;
   lastAuthenticatedAt?: string;
 }
 

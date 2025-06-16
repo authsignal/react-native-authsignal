@@ -52,6 +52,7 @@ class AuthsignalDeviceModule(private val reactContext: ReactApplicationContext) 
         val map = Arguments.createMap()
         map.putString("credentialId", credential!!.credentialId)
         map.putString("createdAt", credential.createdAt)
+        map.putString("userId", credential.userId)
         map.putString("lastAuthenticatedAt", credential.lastAuthenticatedAt)
         promise.resolve(map)
       }
@@ -71,7 +72,13 @@ class AuthsignalDeviceModule(private val reactContext: ReactApplicationContext) 
 
         promise.reject(errorCode, response.error)
       } else {
-        promise.resolve(response.data)
+        val credential = response.data
+        val map = Arguments.createMap()
+        map.putString("credentialId", credential!!.credentialId)
+        map.putString("createdAt", credential.createdAt)
+        map.putString("userId", credential.userId)
+        map.putString("lastAuthenticatedAt", credential.lastAuthenticatedAt)
+        promise.resolve(map)
       }
     }
   }
