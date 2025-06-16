@@ -231,4 +231,26 @@ class AuthsignalDeviceModule: NSObject {
       }
     }
   }
+
+  func getKeychainAccess(value: String?) -> KeychainAccess {
+    switch value {
+    case "afterFirstUnlock":
+      return .afterFirstUnlock
+      
+    case "afterFirstUnlockThisDeviceOnly":
+      return .afterFirstUnlockThisDeviceOnly
+        
+    case "whenUnlocked":
+      return .whenUnlocked
+        
+    case "whenUnlockedThisDeviceOnly":
+      return .whenUnlockedThisDeviceOnly
+        
+    case "afterFirstUnlock":
+      return .whenPasscodeSetThisDeviceOnly
+      
+    default:
+      return .whenUnlockedThisDeviceOnly
+    }
+  }
 }
