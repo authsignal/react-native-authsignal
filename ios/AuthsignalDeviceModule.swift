@@ -39,6 +39,7 @@ class AuthsignalDeviceModule: NSObject {
         let credential: [String: String?] = [
           "credentialId": data.credentialId,
           "createdAt": data.createdAt,
+          "userId": data.userId,
           "lastAuthenticatedAt": data.lastAuthenticatedAt,
         ]
         
@@ -51,6 +52,8 @@ class AuthsignalDeviceModule: NSObject {
 
   @objc func addCredential(
     _ token: NSString?,
+    withRequireUserAuthentication requireUserAuthentication: Bool,
+    withKeychainAccess keychainAccess: NSString,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -60,15 +63,29 @@ class AuthsignalDeviceModule: NSObject {
     }
     
     let tokenStr = token as String?
-    let keychainAccess: KeychainAccess = .whenUnlockedThisDeviceOnly
+    let userPresenceRequired = requireUserAuthentication as Bool
+    let keychainAccess = getKeychainAccess(value: keychainAccess as String?)
     
     Task.init {
-      let response = await authsignal.addCredential(token: tokenStr, keychainAccess: keychainAccess)
+      let response = await authsignal.addCredential(
+        token: tokenStr,
+        keychainAccess: keychainAccess,
+        userPresenceRequired: userPresenceRequired
+      )
       
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
+      } else if let data = response.data {
+        let credential: [String: String?] = [
+          "credentialId": data.credentialId,
+          "createdAt": data.createdAt,
+          "userId": data.userId,
+          "lastAuthenticatedAt": data.lastAuthenticatedAt,
+        ]
+        
+        resolve(credential)
       } else {
-        resolve(response.data)
+        resolve(nil)
       }
     }
   }
@@ -212,6 +229,28 @@ class AuthsignalDeviceModule: NSObject {
       } else {
         resolve(nil)
       }
+    }
+  }
+
+  func getKeychainAccess(value: String?) -> KeychainAccess {
+    switch value {
+    case "afterFirstUnlock":
+      return .afterFirstUnlock
+      
+    case "afterFirstUnlockThisDeviceOnly":
+      return .afterFirstUnlockThisDeviceOnly
+        
+    case "whenUnlocked":
+      return .whenUnlocked
+        
+    case "whenUnlockedThisDeviceOnly":
+      return .whenUnlockedThisDeviceOnly
+        
+    case "whenPasscodeSetThisDeviceOnly":
+      return .whenPasscodeSetThisDeviceOnly
+      
+    default:
+      return .whenUnlockedThisDeviceOnly
     }
   }
 }
