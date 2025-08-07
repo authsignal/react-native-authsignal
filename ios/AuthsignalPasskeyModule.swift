@@ -13,10 +13,11 @@ class AuthsignalPasskeyModule: NSObject {
   @objc func initialize(
     _ tenantID: NSString,
     withBaseURL baseURL: NSString,
+    withDeviceID deviceID: NSString?,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
-    self.authsignal = AuthsignalPasskey(tenantID: tenantID as String, baseURL: baseURL as String)
+    self.authsignal = AuthsignalPasskey(tenantID: tenantID as String, baseURL: baseURL as String, deviceID: deviceID as String?)
     
     resolve(nil)
   }

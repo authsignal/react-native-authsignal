@@ -5,6 +5,7 @@
 
 RCT_EXTERN_METHOD(initialize:(NSString)tenantID
                   withBaseURL:(NSString)baseURL
+                  withDeviceID:(NSString)deviceID
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
