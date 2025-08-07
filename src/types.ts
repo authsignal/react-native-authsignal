@@ -96,3 +96,14 @@ export enum KeychainAccess {
   whenUnlockedThisDeviceOnly = 'whenUnlockedThisDeviceOnly',
   whenPasscodeSetThisDeviceOnly = 'whenPasscodeSetThisDeviceOnly',
 }
+
+export enum UserActionState {
+  ALLOW = 'ALLOW',
+  BLOCK = 'BLOCK',
+  CHALLENGE_REQUIRED = 'CHALLENGE_REQUIRED',
+  CHALLENGE_SUCCEEDED = 'CHALLENGE_SUCCEEDED',
+  CHALLENGE_FAILED = 'CHALLENGE_FAILED',
+  REVIEW_REQUIRED = 'REVIEW_REQUIRED',
+  REVIEW_SUCCEEDED = 'REVIEW_SUCCEEDED',
+  REVIEW_FAILED = 'REVIEW_FAILED',
+}
