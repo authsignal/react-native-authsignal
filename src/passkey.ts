@@ -9,6 +9,7 @@ import type {
 interface ConstructorArgs {
   tenantID: string;
   baseURL: string;
+  deviceID?: string;
   enableLogging: boolean;
 }
 
@@ -42,11 +43,13 @@ const AuthsignalPasskeyModule = NativeModules.AuthsignalPasskeyModule
 export class AuthsignalPasskey {
   tenantID: string;
   baseURL: string;
+  deviceID?: string;
   enableLogging: boolean;
 
-  constructor({ tenantID, baseURL, enableLogging }: ConstructorArgs) {
+  constructor({ tenantID, baseURL, deviceID, enableLogging }: ConstructorArgs) {
     this.tenantID = tenantID;
     this.baseURL = baseURL;
+    this.deviceID = deviceID;
     this.enableLogging = enableLogging;
   }
 
@@ -141,7 +144,11 @@ export class AuthsignalPasskey {
       return;
     }
 
-    await AuthsignalPasskeyModule.initialize(this.tenantID, this.baseURL);
+    await AuthsignalPasskeyModule.initialize(
+      this.tenantID,
+      this.baseURL,
+      this.deviceID
+    );
 
     initialized = true;
   }

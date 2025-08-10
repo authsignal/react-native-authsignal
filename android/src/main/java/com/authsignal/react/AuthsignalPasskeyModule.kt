@@ -29,11 +29,11 @@ class AuthsignalPasskeyModule(private val reactContext: ReactApplicationContext)
   }
 
   @ReactMethod
-  fun initialize(tenantID: String, baseURL: String, promise: Promise) {
+  fun initialize(tenantID: String, baseURL: String, deviceID: String?, promise: Promise) {
     val activity = reactContext.currentActivity
 
     if (activity != null) {
-      authsignal = AuthsignalPasskey(tenantID, baseURL, activity)
+      authsignal = AuthsignalPasskey(tenantID, baseURL, activity, deviceID)
     }
 
     promise.resolve(null)

@@ -24,6 +24,7 @@ const AuthsignalModule = NativeModules.AuthsignalModule
 interface ConstructorArgs {
   tenantID: string;
   baseURL?: string;
+  deviceID?: string;
   enableLogging?: boolean;
 }
 
@@ -42,14 +43,21 @@ export class Authsignal {
   constructor({
     tenantID,
     baseURL = 'https://api.authsignal.com/v1',
+    deviceID,
     enableLogging = __DEV__,
   }: ConstructorArgs) {
     this.tenantID = tenantID;
     this.baseURL = baseURL;
     this.enableLogging = enableLogging;
 
+    this.passkey = new AuthsignalPasskey({
+      tenantID,
+      baseURL,
+      deviceID,
+      enableLogging,
+    });
+
     this.email = new AuthsignalEmail({ tenantID, baseURL, enableLogging });
-    this.passkey = new AuthsignalPasskey({ tenantID, baseURL, enableLogging });
     this.push = new AuthsignalPush({ tenantID, baseURL, enableLogging });
     this.device = new AuthsignalDevice({ tenantID, baseURL, enableLogging });
     this.sms = new AuthsignalSms({ tenantID, baseURL, enableLogging });
