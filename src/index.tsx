@@ -6,6 +6,7 @@ import { AuthsignalPush } from './push';
 import { AuthsignalSms } from './sms';
 import { AuthsignalTotp } from './totp';
 import { AuthsignalDevice } from './device';
+import { AuthsignalWhatsapp } from './whatsapp';
 
 export * from './types';
 export { ErrorCode } from './error';
@@ -39,6 +40,7 @@ export class Authsignal {
   device: AuthsignalDevice;
   sms: AuthsignalSms;
   totp: AuthsignalTotp;
+  whatsapp: AuthsignalWhatsapp;
 
   constructor({
     tenantID,
@@ -62,6 +64,11 @@ export class Authsignal {
     this.device = new AuthsignalDevice({ tenantID, baseURL, enableLogging });
     this.sms = new AuthsignalSms({ tenantID, baseURL, enableLogging });
     this.totp = new AuthsignalTotp({ tenantID, baseURL, enableLogging });
+    this.whatsapp = new AuthsignalWhatsapp({
+      tenantID,
+      baseURL,
+      enableLogging,
+    });
   }
 
   async setToken(token: string): Promise<void> {
