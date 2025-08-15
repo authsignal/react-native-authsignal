@@ -4,7 +4,7 @@ import Authsignal
 
 @objc(AuthsignalWhatsappModule)
 class AuthsignalWhatsappModule: NSObject {
-  var authsignal: AuthsignalWhatsapp?
+  var authsignal: AuthsignalWhatsApp?
   
   @objc static func requiresMainQueueSetup() -> Bool {
     return true
@@ -16,7 +16,7 @@ class AuthsignalWhatsappModule: NSObject {
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
-    self.authsignal = AuthsignalWhatsapp(tenantID: tenantID as String, baseURL: baseURL as String)
+    self.authsignal = AuthsignalWhatsApp(tenantID: tenantID as String, baseURL: baseURL as String)
     
     resolve(nil)
   }
