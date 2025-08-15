@@ -35,6 +35,8 @@
 		D8EC5CD72A4D1EE90085B442 /* Authsignal-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Authsignal-Bridging-Header.h"; sourceTree = "<group>"; };
 		DDDCE5EE2DDD8E5B0095B3F2 /* AuthsignalDeviceModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuthsignalDeviceModule.m; sourceTree = "<group>"; };
 		DDDCE5EF2DDD8E5B0095B3F2 /* AuthsignalDeviceModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthsignalDeviceModule.swift; sourceTree = "<group>"; };
+		DDDD1001AAAA1111BBBB2222 /* AuthsignalWhatsappModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuthsignalWhatsappModule.m; sourceTree = "<group>"; };
+		DDDD1002AAAA1111BBBB2222 /* AuthsignalWhatsappModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthsignalWhatsappModule.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +76,8 @@
 				D8EC5CD42A4D1EE00085B442 /* AuthsignalPushModule.swift */,
 				DDDCE5EE2DDD8E5B0095B3F2 /* AuthsignalDeviceModule.m */,
 				DDDCE5EF2DDD8E5B0095B3F2 /* AuthsignalDeviceModule.swift */,
+				DDDD1001AAAA1111BBBB2222 /* AuthsignalWhatsappModule.m */,
+				DDDD1002AAAA1111BBBB2222 /* AuthsignalWhatsappModule.swift */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			sourceTree = "<group>";
