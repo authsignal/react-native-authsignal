@@ -5,7 +5,7 @@ import com.authsignal.models.AuthsignalResponse
 import com.authsignal.models.ChallengeResponse
 import com.authsignal.models.EnrollResponse
 import com.authsignal.models.VerifyResponse
-import com.authsignal.whatsapp.AuthsignalWhatsapp
+import com.authsignal.whatsapp.AuthsignalWhatsApp
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
@@ -22,7 +22,7 @@ class AuthsignalWhatsappModule(private val reactContext: ReactApplicationContext
     reactContext
   ) {
   private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
-  private var authsignal: AuthsignalWhatsapp? = null
+  private var authsignal: AuthsignalWhatsApp? = null
   private val defaultError = "unexpected_error"
 
   override fun getConstants(): Map<String, Any>? {
@@ -40,7 +40,7 @@ class AuthsignalWhatsappModule(private val reactContext: ReactApplicationContext
     val currentActivity = reactContext.currentActivity
 
     if (currentActivity != null) {
-      authsignal = AuthsignalWhatsapp(tenantID, baseURL)
+      authsignal = AuthsignalWhatsApp(tenantID, baseURL)
     }
 
     promise.resolve(null)
@@ -84,7 +84,7 @@ class AuthsignalWhatsappModule(private val reactContext: ReactApplicationContext
     }
   }
 
-  private fun launch(promise: Promise, fn: suspend (client: AuthsignalWhatsapp) -> Unit) {
+  private fun launch(promise: Promise, fn: suspend (client: AuthsignalWhatsApp) -> Unit) {
     coroutineScope.launch {
       authsignal?.let {
         fn(it)
