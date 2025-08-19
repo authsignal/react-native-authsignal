@@ -133,6 +133,19 @@ export class AuthsignalPasskey {
     }
   }
 
+  isSupported(): boolean {
+    if (Platform.OS === 'android') {
+      return Platform.Version >= 28;
+    } else if (Platform.OS === 'ios') {
+      return parseInt(Platform.Version, 10) >= 15;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * @deprecated Use 'preferImmediatelyAvailableCredentials' to control what happens when a passkey isn't available.
+   */
   async isAvailableOnDevice(): Promise<boolean> {
     await this.ensureModuleIsInitialized();
 
