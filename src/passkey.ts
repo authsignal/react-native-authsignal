@@ -143,6 +143,12 @@ export class AuthsignalPasskey {
     }
   }
 
+  async shouldPromptToCreatePasskey(): Promise<boolean> {
+    await this.ensureModuleIsInitialized();
+
+    return await AuthsignalPasskeyModule.shouldPromptToCreatePasskey();
+  }
+
   /**
    * @deprecated Use 'preferImmediatelyAvailableCredentials' to control what happens when a passkey isn't available.
    */
