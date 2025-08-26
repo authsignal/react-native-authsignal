@@ -12,6 +12,7 @@ RCT_EXTERN_METHOD(initialize:(NSString)tenantID
 RCT_EXTERN_METHOD(signUp:(NSString)token
                   withUsername:(NSString)username
                   withDisplayName:(NSString)displayName
+                  withIgnorePasskeyAlreadyExistsError:(BOOL)ignorePasskeyAlreadyExistsError
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 

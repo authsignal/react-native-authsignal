@@ -26,6 +26,7 @@ class AuthsignalPasskeyModule: NSObject {
     _ token: NSString?,
     withUsername username: NSString?,
     withDisplayName displayName: NSString?,
+    withIgnorePasskeyAlreadyExistsError ignorePasskeyAlreadyExistsError: Bool,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -39,8 +40,13 @@ class AuthsignalPasskeyModule: NSObject {
     let displayNameStr = displayName as String?
     
     Task.init {
-      let response = await authsignal!.signUp(token: tokenStr, username: usernameStr, displayName: displayNameStr)
-      
+      let response = await authsignal!.signUp(
+        token: tokenStr,
+        username: usernameStr,
+        displayName: displayNameStr,
+        ignorePasskeyAlreadyExistsError: ignorePasskeyAlreadyExistsError
+      )
+
       if (response.error != nil) {
         reject(response.errorCode ?? "unexpected_error", response.error, nil)
       } else {

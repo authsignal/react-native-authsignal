@@ -40,9 +40,9 @@ class AuthsignalPasskeyModule(private val reactContext: ReactApplicationContext)
   }
 
   @ReactMethod
-  fun signUp(token: String?, username: String?, displayName: String?, promise: Promise) {
+  fun signUp(token: String?, username: String?, displayName: String?, ignorePasskeyAlreadyExistsError: Boolean, promise: Promise) {
     launch(promise) {
-      val response = it.signUp(token, username, displayName)
+      val response = it.signUp(token, username, displayName, false, ignorePasskeyAlreadyExistsError)
 
       if (response.error != null) {
         val errorCode = response.errorCode ?: defaultError
