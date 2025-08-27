@@ -48,10 +48,13 @@ class AuthsignalPasskeyModule(private val reactContext: ReactApplicationContext)
         val errorCode = response.errorCode ?: defaultError
 
         promise.reject(errorCode, response.error)
-      } else {
+      } else if (response.data != null) {
         val signUpResponse = response.data
         val map = Arguments.createMap()
         map.putString("token", signUpResponse!!.token)
+        promise.resolve(map)
+      } else {
+        val map = Arguments.createMap()
         promise.resolve(map)
       }
     }
