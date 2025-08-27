@@ -17,6 +17,7 @@ interface PasskeySignUpInput {
   token?: string;
   username?: string;
   displayName?: string;
+  ignorePasskeyAlreadyExistsError?: boolean;
 }
 
 interface PasskeySignInInput {
@@ -57,6 +58,7 @@ export class AuthsignalPasskey {
     token,
     username,
     displayName,
+    ignorePasskeyAlreadyExistsError = false,
   }: PasskeySignUpInput = {}): Promise<AuthsignalResponse<SignUpResponse>> {
     await this.ensureModuleIsInitialized();
 
@@ -64,7 +66,8 @@ export class AuthsignalPasskey {
       const data = await AuthsignalPasskeyModule.signUp(
         token,
         username,
-        displayName
+        displayName,
+        ignorePasskeyAlreadyExistsError
       );
 
       return { data };
@@ -141,6 +144,12 @@ export class AuthsignalPasskey {
     } else {
       return false;
     }
+  }
+
+  async shouldPromptToCreatePasskey(): Promise<boolean> {
+    await this.ensureModuleIsInitialized();
+
+    return await AuthsignalPasskeyModule.shouldPromptToCreatePasskey();
   }
 
   /**
