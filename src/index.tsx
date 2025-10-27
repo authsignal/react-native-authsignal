@@ -5,8 +5,9 @@ import { AuthsignalPasskey } from './passkey';
 import { AuthsignalPush } from './push';
 import { AuthsignalSms } from './sms';
 import { AuthsignalTotp } from './totp';
-import { AuthsignalDevice } from './device';
+import { AuthsignalQrCode } from './qr';
 import { AuthsignalWhatsapp } from './whatsapp';
+import { AuthsignalInApp } from './inapp';
 
 export * from './types';
 export { ErrorCode } from './error';
@@ -37,7 +38,8 @@ export class Authsignal {
   email: AuthsignalEmail;
   passkey: AuthsignalPasskey;
   push: AuthsignalPush;
-  device: AuthsignalDevice;
+  qr: AuthsignalQrCode;
+  inapp: AuthsignalInApp;
   sms: AuthsignalSms;
   totp: AuthsignalTotp;
   whatsapp: AuthsignalWhatsapp;
@@ -52,23 +54,16 @@ export class Authsignal {
     this.baseURL = baseURL;
     this.enableLogging = enableLogging;
 
-    this.passkey = new AuthsignalPasskey({
-      tenantID,
-      baseURL,
-      deviceID,
-      enableLogging,
-    });
+    const input = { tenantID, baseURL, deviceID, enableLogging };
 
-    this.email = new AuthsignalEmail({ tenantID, baseURL, enableLogging });
-    this.push = new AuthsignalPush({ tenantID, baseURL, enableLogging });
-    this.device = new AuthsignalDevice({ tenantID, baseURL, enableLogging });
-    this.sms = new AuthsignalSms({ tenantID, baseURL, enableLogging });
-    this.totp = new AuthsignalTotp({ tenantID, baseURL, enableLogging });
-    this.whatsapp = new AuthsignalWhatsapp({
-      tenantID,
-      baseURL,
-      enableLogging,
-    });
+    this.passkey = new AuthsignalPasskey(input);
+    this.email = new AuthsignalEmail(input);
+    this.push = new AuthsignalPush(input);
+    this.qr = new AuthsignalQrCode(input);
+    this.inapp = new AuthsignalInApp(input);
+    this.sms = new AuthsignalSms(input);
+    this.totp = new AuthsignalTotp(input);
+    this.whatsapp = new AuthsignalWhatsapp(input);
   }
 
   async setToken(token: string): Promise<void> {

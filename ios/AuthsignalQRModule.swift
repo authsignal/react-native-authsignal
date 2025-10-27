@@ -2,9 +2,9 @@ import Security
 import Foundation
 import Authsignal
 
-@objc(AuthsignalPushModule)
-class AuthsignalPushModule: NSObject {
-  var authsignal: AuthsignalPush?
+@objc(AuthsignalQRCodeModule)
+class AuthsignalQRCodeModule: NSObject {
+  var authsignal: AuthsignalQRCode?
   
   @objc static func requiresMainQueueSetup() -> Bool {
     return true
@@ -16,7 +16,7 @@ class AuthsignalPushModule: NSObject {
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
-    self.authsignal = AuthsignalPush(tenantID: tenantID as String, baseURL: baseURL as String)
+    self.authsignal = AuthsignalQRCode(tenantID: tenantID as String, baseURL: baseURL as String)
     
     resolve(nil)
   }
@@ -63,20 +63,20 @@ class AuthsignalPushModule: NSObject {
     }
     
     let tokenStr = token as String?
-    let requireAuthentication = requireUserAuthentication as Bool
+    let userPresenceRequired = requireUserAuthentication as Bool
     let keychainAccess = getKeychainAccess(value: keychainAccess as String?)
     
     Task.init {
       let response = await authsignal.addCredential(
         token: tokenStr,
         keychainAccess: keychainAccess,
-        userPresenceRequired: requireAuthentication
+        userPresenceRequired: userPresenceRequired
       )
       
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
-      } else {
-         let credential: [String: String?] = [
+      } else if let data = response.data {
+        let credential: [String: String?] = [
           "credentialId": data.credentialId,
           "createdAt": data.createdAt,
           "userId": data.userId,
@@ -84,6 +84,8 @@ class AuthsignalPushModule: NSObject {
         ]
         
         resolve(credential)
+      } else {
+        resolve(nil)
       }
     }
   }
@@ -108,8 +110,9 @@ class AuthsignalPushModule: NSObject {
     }
   }
 
-  @objc func getChallenge(
-    _ resolve: @escaping RCTPromiseResolveBlock,
+  @objc func claimChallenge(
+    _ challengeId: NSString,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     guard let authsignal = authsignal else {
@@ -117,22 +120,21 @@ class AuthsignalPushModule: NSObject {
       return
     }
     
+    let challenge = challengeId as String
+    
     Task.init {
-      let response = await authsignal.getChallenge()
+      let response = await authsignal.claimChallenge(challengeId: challenge)
       
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
-      } else if let data = response.data as? PushChallenge {
-        let challenge: [String: String?] = [
-          "challengeId": data.challengeId,
-          "actionCode": data.actionCode,
-          "idempotencyKey": data.idempotencyKey,
+      } else if let data = response.data {
+        let result: [String: Any?] = [
+          "success": data.success,
           "userAgent": data.userAgent,
-          "deviceId": data.deviceId,
           "ipAddress": data.ipAddress,
         ]
         
-        resolve(challenge)
+        resolve(result)
       } else {
         resolve(nil)
       }
@@ -169,7 +171,7 @@ class AuthsignalPushModule: NSObject {
       }
     }
   }
-  
+
   func getKeychainAccess(value: String?) -> KeychainAccess {
     switch value {
     case "afterFirstUnlock":

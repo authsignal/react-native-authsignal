@@ -1,11 +1,10 @@
 import { NativeModules, Platform } from 'react-native';
 import { handleErrorCodes, LINKING_ERROR } from './error';
 import type {
-  AddCredentialInput,
-  AppChallenge,
-  AppCredential,
   AuthsignalResponse,
-  UpdateChallengeInput,
+  AppCredential,
+  InAppVerifyResponse,
+  AddCredentialInput,
 } from './types';
 
 interface ConstructorArgs {
@@ -16,8 +15,8 @@ interface ConstructorArgs {
 
 let initialized = false;
 
-const AuthsignalPushModule = NativeModules.AuthsignalPushModule
-  ? NativeModules.AuthsignalPushModule
+const AuthsignalInAppModule = NativeModules.AuthsignalInAppModule
+  ? NativeModules.AuthsignalInAppModule
   : new Proxy(
       {},
       {
@@ -27,7 +26,7 @@ const AuthsignalPushModule = NativeModules.AuthsignalPushModule
       }
     );
 
-export class AuthsignalPush {
+export class AuthsignalInApp {
   tenantID: string;
   baseURL: string;
   enableLogging: boolean;
@@ -42,7 +41,7 @@ export class AuthsignalPush {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalPushModule.getCredential();
+      const data = await AuthsignalInAppModule.getCredential();
 
       return { data };
     } catch (ex) {
@@ -64,12 +63,12 @@ export class AuthsignalPush {
     try {
       const data =
         Platform.OS === 'ios'
-          ? await AuthsignalPushModule.addCredential(
+          ? await AuthsignalInAppModule.addCredential(
               token,
               requireUserAuthentication,
               keychainAccess
             )
-          : await AuthsignalPushModule.addCredential(token);
+          : await AuthsignalInAppModule.addCredential(token);
 
       return { data };
     } catch (ex) {
@@ -85,7 +84,7 @@ export class AuthsignalPush {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalPushModule.removeCredential();
+      const data = await AuthsignalInAppModule.removeCredential();
       return { data };
     } catch (ex) {
       if (this.enableLogging) {
@@ -95,36 +94,11 @@ export class AuthsignalPush {
       return handleErrorCodes(ex);
     }
   }
-
-  async getChallenge(): Promise<AuthsignalResponse<AppChallenge | undefined>> {
+  async verify(): Promise<AuthsignalResponse<InAppVerifyResponse>> {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalPushModule.getChallenge();
-
-      return { data };
-    } catch (ex) {
-      if (this.enableLogging) {
-        console.log(ex);
-      }
-
-      return handleErrorCodes(ex);
-    }
-  }
-
-  async updateChallenge({
-    challengeId,
-    approved,
-    verificationCode = null,
-  }: UpdateChallengeInput): Promise<AuthsignalResponse<boolean>> {
-    await this.ensureModuleIsInitialized();
-
-    try {
-      const data = await AuthsignalPushModule.updateChallenge(
-        challengeId,
-        approved,
-        verificationCode
-      );
+      const data = await AuthsignalInAppModule.verify();
 
       return { data };
     } catch (ex) {
@@ -141,7 +115,7 @@ export class AuthsignalPush {
       return;
     }
 
-    await AuthsignalPushModule.initialize(this.tenantID, this.baseURL);
+    await AuthsignalInAppModule.initialize(this.tenantID, this.baseURL);
 
     initialized = true;
   }
