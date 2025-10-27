@@ -1,7 +1,7 @@
 package com.authsignal.react
 
 import android.util.Log
-import com.authsignal.device.AuthsignalDevice
+import com.authsignal.inapp.AuthsignalInApp
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
@@ -12,12 +12,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
-class AuthsignalDeviceModule(private val reactContext: ReactApplicationContext) :
+class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(
     reactContext
   ) {
   private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
-  private var authsignal: AuthsignalDevice? = null
+  private var authsignal: AuthsignalInApp? = null
   private var defaultError = "unexpected_error"
 
   override fun getConstants(): Map<String, Any>? {
@@ -27,13 +27,13 @@ class AuthsignalDeviceModule(private val reactContext: ReactApplicationContext) 
   }
 
   override fun getName(): String {
-    return "AuthsignalDeviceModule"
+    return "AuthsignalInAppModule"
   }
 
   @ReactMethod
   fun initialize(tenantID: String?, baseURL: String?, promise: Promise) {
-    Log.d("AuthsignalDeviceModule", "initialize: $tenantID, $baseURL")
-    authsignal = AuthsignalDevice(tenantID!!, baseURL!!)
+    Log.d("AuthsignalInAppModule", "initialize: $tenantID, $baseURL")
+    authsignal = AuthsignalInApp(tenantID!!, baseURL!!)
 
     promise.resolve(null)
   }
@@ -101,81 +101,6 @@ class AuthsignalDeviceModule(private val reactContext: ReactApplicationContext) 
   }
 
   @ReactMethod
-  fun getChallenge(promise: Promise) {
-    launch(promise) {
-      val response = it.getChallenge()
-
-      if (response.error != null) {
-        val errorCode = response.errorCode ?: defaultError
-
-        promise.reject(errorCode, response.error)
-      } else {
-        val challenge = response.data
-
-        if (challenge == null) {
-          promise.resolve(null)
-        } else {
-          val map = Arguments.createMap()
-          map.putString("challengeId", challenge.challengeId)
-          map.putString("actionCode", challenge.actionCode)
-          map.putString("idempotencyKey", challenge.idempotencyKey)
-          map.putString("ipAddress", challenge.ipAddress)
-          map.putString("deviceId", challenge.deviceId)
-          map.putString("userAgent", challenge.userAgent)
-          promise.resolve(map)
-        }
-      }
-    }
-  }
-
-  @ReactMethod
-  fun claimChallenge(
-    challengeId: String,
-    promise: Promise
-  ) {
-    launch(promise) {
-      val response = it.claimChallenge(challengeId)
-
-      if (response.error != null) {
-        val errorCode = response.errorCode ?: defaultError
-
-        promise.reject(errorCode, response.error)
-      } else {
-        val data = response.data
-        if (data == null) {
-          promise.resolve(null)
-        } else {
-          val map = Arguments.createMap()
-          map.putBoolean("success", data.success)
-          data.userAgent?.let { map.putString("userAgent", it) }
-          data.ipAddress?.let { map.putString("ipAddress", it) }
-          promise.resolve(map)
-        }
-      }
-    }
-  }
-
-  @ReactMethod
-  fun updateChallenge(
-    challengeId: String,
-    approved: Boolean,
-    verificationCode: String?,
-    promise: Promise
-  ) {
-    launch(promise) {
-      val response = it.updateChallenge(challengeId, approved, verificationCode)
-
-      if (response.error != null) {
-        val errorCode = response.errorCode ?: defaultError
-
-        promise.reject(errorCode, response.error)
-      } else {
-        promise.resolve(response.data)
-      }
-    }
-  }
-
-  @ReactMethod
   fun verify(promise: Promise) {
     launch(promise) {
       val response = it.verify()
@@ -201,7 +126,7 @@ class AuthsignalDeviceModule(private val reactContext: ReactApplicationContext) 
       authsignal?.let {
         fn(it)
       }  ?: run {
-        Log.w("init_error", "AuthsignalDeviceModule is not initialized.")
+        Log.w("init_error", "AuthsignalInAppModule is not initialized.")
 
         promise.resolve(null)
       }

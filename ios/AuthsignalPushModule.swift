@@ -39,6 +39,7 @@ class AuthsignalPushModule: NSObject {
         let credential: [String: String?] = [
           "credentialId": data.credentialId,
           "createdAt": data.createdAt,
+          "userId": data.userId,
           "lastAuthenticatedAt": data.lastAuthenticatedAt,
         ]
         
@@ -75,7 +76,14 @@ class AuthsignalPushModule: NSObject {
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
       } else {
-        resolve(response.data)
+         let credential: [String: String?] = [
+          "credentialId": data.credentialId,
+          "createdAt": data.createdAt,
+          "userId": data.userId,
+          "lastAuthenticatedAt": data.lastAuthenticatedAt,
+        ]
+        
+        resolve(credential)
       }
     }
   }
