@@ -77,10 +77,10 @@ class AuthsignalPushModule: NSObject {
         reject(response.errorCode ?? "unexpected_error", error, nil)
       } else {
          let credential: [String: String?] = [
-          "credentialId": data.credentialId,
-          "createdAt": data.createdAt,
-          "userId": data.userId,
-          "lastAuthenticatedAt": data.lastAuthenticatedAt,
+          "credentialId": response.data!.credentialId,
+          "createdAt": response.data!.createdAt,
+          "userId": response.data!.userId,
+          "lastAuthenticatedAt": response.data!.lastAuthenticatedAt,
         ]
         
         resolve(credential)
