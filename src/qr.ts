@@ -1,12 +1,12 @@
 import { NativeModules, Platform } from 'react-native';
 import { handleErrorCodes, LINKING_ERROR } from './error';
 import type {
+  AddCredentialInput,
+  AppCredential,
   AuthsignalResponse,
+  ClaimChallengeInput,
   ClaimChallengeResponse,
-  DeviceChallenge,
-  DeviceCredential,
-  KeychainAccess,
-  VerifyDeviceResponse,
+  UpdateChallengeInput,
 } from './types';
 
 interface ConstructorArgs {
@@ -17,8 +17,8 @@ interface ConstructorArgs {
 
 let initialized = false;
 
-const AuthsignalDeviceModule = NativeModules.AuthsignalDeviceModule
-  ? NativeModules.AuthsignalDeviceModule
+const AuthsignalQrCodeModule = NativeModules.AuthsignalQrCodeModule
+  ? NativeModules.AuthsignalQrCodeModule
   : new Proxy(
       {},
       {
@@ -28,23 +28,7 @@ const AuthsignalDeviceModule = NativeModules.AuthsignalDeviceModule
       }
     );
 
-interface AddCredentialInput {
-  token?: string;
-  requireUserAuthentication?: boolean;
-  keychainAccess?: KeychainAccess;
-}
-
-interface ClaimChallengeInput {
-  challengeId: string;
-}
-
-interface UpdateChallengeInput {
-  challengeId: string;
-  approved: boolean;
-  verificationCode?: string | null;
-}
-
-export class AuthsignalDevice {
+export class AuthsignalQrCode {
   tenantID: string;
   baseURL: string;
   enableLogging: boolean;
@@ -55,11 +39,11 @@ export class AuthsignalDevice {
     this.enableLogging = enableLogging;
   }
 
-  async getCredential(): Promise<AuthsignalResponse<DeviceCredential>> {
+  async getCredential(): Promise<AuthsignalResponse<AppCredential>> {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalDeviceModule.getCredential();
+      const data = await AuthsignalQrCodeModule.getCredential();
 
       return { data };
     } catch (ex) {
@@ -75,18 +59,18 @@ export class AuthsignalDevice {
     token,
     requireUserAuthentication = false,
     keychainAccess,
-  }: AddCredentialInput = {}): Promise<AuthsignalResponse<DeviceCredential>> {
+  }: AddCredentialInput = {}): Promise<AuthsignalResponse<AppCredential>> {
     await this.ensureModuleIsInitialized();
 
     try {
       const data =
         Platform.OS === 'ios'
-          ? await AuthsignalDeviceModule.addCredential(
+          ? await AuthsignalQrCodeModule.addCredential(
               token,
               requireUserAuthentication,
               keychainAccess
             )
-          : await AuthsignalDeviceModule.addCredential(token);
+          : await AuthsignalQrCodeModule.addCredential(token);
 
       return { data };
     } catch (ex) {
@@ -102,25 +86,7 @@ export class AuthsignalDevice {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalDeviceModule.removeCredential();
-      return { data };
-    } catch (ex) {
-      if (this.enableLogging) {
-        console.log(ex);
-      }
-
-      return handleErrorCodes(ex);
-    }
-  }
-
-  async getChallenge(): Promise<
-    AuthsignalResponse<DeviceChallenge | undefined>
-  > {
-    await this.ensureModuleIsInitialized();
-
-    try {
-      const data = await AuthsignalDeviceModule.getChallenge();
-
+      const data = await AuthsignalQrCodeModule.removeCredential();
       return { data };
     } catch (ex) {
       if (this.enableLogging) {
@@ -137,7 +103,7 @@ export class AuthsignalDevice {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalDeviceModule.claimChallenge(challengeId);
+      const data = await AuthsignalQrCodeModule.claimChallenge(challengeId);
 
       return { data };
     } catch (ex) {
@@ -157,27 +123,11 @@ export class AuthsignalDevice {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalDeviceModule.updateChallenge(
+      const data = await AuthsignalQrCodeModule.updateChallenge(
         challengeId,
         approved,
         verificationCode
       );
-
-      return { data };
-    } catch (ex) {
-      if (this.enableLogging) {
-        console.log(ex);
-      }
-
-      return handleErrorCodes(ex);
-    }
-  }
-
-  async verify(): Promise<AuthsignalResponse<VerifyDeviceResponse>> {
-    await this.ensureModuleIsInitialized();
-
-    try {
-      const data = await AuthsignalDeviceModule.verify();
 
       return { data };
     } catch (ex) {
@@ -194,7 +144,7 @@ export class AuthsignalDevice {
       return;
     }
 
-    await AuthsignalDeviceModule.initialize(this.tenantID, this.baseURL);
+    await AuthsignalQrCodeModule.initialize(this.tenantID, this.baseURL);
 
     initialized = true;
   }

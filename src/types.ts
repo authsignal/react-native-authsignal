@@ -45,13 +45,13 @@ export interface VerifyResponse {
   failureReason?: string;
 }
 
-export interface PushCredential {
-  credentialId: string;
-  createdAt: string;
-  lastAuthenticatedAt?: string;
+export interface AddCredentialInput {
+  token?: string;
+  requireUserAuthentication?: boolean;
+  keychainAccess?: KeychainAccess;
 }
 
-export interface PushChallenge {
+export interface AppChallenge {
   challengeId: string;
   actionCode?: string;
   idempotencyKey?: string;
@@ -60,20 +60,15 @@ export interface PushChallenge {
   ipAddress?: string;
 }
 
-export interface DeviceCredential {
+export interface AppCredential {
   credentialId: string;
   createdAt: string;
   userId: string;
   lastAuthenticatedAt?: string;
 }
 
-export interface DeviceChallenge {
+export interface ClaimChallengeInput {
   challengeId: string;
-  actionCode?: string;
-  idempotencyKey?: string;
-  userAgent?: string;
-  deviceId?: string;
-  ipAddress?: string;
 }
 
 export interface ClaimChallengeResponse {
@@ -82,7 +77,13 @@ export interface ClaimChallengeResponse {
   ipAddress?: string;
 }
 
-export interface VerifyDeviceResponse {
+export interface UpdateChallengeInput {
+  challengeId: string;
+  approved: boolean;
+  verificationCode?: string | null;
+}
+
+export interface InAppVerifyResponse {
   token: string;
   userId: string;
   userAuthenticatorId: string;
