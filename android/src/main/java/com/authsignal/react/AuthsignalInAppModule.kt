@@ -121,7 +121,7 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
     }
   }
 
-  private fun launch(promise: Promise, fn: suspend (client: AuthsignalDevice) -> Unit) {
+  private fun launch(promise: Promise, fn: suspend (client: AuthsignalInApp) -> Unit) {
     coroutineScope.launch {
       authsignal?.let {
         fn(it)

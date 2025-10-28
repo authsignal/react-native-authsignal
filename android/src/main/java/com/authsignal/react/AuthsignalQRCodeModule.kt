@@ -33,7 +33,7 @@ class AuthsignalQRCodeModule(private val reactContext: ReactApplicationContext) 
   @ReactMethod
   fun initialize(tenantID: String?, baseURL: String?, promise: Promise) {
     Log.d("AuthsignalQRCodeModule", "initialize: $tenantID, $baseURL")
-    authsignal = AuthsignalDevice(tenantID!!, baseURL!!)
+    authsignal = AuthsignalQRCode(tenantID!!, baseURL!!)
 
     promise.resolve(null)
   }
@@ -147,7 +147,7 @@ class AuthsignalQRCodeModule(private val reactContext: ReactApplicationContext) 
     }
   }
 
-  private fun launch(promise: Promise, fn: suspend (client: AuthsignalDevice) -> Unit) {
+  private fun launch(promise: Promise, fn: suspend (client: AuthsignalQRCode) -> Unit) {
     coroutineScope.launch {
       authsignal?.let {
         fn(it)
