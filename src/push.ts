@@ -38,7 +38,9 @@ export class AuthsignalPush {
     this.enableLogging = enableLogging;
   }
 
-  async getCredential(): Promise<AuthsignalResponse<AppCredential>> {
+  async getCredential(): Promise<
+    AuthsignalResponse<AppCredential | undefined>
+  > {
     await this.ensureModuleIsInitialized();
 
     try {

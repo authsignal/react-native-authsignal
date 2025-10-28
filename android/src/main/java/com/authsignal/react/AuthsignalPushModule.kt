@@ -46,7 +46,7 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
         val errorCode = response.errorCode ?: defaultError
 
         promise.reject(errorCode, response.error)
-      } else {
+      } else if (response.data != null) {
         val credential = response.data
         val map = Arguments.createMap()
         map.putString("credentialId", credential!!.credentialId)
@@ -54,6 +54,8 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
         map.putString("userId", credential.userId)
         map.putString("lastAuthenticatedAt", credential.lastAuthenticatedAt)
         promise.resolve(map)
+      } else {
+        promise.resolve(null)
       }
     }
   }
