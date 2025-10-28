@@ -51,7 +51,7 @@ class AuthsignalPasskeyModule: NSObject {
         reject(response.errorCode ?? "unexpected_error", response.error, nil)
       } else {
         let signUpResponse: [String: String?] = [
-          "token": response.data!.token,
+          "token": response.data?.token,
         ]
 
         resolve(signUpResponse)
