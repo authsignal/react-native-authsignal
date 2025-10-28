@@ -122,7 +122,7 @@ class AuthsignalPushModule: NSObject {
       
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
-      } else if let data = response.data as? PushChallenge {
+      } else if let data = response.data as? AppChallenge {
         let challenge: [String: String?] = [
           "challengeId": data.challengeId,
           "actionCode": data.actionCode,
