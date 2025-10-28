@@ -17,8 +17,8 @@ interface ConstructorArgs {
 
 let initialized = false;
 
-const AuthsignalQrCodeModule = NativeModules.AuthsignalQrCodeModule
-  ? NativeModules.AuthsignalQrCodeModule
+const AuthsignalQRCodeModule = NativeModules.AuthsignalQRCodeModule
+  ? NativeModules.AuthsignalQRCodeModule
   : new Proxy(
       {},
       {
@@ -45,7 +45,7 @@ export class AuthsignalQrCode {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalQrCodeModule.getCredential();
+      const data = await AuthsignalQRCodeModule.getCredential();
 
       return { data };
     } catch (ex) {
@@ -67,12 +67,12 @@ export class AuthsignalQrCode {
     try {
       const data =
         Platform.OS === 'ios'
-          ? await AuthsignalQrCodeModule.addCredential(
+          ? await AuthsignalQRCodeModule.addCredential(
               token,
               requireUserAuthentication,
               keychainAccess
             )
-          : await AuthsignalQrCodeModule.addCredential(token);
+          : await AuthsignalQRCodeModule.addCredential(token);
 
       return { data };
     } catch (ex) {
@@ -88,7 +88,7 @@ export class AuthsignalQrCode {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalQrCodeModule.removeCredential();
+      const data = await AuthsignalQRCodeModule.removeCredential();
       return { data };
     } catch (ex) {
       if (this.enableLogging) {
@@ -105,7 +105,7 @@ export class AuthsignalQrCode {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalQrCodeModule.claimChallenge(challengeId);
+      const data = await AuthsignalQRCodeModule.claimChallenge(challengeId);
 
       return { data };
     } catch (ex) {
@@ -125,7 +125,7 @@ export class AuthsignalQrCode {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalQrCodeModule.updateChallenge(
+      const data = await AuthsignalQRCodeModule.updateChallenge(
         challengeId,
         approved,
         verificationCode
@@ -146,7 +146,7 @@ export class AuthsignalQrCode {
       return;
     }
 
-    await AuthsignalQrCodeModule.initialize(this.tenantID, this.baseURL);
+    await AuthsignalQRCodeModule.initialize(this.tenantID, this.baseURL);
 
     initialized = true;
   }
