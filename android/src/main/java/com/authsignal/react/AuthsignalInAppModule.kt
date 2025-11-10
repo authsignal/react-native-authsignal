@@ -101,9 +101,12 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun verify(promise: Promise) {
+  fun verify(
+    action: String?,
+    promise: Promise
+  ) {
     launch(promise) {
-      val response = it.verify()
+      val response = it.verify(action)
 
       if (response.error != null) {
         val errorCode = response.errorCode ?: defaultError

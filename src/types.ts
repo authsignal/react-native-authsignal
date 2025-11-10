@@ -83,6 +83,10 @@ export interface UpdateChallengeInput {
   verificationCode?: string | null;
 }
 
+export interface InAppVerifyRequest {
+  action?: string;
+}
+
 export interface InAppVerifyResponse {
   token: string;
   userId: string;

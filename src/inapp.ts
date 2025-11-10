@@ -3,6 +3,7 @@ import { handleErrorCodes, LINKING_ERROR } from './error';
 import type {
   AuthsignalResponse,
   AppCredential,
+  InAppVerifyRequest,
   InAppVerifyResponse,
   AddCredentialInput,
 } from './types';
@@ -96,11 +97,14 @@ export class AuthsignalInApp {
       return handleErrorCodes(ex);
     }
   }
-  async verify(): Promise<AuthsignalResponse<InAppVerifyResponse>> {
+
+  async verify({ action }: InAppVerifyRequest = {}): Promise<
+    AuthsignalResponse<InAppVerifyResponse>
+  > {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalInAppModule.verify();
+      const data = await AuthsignalInAppModule.verify(action);
 
       return { data };
     } catch (ex) {
