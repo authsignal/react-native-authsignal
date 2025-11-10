@@ -20,7 +20,8 @@ RCT_EXTERN_METHOD(addCredential:(NSString)token
 RCT_EXTERN_METHOD(removeCredential:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(verify:(RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(verify:(NSString)action
+                  resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
 @end

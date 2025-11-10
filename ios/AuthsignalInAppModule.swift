@@ -111,16 +111,19 @@ class AuthsignalInAppModule: NSObject {
   }
 
   @objc func verify(
-    _ resolve: @escaping RCTPromiseResolveBlock,
+    _ action: NSString?,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     guard let authsignal = authsignal else {
       resolve(nil)
       return
     }
+
+    let actionStr = action as String?
     
     Task.init {
-      let response = await authsignal.verify()
+      let response = await authsignal.verify(action: actionStr)
       
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
