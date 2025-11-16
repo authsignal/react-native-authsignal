@@ -22,16 +22,19 @@ class AuthsignalInAppModule: NSObject {
   }
 
   @objc func getCredential(
-    _ resolve: @escaping RCTPromiseResolveBlock,
+    _ username: NSString?,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     guard let authsignal = authsignal else {
       resolve(nil)
       return
     }
+
+    let usernameStr = username as String?
     
     Task.init {
-      let response = await authsignal.getCredential()
+      let response = await authsignal.getCredential(username: usernameStr)
       
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
@@ -54,6 +57,7 @@ class AuthsignalInAppModule: NSObject {
     _ token: NSString?,
     withRequireUserAuthentication requireUserAuthentication: Bool,
     withKeychainAccess keychainAccess: NSString,
+    withUsername username: NSString?,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -65,12 +69,14 @@ class AuthsignalInAppModule: NSObject {
     let tokenStr = token as String?
     let userPresenceRequired = requireUserAuthentication as Bool
     let keychainAccess = getKeychainAccess(value: keychainAccess as String?)
+    let usernameStr = username as String?
     
     Task.init {
       let response = await authsignal.addCredential(
         token: tokenStr,
         keychainAccess: keychainAccess,
-        userPresenceRequired: userPresenceRequired
+        userPresenceRequired: userPresenceRequired,
+        username: usernameStr
       )
       
       if let error = response.error {
@@ -91,16 +97,19 @@ class AuthsignalInAppModule: NSObject {
   }
   
   @objc func removeCredential(
-    _ resolve: @escaping RCTPromiseResolveBlock,
+    _ username: NSString?,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     guard let authsignal = authsignal else {
       resolve(nil)
       return
     }
+
+    let usernameStr = username as String?
     
     Task.init {
-      let response = await authsignal.removeCredential()
+      let response = await authsignal.removeCredential(username: usernameStr)
       
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
@@ -112,6 +121,7 @@ class AuthsignalInAppModule: NSObject {
 
   @objc func verify(
     _ action: NSString?,
+    withUsername username: NSString?,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -121,9 +131,10 @@ class AuthsignalInAppModule: NSObject {
     }
 
     let actionStr = action as String?
+    let usernameStr = username as String?
     
     Task.init {
-      let response = await authsignal.verify(action: actionStr)
+      let response = await authsignal.verify(action: actionStr, username: usernameStr)
       
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)

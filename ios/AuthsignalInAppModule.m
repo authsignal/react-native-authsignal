@@ -8,19 +8,23 @@ RCT_EXTERN_METHOD(initialize:(NSString)tenantID
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(getCredential:(RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(getCredential:(NSString)username
+                  resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(addCredential:(NSString)token
                   withRequireUserAuthentication:(BOOL)requireUserAuthentication
                   withKeychainAccess:(NSString)keychainAccess
+                  withUsername:(NSString)username
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(removeCredential:(RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(removeCredential:(NSString)username
+                  resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(verify:(NSString)action
+                  withUsername:(NSString)username
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 

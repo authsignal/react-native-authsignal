@@ -83,8 +83,21 @@ export interface UpdateChallengeInput {
   verificationCode?: string | null;
 }
 
+export interface InAppGetCredentialInput {
+  username?: string;
+}
+
+export interface InAppAddCredentialInput extends AddCredentialInput {
+  username?: string;
+}
+
+export interface InAppRemoveCredentialInput {
+  username?: string;
+}
+
 export interface InAppVerifyRequest {
   action?: string;
+  username?: string;
 }
 
 export interface InAppVerifyResponse {
