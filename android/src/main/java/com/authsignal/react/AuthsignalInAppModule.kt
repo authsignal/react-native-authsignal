@@ -39,9 +39,9 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun getCredential(promise: Promise) {
+  fun getCredential(username: String?, promise: Promise) {
     launch(promise) {
-      val response = it.getCredential()
+      val response = it.getCredential(username = username)
 
       if (response.error != null) {
         val errorCode = response.errorCode ?: defaultError
@@ -64,10 +64,18 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
   @ReactMethod
   fun addCredential(
     token: String?,
+    username: String?,
     promise: Promise
   ) {
     launch(promise) {
-      val response = it.addCredential(token, null)
+      val response = it.addCredential(
+        token = token,
+        deviceName = null,
+        userAuthenticationRequired = false,
+        timeout = 0,
+        authorizationType = 0,
+        username = username,
+      )
 
       if (response.error != null) {
         val errorCode = response.errorCode ?: defaultError
@@ -86,9 +94,9 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun removeCredential(promise: Promise) {
+  fun removeCredential(username: String?, promise: Promise) {
     launch(promise) {
-      val response = it.removeCredential()
+      val response = it.removeCredential(username = username)
 
       if (response.error != null) {
         val errorCode = response.errorCode ?: defaultError
@@ -103,10 +111,11 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
   @ReactMethod
   fun verify(
     action: String?,
+    username: String?,
     promise: Promise
   ) {
     launch(promise) {
-      val response = it.verify(action)
+      val response = it.verify(action = action, username = username)
 
       if (response.error != null) {
         val errorCode = response.errorCode ?: defaultError

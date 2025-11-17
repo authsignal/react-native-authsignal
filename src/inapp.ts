@@ -5,7 +5,9 @@ import type {
   AppCredential,
   InAppVerifyRequest,
   InAppVerifyResponse,
-  AddCredentialInput,
+  InAppAddCredentialInput,
+  InAppGetCredentialInput,
+  InAppRemoveCredentialInput,
 } from './types';
 
 interface ConstructorArgs {
@@ -38,13 +40,15 @@ export class AuthsignalInApp {
     this.enableLogging = enableLogging;
   }
 
-  async getCredential(): Promise<
+  async getCredential({
+    username,
+  }: InAppGetCredentialInput): Promise<
     AuthsignalResponse<AppCredential | undefined>
   > {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalInAppModule.getCredential();
+      const data = await AuthsignalInAppModule.getCredential(username);
 
       return { data };
     } catch (ex) {
@@ -60,7 +64,8 @@ export class AuthsignalInApp {
     token,
     requireUserAuthentication = false,
     keychainAccess,
-  }: AddCredentialInput = {}): Promise<AuthsignalResponse<AppCredential>> {
+    username,
+  }: InAppAddCredentialInput = {}): Promise<AuthsignalResponse<AppCredential>> {
     await this.ensureModuleIsInitialized();
 
     try {
@@ -69,9 +74,10 @@ export class AuthsignalInApp {
           ? await AuthsignalInAppModule.addCredential(
               token,
               requireUserAuthentication,
-              keychainAccess
+              keychainAccess,
+              username
             )
-          : await AuthsignalInAppModule.addCredential(token);
+          : await AuthsignalInAppModule.addCredential(token, username);
 
       return { data };
     } catch (ex) {
@@ -83,11 +89,13 @@ export class AuthsignalInApp {
     }
   }
 
-  async removeCredential(): Promise<AuthsignalResponse<boolean>> {
+  async removeCredential({
+    username,
+  }: InAppRemoveCredentialInput): Promise<AuthsignalResponse<boolean>> {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalInAppModule.removeCredential();
+      const data = await AuthsignalInAppModule.removeCredential(username);
       return { data };
     } catch (ex) {
       if (this.enableLogging) {
@@ -98,13 +106,13 @@ export class AuthsignalInApp {
     }
   }
 
-  async verify({ action }: InAppVerifyRequest = {}): Promise<
+  async verify({ action, username }: InAppVerifyRequest = {}): Promise<
     AuthsignalResponse<InAppVerifyResponse>
   > {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalInAppModule.verify(action);
+      const data = await AuthsignalInAppModule.verify(action, username);
 
       return { data };
     } catch (ex) {
