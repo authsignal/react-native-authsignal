@@ -133,6 +133,74 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
     }
   }
 
+  @ReactMethod
+  fun createPin(pin: String, username: String, token: String?, promise: Promise) {
+    launch(promise) {
+      val response = it.createPin(
+        pin = pin,
+        username = username,
+        token = token,
+      )
+
+      if (response.error != null) {
+        val errorCode = response.errorCode ?: defaultError
+
+        promise.reject(errorCode, response.error)
+      } else {
+        promise.resolve(response.data)
+      }
+    }
+  }
+
+  @ReactMethod
+  fun verifyPin(pin: String, username: String, action: String?, promise: Promise) {
+    launch(promise) {
+      val response = it.verifyPin(
+        pin = pin,
+        username = username,
+        action = action,
+      )
+
+      if (response.error != null) {
+        val errorCode = response.errorCode ?: defaultError
+
+        promise.reject(errorCode, response.error)
+      } else {
+        promise.resolve(response.data)
+      }
+    }
+  }
+
+  @ReactMethod
+  fun deletePin(username: String, promise: Promise) {
+    launch(promise) {
+      val response = it.deletePin(username = username)
+
+      if (response.error != null) {
+        val errorCode = response.errorCode ?: defaultError
+
+        promise.reject(errorCode, response.error)
+      } else {
+        promise.resolve(response.data)
+      }
+    }
+  }
+
+  @ReactMethod
+  fun getAllUsernames(promise: Promise) {
+    launch(promise) {
+      val response = it.getAllUsernames()
+
+      if (response.error != null) {
+        val errorCode = response.errorCode ?: defaultError
+
+        promise.reject(errorCode, response.error)
+      } else {
+        promise.resolve(response.data)
+      }
+    }
+  }
+
   private fun launch(promise: Promise, fn: suspend (client: AuthsignalInApp) -> Unit) {
     coroutineScope.launch {
       authsignal?.let {

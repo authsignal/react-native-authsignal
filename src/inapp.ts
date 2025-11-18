@@ -3,11 +3,14 @@ import { handleErrorCodes, LINKING_ERROR } from './error';
 import type {
   AuthsignalResponse,
   AppCredential,
-  InAppVerifyRequest,
+  InAppVerifyInput,
   InAppVerifyResponse,
   InAppAddCredentialInput,
   InAppGetCredentialInput,
   InAppRemoveCredentialInput,
+  CreatePinInput,
+  VerifyPinInput,
+  VerifyPinResponse,
 } from './types';
 
 interface ConstructorArgs {
@@ -106,7 +109,7 @@ export class AuthsignalInApp {
     }
   }
 
-  async verify({ action, username }: InAppVerifyRequest = {}): Promise<
+  async verify({ action, username }: InAppVerifyInput = {}): Promise<
     AuthsignalResponse<InAppVerifyResponse>
   > {
     await this.ensureModuleIsInitialized();
@@ -114,6 +117,76 @@ export class AuthsignalInApp {
     try {
       const data = await AuthsignalInAppModule.verify(action, username);
 
+      return { data };
+    } catch (ex) {
+      if (this.enableLogging) {
+        console.log(ex);
+      }
+
+      return handleErrorCodes(ex);
+    }
+  }
+
+  async createPin({
+    pin,
+    username,
+    token,
+  }: CreatePinInput): Promise<AuthsignalResponse<AppCredential>> {
+    await this.ensureModuleIsInitialized();
+
+    try {
+      const data = await AuthsignalInAppModule.createPin(pin, username, token);
+      return { data };
+    } catch (ex) {
+      if (this.enableLogging) {
+        console.log(ex);
+      }
+
+      return handleErrorCodes(ex);
+    }
+  }
+
+  async verifyPin({
+    pin,
+    username,
+    action,
+  }: VerifyPinInput): Promise<AuthsignalResponse<VerifyPinResponse>> {
+    await this.ensureModuleIsInitialized();
+
+    try {
+      const data = await AuthsignalInAppModule.verifyPin(pin, username, action);
+      return { data };
+    } catch (ex) {
+      if (this.enableLogging) {
+        console.log(ex);
+      }
+
+      return handleErrorCodes(ex);
+    }
+  }
+
+  async deletePin({
+    username,
+  }: VerifyPinInput): Promise<AuthsignalResponse<boolean>> {
+    await this.ensureModuleIsInitialized();
+
+    try {
+      const data = await AuthsignalInAppModule.deletePin(username);
+      return { data };
+    } catch (ex) {
+      if (this.enableLogging) {
+        console.log(ex);
+      }
+
+      return handleErrorCodes(ex);
+    }
+  }
+
+  async getAllUsernames(): Promise<AuthsignalResponse<string[]>> {
+    await this.ensureModuleIsInitialized();
+
+    try {
+      const data = await AuthsignalInAppModule.getAllUsernames();
       return { data };
     } catch (ex) {
       if (this.enableLogging) {

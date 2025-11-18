@@ -152,6 +152,111 @@ class AuthsignalInAppModule: NSObject {
       }
     }
   }
+  
+  @objc func createPin(
+    _ pin: NSString,
+    withUsername username: NSString,
+    withToken token: NSString?,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock
+  ) -> Void {
+    guard let authsignal = authsignal else {
+      resolve(nil)
+      return
+    }
+
+    let pinStr = pin as String
+    let usernameStr = username as String
+    let tokenStr = token as String?
+    
+    Task.init {
+      let response = await authsignal.createPin(
+        pin: pinStr,
+        username: usernameStr,
+        token: tokenStr
+      )
+      
+      if let error = response.error {
+        reject(response.errorCode ?? "unexpected_error", error, nil)
+      } else {
+        resolve(response.data)
+      }
+    }
+  }
+  
+  @objc func verifyPin(
+    _ pin: NSString,
+    withUsername username: NSString,
+    withAction action: NSString?,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock
+  ) -> Void {
+    guard let authsignal = authsignal else {
+      resolve(nil)
+      return
+    }
+
+    let pinStr = pin as String
+    let usernameStr = username as String
+    let actionStr = action as String?
+    
+    Task.init {
+      let response = await authsignal.verifyPin(
+        pin: pinStr,
+        username: usernameStr,
+        action: actionStr
+      )
+      
+      if let error = response.error {
+        reject(response.errorCode ?? "unexpected_error", error, nil)
+      } else {
+        resolve(response.data)
+      }
+    }
+  }
+  
+  @objc func deletePin(
+    _ username: NSString,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock
+  ) -> Void {
+    guard let authsignal = authsignal else {
+      resolve(nil)
+      return
+    }
+
+    let usernameStr = username as String
+    
+    Task.init {
+      let response = await authsignal.deletePin(username: usernameStr)
+      
+      if let error = response.error {
+        reject(response.errorCode ?? "unexpected_error", error, nil)
+      } else {
+        resolve(response.data)
+      }
+    }
+  }
+
+  @objc func getAllUsernames(
+    _ resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock
+  ) -> Void {
+    guard let authsignal = authsignal else {
+      resolve(nil)
+      return
+    }
+    
+    Task.init {
+      let response = await authsignal.getAllUsernames()
+      
+      if let error = response.error {
+        reject(response.errorCode ?? "unexpected_error", error, nil)
+      } else {
+        resolve(response.data)
+      }
+    }
+  }
 
   func getKeychainAccess(value: String?) -> KeychainAccess {
     switch value {

@@ -97,7 +97,7 @@ export interface InAppRemoveCredentialInput {
   username?: string;
 }
 
-export interface InAppVerifyRequest {
+export interface InAppVerifyInput {
   action?: string;
   username?: string;
 }
@@ -106,6 +106,28 @@ export interface InAppVerifyResponse {
   token: string;
   userId: string;
   userAuthenticatorId: string;
+  username?: string;
+}
+
+export interface CreatePinInput {
+  pin: string;
+  username: string;
+  token?: string;
+}
+
+export interface VerifyPinInput {
+  pin: string;
+  username: string;
+  action?: string;
+}
+
+export interface VerifyPinResponse {
+  isVerified: string;
+  token?: string;
+  userId?: string;
+}
+
+export interface DeletePinInput {
   username?: string;
 }
 
