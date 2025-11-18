@@ -75,6 +75,8 @@ export interface ClaimChallengeResponse {
   success: boolean;
   userAgent?: string;
   ipAddress?: string;
+  actionCode: string;
+  idempotencyKey: string;
 }
 
 export interface UpdateChallengeInput {
