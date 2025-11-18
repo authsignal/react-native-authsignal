@@ -2,6 +2,7 @@ import { NativeModules, Platform } from 'react-native';
 import { handleErrorCodes, LINKING_ERROR } from './error';
 import type {
   AddCredentialInput,
+  AppChallenge,
   AppCredential,
   AuthsignalResponse,
   ClaimChallengeInput,
@@ -73,6 +74,22 @@ export class AuthsignalQrCode {
               keychainAccess
             )
           : await AuthsignalQRCodeModule.addCredential(token);
+
+      return { data };
+    } catch (ex) {
+      if (this.enableLogging) {
+        console.log(ex);
+      }
+
+      return handleErrorCodes(ex);
+    }
+  }
+
+  async getChallenge(): Promise<AuthsignalResponse<AppChallenge | undefined>> {
+    await this.ensureModuleIsInitialized();
+
+    try {
+      const data = await AuthsignalQRCodeModule.getChallenge();
 
       return { data };
     } catch (ex) {
