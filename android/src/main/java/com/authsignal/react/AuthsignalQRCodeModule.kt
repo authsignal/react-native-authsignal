@@ -121,6 +121,8 @@ class AuthsignalQRCodeModule(private val reactContext: ReactApplicationContext) 
           map.putBoolean("success", data.success)
           data.userAgent?.let { map.putString("userAgent", it) }
           data.ipAddress?.let { map.putString("ipAddress", it) }
+          data.actionCode?.let { map.putString("actionCode", it) }
+          data.idempotencyKey?.let { map.putString("idempotencyKey", it) }
           promise.resolve(map)
         }
       }

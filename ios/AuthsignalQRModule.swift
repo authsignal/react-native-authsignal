@@ -132,6 +132,8 @@ class AuthsignalQRCodeModule: NSObject {
           "success": data.success,
           "userAgent": data.userAgent,
           "ipAddress": data.ipAddress,
+          "actionCode": data.actionCode,
+          "idempotencyKey": data.idempotencyKey,
         ]
         
         resolve(result)
