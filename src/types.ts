@@ -122,7 +122,7 @@ export interface VerifyPinInput {
 }
 
 export interface VerifyPinResponse {
-  isVerified: string;
+  isVerified: boolean;
   token?: string;
   userId?: string;
 }

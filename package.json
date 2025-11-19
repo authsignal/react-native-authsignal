@@ -1,6 +1,6 @@
 {
   "name": "react-native-authsignal",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "The official Authsignal React Native library.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
