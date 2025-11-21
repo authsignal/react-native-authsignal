@@ -44,7 +44,7 @@ class AuthsignalModule(private val reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun launch(url: String?, callback: Callback) {
-    val activity = currentActivity
+    val activity = reactContext.currentActivity
     val parsedUrl = Uri.parse(url)
     this.callback = callback
 
