@@ -219,7 +219,13 @@ class AuthsignalInAppModule: NSObject {
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
       } else {
-        resolve(response.data)
+        let verifyPinResponse: [String: Any?] = [
+          "isVerified": response.data!.isVerified,
+          "token": response.data!.token,
+          "userId": response.data!.userId,
+        ]
+
+        resolve(verifyPinResponse)
       }
     }
   }
