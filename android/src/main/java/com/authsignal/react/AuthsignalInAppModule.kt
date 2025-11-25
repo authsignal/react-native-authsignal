@@ -172,7 +172,12 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
 
         promise.reject(errorCode, response.error)
       } else {
-        promise.resolve(response.data)
+        val data = response.data!!
+        val map = Arguments.createMap()
+        map.putBoolean("isVerified", data.isVerified)
+        map.putString("token", data.token)
+        map.putString("userId", data.userId)
+        promise.resolve(map)
       }
     }
   }
