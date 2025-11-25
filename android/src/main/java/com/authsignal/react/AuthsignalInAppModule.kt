@@ -147,7 +147,13 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
 
         promise.reject(errorCode, response.error)
       } else {
-        promise.resolve(response.data)
+        val data = response.data!!
+        val map = Arguments.createMap()
+        map.putString("credentialId", data.credentialId)
+        map.putString("createdAt", data.createdAt)
+        map.putString("userId", data.userId)
+        map.putString("lastAuthenticatedAt", data.lastAuthenticatedAt)
+        promise.resolve(map)
       }
     }
   }

@@ -178,8 +178,17 @@ class AuthsignalInAppModule: NSObject {
       
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
+      } else if let data = response.data {
+        let credential: [String: String?] = [
+          "credentialId": data.credentialId,
+          "createdAt": data.createdAt,
+          "userId": data.userId,
+          "lastAuthenticatedAt": data.lastAuthenticatedAt,
+        ]
+        
+        resolve(credential)
       } else {
-        resolve(response.data)
+        resolve(nil)
       }
     }
   }
