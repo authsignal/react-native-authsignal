@@ -253,7 +253,7 @@ class AuthsignalInAppModule: NSObject {
     }
   }
 
-  @objc func getAllUsernames(
+  @objc func getAllPinUsernames(
     _ resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -263,7 +263,7 @@ class AuthsignalInAppModule: NSObject {
     }
     
     Task.init {
-      let response = await authsignal.getAllUsernames()
+      let response = await authsignal.getAllPinUsernames()
       
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)

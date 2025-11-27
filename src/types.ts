@@ -128,7 +128,7 @@ export interface VerifyPinResponse {
 }
 
 export interface DeletePinInput {
-  username?: string;
+  username: string;
 }
 
 export enum KeychainAccess {

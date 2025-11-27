@@ -33,7 +33,7 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
   @ReactMethod
   fun initialize(tenantID: String?, baseURL: String?, promise: Promise) {
     Log.d("AuthsignalInAppModule", "initialize: $tenantID, $baseURL")
-    authsignal = AuthsignalInApp(tenantID!!, baseURL!!)
+    authsignal = AuthsignalInApp(tenantID!!, baseURL!!, context = reactContext)
 
     promise.resolve(null)
   }
@@ -198,16 +198,18 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun getAllUsernames(promise: Promise) {
+  fun getAllPinUsernames(promise: Promise) {
     launch(promise) {
-      val response = it.getAllUsernames()
+      val response = it.getAllPinUsernames()
 
       if (response.error != null) {
         val errorCode = response.errorCode ?: defaultError
 
         promise.reject(errorCode, response.error)
       } else {
-        promise.resolve(response.data)
+        val usernames = Arguments.createArray()
+        response.data?.forEach { username -> usernames.pushString(username) }
+        promise.resolve(usernames)
       }
     }
   }
