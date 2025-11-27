@@ -11,6 +11,7 @@ import type {
   CreatePinInput,
   VerifyPinInput,
   VerifyPinResponse,
+  DeletePinInput,
 } from './types';
 
 interface ConstructorArgs {
@@ -167,7 +168,7 @@ export class AuthsignalInApp {
 
   async deletePin({
     username,
-  }: VerifyPinInput): Promise<AuthsignalResponse<boolean>> {
+  }: DeletePinInput): Promise<AuthsignalResponse<boolean>> {
     await this.ensureModuleIsInitialized();
 
     try {
@@ -182,11 +183,11 @@ export class AuthsignalInApp {
     }
   }
 
-  async getAllUsernames(): Promise<AuthsignalResponse<string[]>> {
+  async getAllPinUsernames(): Promise<AuthsignalResponse<string[]>> {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalInAppModule.getAllUsernames();
+      const data = await AuthsignalInAppModule.getAllPinUsernames();
       return { data };
     } catch (ex) {
       if (this.enableLogging) {
