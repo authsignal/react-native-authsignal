@@ -146,14 +146,16 @@ export class AuthsignalPasskey {
     }
   }
 
-  async shouldPromptToCreatePasskey(): Promise<boolean> {
+  async shouldPromptToCreatePasskey({
+    username,
+  }: { username?: string } = {}): Promise<boolean> {
     await this.ensureModuleIsInitialized();
 
-    return await AuthsignalPasskeyModule.shouldPromptToCreatePasskey();
+    return await AuthsignalPasskeyModule.shouldPromptToCreatePasskey(username);
   }
 
   /**
-   * @deprecated Use 'preferImmediatelyAvailableCredentials' to control what happens when a passkey isn't available.
+   * @deprecated Use 'preferImmediatelyAvailableCredentials' to control what happens when a passkey isn't available, or use 'shouldPromptToCreatePasskey' to check if you should prompt the user to create a passkey.
    */
   async isAvailableOnDevice(): Promise<boolean> {
     await this.ensureModuleIsInitialized();

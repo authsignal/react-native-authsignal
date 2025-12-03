@@ -26,7 +26,8 @@ RCT_EXTERN_METHOD(signIn:(NSString)action
 RCT_EXTERN_METHOD(shouldPromptToCreatePasskey:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(isAvailableOnDevice:(RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(isAvailableOnDevice:(NSString)username
+                  resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN__BLOCKING_SYNCHRONOUS_METHOD(cancel)
