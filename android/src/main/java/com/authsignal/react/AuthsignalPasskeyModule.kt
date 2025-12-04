@@ -84,18 +84,18 @@ class AuthsignalPasskeyModule(private val reactContext: ReactApplicationContext)
   }
 
   @ReactMethod
-  fun shouldPromptToCreatePasskey(promise: Promise) {
+  fun shouldPromptToCreatePasskey(username: String?, promise: Promise) {
     launch(promise) {
-      val response = it.shouldPromptToCreatePasskey()
+      val response = it.shouldPromptToCreatePasskey(username)
 
       promise.resolve(response.data ?: false)
     }
   }
 
   @ReactMethod
-  fun isAvailableOnDevice(username: String?, promise: Promise) {
+  fun isAvailableOnDevice(promise: Promise) {
     launch(promise) {
-      val response = it.isAvailableOnDevice(username)
+      val response = it.isAvailableOnDevice()
 
       promise.resolve(response.data ?: false)
     }
