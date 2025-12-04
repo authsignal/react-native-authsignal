@@ -1,6 +1,6 @@
 {
   "name": "react-native-authsignal",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "description": "The official Authsignal React Native library.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -8,13 +8,11 @@
   "react-native": "src/index",
   "source": "src/index",
   "files": [
-    "src",
     "lib",
     "android",
     "ios",
     "cpp",
     "*.podspec",
-    "!lib/typescript/example",
     "!ios/build",
     "!android/build",
     "!android/gradle",
