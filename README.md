@@ -2,7 +2,7 @@
 
 # Authsignal React Native SDK
 
-Check out our [official React Native documentation](https://docs.authsignal.com/sdks/client/react-native).
+Check out our [official Mobile SDK documentation](https://docs.authsignal.com/sdks/client/mobile/setup).
 
 ## Installation
 
@@ -45,15 +45,14 @@ You must specify the correct `baseUrl` for your tenant's region.
 
 ### Passkeys
 
-For more detailed info on how add passkeys to your app using Authsignal, check out our [official passkey documentation for React Native](https://docs.authsignal.com/sdks/client/react-native#passkeys).
+For more detailed info on how add passkeys to your app using Authsignal, check out our [passkey documentation for Mobile SDKs](https://docs.authsignal.com/authentication-methods/passkey/mobile-sdks).
 
-### Push
+### App verification
 
-To see how to add push authentication to your app using Authsignal, see our [official push documentation for React Native](https://docs.authsignal.com/sdks/client/react-native#push).
+To see how to add app verification with push notifications or QR codes, see our [app verification documentation for Mobile SDKs](https://docs.authsignal.com/authentication-methods/app-verification/push).
 
 ## Examples
 
 ### Passkeys
 
-You can check out [this Github repo](https://github.com/authsignal/cognito-react-native-example) to see an example app which implements a sign-in with passkey flow using the Authsignal React Native SDK, Amazon Cognito and AWS SDK.
-
+You can check out [this Github repo](https://github.com/authsignal/mobile-sdk-example) to see an example app which implements a sign-in with passkey flow using the Authsignal React Native SDK.

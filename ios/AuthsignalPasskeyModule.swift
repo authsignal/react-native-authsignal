@@ -110,14 +110,20 @@ class AuthsignalPasskeyModule: NSObject {
     authsignal?.cancel()
   }
 
-  @objc func shouldPromptToCreatePasskey(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
+  @objc func shouldPromptToCreatePasskey(
+    _ username: NSString?,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock
+  ) -> Void {
     if (authsignal == nil) {
       resolve(false)
       return
     }
+
+    let usernameStr = username as String?
     
     Task.init {
-      let response = await authsignal!.shouldPromptToCreatePasskey()
+      let response = await authsignal!.shouldPromptToCreatePasskey(username: usernameStr)
       
       if (response.error != nil) {
         resolve(false)
