@@ -1,6 +1,6 @@
 {
   "name": "react-native-authsignal",
-  "version": "2.3.7",
+  "version": "2.3.8",
   "description": "The official Authsignal React Native library.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -39,13 +39,13 @@
     "authentication",
     "mfa"
   ],
-  "repository": "https://github.com/authsignal/react-native-authsignal.git",
+  "repository": "https://github.com/authsignal/react-native-authsignal",
   "author": "Authsignal <support@authsignal.com> (https://www.authsignal.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/authsignal/react-native-authsignal.git/issues"
+    "url": "https://github.com/authsignal/react-native-authsignal/issues"
   },
-  "homepage": "https://github.com/authsignal/react-native-authsignal.git#readme",
+  "homepage": "https://github.com/authsignal/react-native-authsignal#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
@@ -60,7 +60,7 @@
     "prettier": "^2.0.5",
     "react": "18.1.0",
     "react-native": "0.70.4",
-    "react-native-builder-bob": "^0.20.0",
+    "react-native-builder-bob": "0.20.4",
     "typescript": "^4.5.2"
   },
   "resolutions": {
