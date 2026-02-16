@@ -28,7 +28,6 @@ export const AuthsignalConfig = {
 
 The example requires a backend server to generate tokens. This server uses the Authsignal Node.js SDK.
 
-**Security:** Only use an API secret key from a non-production tenant when running this server.
 
 ```bash
 cd backend
@@ -36,10 +35,9 @@ npm install
 cp .env.example .env
 ```
 
-Edit `backend/.env` with your credentials:
+Add your credentials:
 ```env
 AUTHSIGNAL_SECRET=your_secret_key
-AUTHSIGNAL_TENANT_ID=your_tenant_id
 AUTHSIGNAL_BASE_URL=https://api.authsignal.com/v1
 PORT=3000
 ```
@@ -48,8 +46,6 @@ Start the server:
 ```bash
 npm run dev
 ```
-
-See [backend/README.md](backend/README.md) for detailed backend documentation.
 
 ### 4. Install dependencies
 
@@ -74,34 +70,3 @@ npx expo start --ios
 ```bash
 npx expo start --android
 ```
-
-## Web Support
-
-This example demonstrates React Native Web support using `@authsignal/browser` under the hood. The same Authsignal SDK API works across all platforms:
-
-| Feature | iOS | Android | Web |
-|---------|-----|---------|-----|
-| Passkeys | Yes | Yes | Yes |
-| Email OTP | Yes | Yes | Yes |
-| SMS OTP | Yes | Yes | Yes |
-| WhatsApp OTP | Yes | Yes | Yes |
-| TOTP | Yes | Yes | Yes |
-| Push | Yes | Yes | No |
-| QR Code | Yes | Yes | No |
-| In-App | Yes | Yes | No |
-
-## Architecture
-
-The web support works using React Native's platform-specific file extensions:
-
-- `email.ts` - Native implementation (iOS/Android)
-- `email.web.ts` - Web implementation (wraps `@authsignal/browser`)
-
-The bundler automatically picks the `.web.ts` file when building for web, and the `.ts` file when building for native platforms.
-
-## Learn More
-
-- [Authsignal documentation](https://docs.authsignal.com)
-- [React Native SDK reference](https://docs.authsignal.com/sdks/client/react-native)
-- [Web SDK reference](https://docs.authsignal.com/sdks/client/web)
-- [API reference](https://docs.authsignal.com/api-reference/overview)
