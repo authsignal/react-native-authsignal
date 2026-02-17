@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "Authsignal React Native Example",
+    "slug": "authsignal-react-native-example",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "authsignal-example",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.authsignal.example"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.authsignal.example"
+    },
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}
