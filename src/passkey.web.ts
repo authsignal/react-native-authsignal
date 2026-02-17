@@ -121,13 +121,6 @@ export class AuthsignalPasskey {
     );
   }
 
-  async shouldPromptToCreatePasskey({
-    username: _username,
-  }: { username?: string } = {}): Promise<boolean> {
-    // On web, always return true if WebAuthn is supported
-    return this.isSupported();
-  }
-
   private getClient() {
     return getOrCreateWebClient({
       tenantID: this.tenantID,
