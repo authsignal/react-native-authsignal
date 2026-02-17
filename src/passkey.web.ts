@@ -1,5 +1,5 @@
 import { getOrCreateWebClient } from './web-client';
-import { handleErrorCodes, ErrorCode } from './error';
+import { handleErrorCodes } from './error';
 import type {
   AuthsignalResponse,
   SignInResponse,
@@ -24,7 +24,6 @@ interface PasskeySignInInput {
   action?: string;
   token?: string;
   autofill?: boolean;
-  preferImmediatelyAvailableCredentials?: boolean;
 }
 
 export class AuthsignalPasskey {
@@ -77,8 +76,6 @@ export class AuthsignalPasskey {
     action,
     token,
     autofill = false,
-    preferImmediatelyAvailableCredentials:
-      _preferImmediatelyAvailableCredentials = true,
   }: PasskeySignInInput = {}): Promise<AuthsignalResponse<SignInResponse>> {
     try {
       const client = this.getClient();
@@ -131,13 +128,6 @@ export class AuthsignalPasskey {
     return this.isSupported();
   }
 
-  /**
-   * @deprecated Use 'preferImmediatelyAvailableCredentials' to control what happens when a passkey isn't available, or use 'shouldPromptToCreatePasskey' to check if you should prompt the user to create a passkey.
-   */
-  async isAvailableOnDevice(): Promise<boolean> {
-    return this.isSupported();
-  }
-
   private getClient() {
     return getOrCreateWebClient({
       tenantID: this.tenantID,
@@ -151,18 +141,17 @@ export class AuthsignalPasskey {
       console.log(ex);
     }
 
-    // Map WebAuthn errors to our error codes
     if (ex?.name === 'NotAllowedError') {
       return {
         error: ex.message ?? 'User cancelled the operation',
-        errorCode: ErrorCode.user_canceled,
+        errorCode: 'user_canceled',
       };
     }
 
     if (ex?.name === 'InvalidStateError') {
       return {
         error: ex.message ?? 'Credential already exists',
-        errorCode: ErrorCode.matched_excluded_credential,
+        errorCode: 'matched_excluded_credential',
       };
     }
 
