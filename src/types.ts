@@ -131,6 +131,12 @@ export interface DeletePinInput {
   username: string;
 }
 
+export type LaunchMode = 'popup' | 'redirect';
+
+export interface LaunchOptions {
+  mode?: LaunchMode;
+}
+
 export enum KeychainAccess {
   afterFirstUnlock = 'afterFirstUnlock',
   afterFirstUnlockThisDeviceOnly = 'afterFirstUnlockThisDeviceOnly',

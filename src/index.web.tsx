@@ -4,6 +4,7 @@ import { AuthsignalPasskey } from './passkey';
 import { AuthsignalSms } from './sms';
 import { AuthsignalTotp } from './totp';
 import { AuthsignalWhatsapp } from './whatsapp';
+import type { LaunchOptions } from './types';
 
 export * from './types';
 export { ErrorCode } from './error';
@@ -63,12 +64,20 @@ export class Authsignal {
     client.setToken(token);
   }
 
-  async launch(url: string): Promise<string | null> {
-    return await launch(url);
+  async launch(
+    url: string,
+    options?: LaunchOptions
+  ): Promise<string | null> {
+    return await launch(url, options);
   }
 }
 
-export function launch(url: string): Promise<string | null> {
+export function launch(
+  url: string,
+  options?: LaunchOptions
+): Promise<string | null> {
+  const mode = options?.mode ?? 'popup';
+
   if (_lastClient) {
     const client = getOrCreateWebClient({
       tenantID: _lastClient.tenantID,
@@ -76,7 +85,7 @@ export function launch(url: string): Promise<string | null> {
       enableLogging: _lastClient.enableLogging,
     });
 
-    return client.launch(url, { mode: 'popup' }).then((result) => {
+    return client.launch(url, { mode }).then((result) => {
       return result?.token ?? null;
     });
   }

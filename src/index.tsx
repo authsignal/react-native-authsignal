@@ -8,6 +8,7 @@ import { AuthsignalTotp } from './totp';
 import { AuthsignalQrCode } from './qr';
 import { AuthsignalWhatsapp } from './whatsapp';
 import { AuthsignalInApp } from './inapp';
+import type { LaunchOptions } from './types';
 
 export * from './types';
 export { ErrorCode } from './error';
@@ -70,12 +71,18 @@ export class Authsignal {
     await AuthsignalModule.setToken(token);
   }
 
-  async launch(url: string): Promise<string | null> {
+  async launch(
+    url: string,
+    _options?: LaunchOptions
+  ): Promise<string | null> {
     return await launch(url);
   }
 }
 
-export function launch(url: string): Promise<string | null> {
+export function launch(
+  url: string,
+  _options?: LaunchOptions
+): Promise<string | null> {
   if (Platform.OS === 'ios') {
     return AuthsignalModule.launch(url);
   } else {
