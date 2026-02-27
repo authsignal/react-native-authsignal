@@ -71,10 +71,7 @@ export class Authsignal {
     await AuthsignalModule.setToken(token);
   }
 
-  async launch(
-    url: string,
-    _options?: LaunchOptions
-  ): Promise<string | null> {
+  async launch(url: string, _options?: LaunchOptions): Promise<string | null> {
     return await launch(url);
   }
 }

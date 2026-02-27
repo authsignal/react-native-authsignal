@@ -13,6 +13,12 @@ export interface ChallengeTokenResponse {
   message?: string;
 }
 
+export interface LaunchUrlResponse {
+  url: string;
+  token: string;
+  state?: string;
+}
+
 export interface ValidationResponse {
   isValid: boolean;
   state?: string;
@@ -109,6 +115,25 @@ class BackendServiceImpl {
       return null;
     } catch (e) {
       console.log(`Validation error: ${e}`);
+      return null;
+    }
+  }
+
+  async getLaunchUrl(userId: string): Promise<LaunchUrlResponse | null> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/launch-url`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      });
+
+      if (response.ok) {
+        return await response.json();
+      }
+      console.log(`Failed to get launch URL: ${response.status}`);
+      return null;
+    } catch (e) {
+      console.log(`Backend connection error: ${e}`);
       return null;
     }
   }
