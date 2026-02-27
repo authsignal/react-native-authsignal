@@ -77,6 +77,58 @@ export function HomeScreen() {
     }
   };
 
+  // --- Launch Methods ---
+
+  const launchPopup = async () => {
+    const authsignal = authsignalRef.current;
+    if (!authsignal) return;
+
+    try {
+      addOutput('Getting launch URL from backend...');
+      const response = await BackendService.getLaunchUrl(userId);
+
+      if (!response?.url) {
+        addOutput('Failed to get launch URL');
+        return;
+      }
+
+      addOutput(`Launch URL received (state: ${response.state})`);
+      addOutput('Opening in popup mode...');
+
+      const token = await authsignal.launch(response.url);
+
+      if (token) {
+        addOutput(`Popup completed! Token: ${token.substring(0, 20)}...`);
+      } else {
+        addOutput('Popup closed without completing.');
+      }
+    } catch (e) {
+      addOutput(`Error: ${e}`);
+    }
+  };
+
+  const launchRedirect = async () => {
+    const authsignal = authsignalRef.current;
+    if (!authsignal) return;
+
+    try {
+      addOutput('Getting launch URL from backend...');
+      const response = await BackendService.getLaunchUrl(userId);
+
+      if (!response?.url) {
+        addOutput('Failed to get launch URL');
+        return;
+      }
+
+      addOutput(`Launch URL received (state: ${response.state})`);
+      addOutput('Redirecting...');
+
+      await authsignal.launch(response.url, { mode: 'redirect' });
+    } catch (e) {
+      addOutput(`Error: ${e}`);
+    }
+  };
+
   // --- Passkey Methods ---
 
   const registerPasskey = async () => {
@@ -549,6 +601,23 @@ export function HomeScreen() {
         onPhoneChange={setPhone}
         onInitialize={initializeSDK}
       />
+
+      {/* Launch */}
+      <FeatureCard
+        title="Launch (web only)"
+        description="Test popup vs redirect mode for the prebuilt MFA page."
+      >
+        <ActionButton
+          title="Launch Popup"
+          onPress={launchPopup}
+          disabled={!isInitialized}
+        />
+        <ActionButton
+          title="Launch Redirect"
+          onPress={launchRedirect}
+          disabled={!isInitialized}
+        />
+      </FeatureCard>
 
       {/* Passkeys */}
       <FeatureCard

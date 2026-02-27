@@ -64,10 +64,7 @@ export class Authsignal {
     client.setToken(token);
   }
 
-  async launch(
-    url: string,
-    options?: LaunchOptions
-  ): Promise<string | null> {
+  async launch(url: string, options?: LaunchOptions): Promise<string | null> {
     return await launch(url, options);
   }
 }
@@ -76,8 +73,6 @@ export function launch(
   url: string,
   options?: LaunchOptions
 ): Promise<string | null> {
-  const mode = options?.mode ?? 'popup';
-
   if (_lastClient) {
     const client = getOrCreateWebClient({
       tenantID: _lastClient.tenantID,
@@ -85,7 +80,12 @@ export function launch(
       enableLogging: _lastClient.enableLogging,
     });
 
-    return client.launch(url, { mode }).then((result) => {
+    if (options?.mode === 'redirect') {
+      client.launch(url, { mode: 'redirect' });
+      return Promise.resolve(null);
+    }
+
+    return client.launch(url, { mode: 'popup' }).then((result) => {
       return result?.token ?? null;
     });
   }

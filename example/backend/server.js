@@ -153,6 +153,37 @@ app.post('/api/challenge-token', async (req, res) => {
   }
 });
 
+app.post('/api/launch-url', async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ error: 'userId is required' });
+    }
+
+    console.log(`  Tracking 'launch' for user: ${userId}`);
+
+    const trackResponse = await authsignal.track({
+      userId,
+      action: 'launch',
+    });
+
+    console.log(`  State: ${trackResponse.state}, URL: ${trackResponse.url}`);
+
+    res.json({
+      url: trackResponse.url,
+      token: trackResponse.token,
+      state: trackResponse.state,
+    });
+  } catch (error) {
+    console.error('  Error:', error.message);
+    res.status(500).json({
+      error: 'Failed to get launch URL',
+      details: error.message,
+    });
+  }
+});
+
 app.post('/api/validate', async (req, res) => {
   try {
     const { token } = req.body;
