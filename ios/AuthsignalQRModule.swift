@@ -1,6 +1,7 @@
-import Security
-import Foundation
 import Authsignal
+import Foundation
+import React
+import Security
 
 @objc(AuthsignalQRCodeModule)
 class AuthsignalQRCodeModule: NSObject {
@@ -13,8 +14,8 @@ class AuthsignalQRCodeModule: NSObject {
   @objc func initialize(
     _ tenantID: NSString,
     withBaseURL baseURL: NSString,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     self.authsignal = AuthsignalQRCode(tenantID: tenantID as String, baseURL: baseURL as String)
     
@@ -23,7 +24,7 @@ class AuthsignalQRCodeModule: NSObject {
 
   @objc func getCredential(
     _ resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     guard let authsignal = authsignal else {
       resolve(nil)
@@ -53,9 +54,9 @@ class AuthsignalQRCodeModule: NSObject {
   @objc func addCredential(
     _ token: NSString?,
     withRequireUserAuthentication requireUserAuthentication: Bool,
-    withKeychainAccess keychainAccess: NSString,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    withKeychainAccess keychainAccess: NSString?,
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     guard let authsignal = authsignal else {
       resolve(nil)
@@ -92,7 +93,7 @@ class AuthsignalQRCodeModule: NSObject {
   
   @objc func removeCredential(
     _ resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     guard let authsignal = authsignal else {
       resolve(nil)
@@ -112,8 +113,8 @@ class AuthsignalQRCodeModule: NSObject {
 
   @objc func claimChallenge(
     _ challengeId: NSString,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     guard let authsignal = authsignal else {
       resolve(nil)
@@ -146,9 +147,9 @@ class AuthsignalQRCodeModule: NSObject {
   @objc func updateChallenge(
     _ challengeId: NSString,
     withApproval approved: Bool,
-    withVerificationCode verificationCode: NSString,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    withVerificationCode verificationCode: NSString?,
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     guard let authsignal = authsignal else {
       resolve(nil)

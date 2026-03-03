@@ -1,5 +1,9 @@
-import { NativeModules, Platform } from 'react-native';
-import { LINKING_ERROR, handleErrorCodes } from './error';
+import { Platform } from 'react-native';
+import { handleErrorCodes } from './error';
+import { getNativeModule } from './getNativeModule';
+import NativeAuthsignalPasskeyModule, {
+  type Spec as AuthsignalPasskeyModuleSpec,
+} from './NativeAuthsignalPasskeyModule';
 import type {
   AuthsignalResponse,
   SignInResponse,
@@ -27,25 +31,18 @@ interface PasskeySignInInput {
   preferImmediatelyAvailableCredentials?: boolean;
 }
 
-let initialized = false;
-let autofillRequestPending = false;
-
-const AuthsignalPasskeyModule = NativeModules.AuthsignalPasskeyModule
-  ? NativeModules.AuthsignalPasskeyModule
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
+const AuthsignalPasskeyModule = getNativeModule<AuthsignalPasskeyModuleSpec>(
+  'AuthsignalPasskeyModule',
+  NativeAuthsignalPasskeyModule
+);
 
 export class AuthsignalPasskey {
   tenantID: string;
   baseURL: string;
   deviceID?: string;
   enableLogging: boolean;
+  private initialized = false;
+  private autofillRequestPending = false;
 
   constructor({ tenantID, baseURL, deviceID, enableLogging }: ConstructorArgs) {
     this.tenantID = tenantID;
@@ -63,12 +60,12 @@ export class AuthsignalPasskey {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalPasskeyModule.signUp(
-        token,
-        username,
-        displayName,
+      const data = (await AuthsignalPasskeyModule.signUp(
+        token ?? null,
+        username ?? null,
+        displayName ?? null,
         ignorePasskeyAlreadyExistsError
-      );
+      )) as SignUpResponse;
 
       return { data };
     } catch (ex) {
@@ -90,50 +87,36 @@ export class AuthsignalPasskey {
 
     try {
       if (autofill) {
-        if (autofillRequestPending) {
+        if (this.autofillRequestPending) {
           return {};
         } else {
-          autofillRequestPending = true;
+          this.autofillRequestPending = true;
         }
       }
 
-      if (Platform.OS === 'ios') {
-        const data = await AuthsignalPasskeyModule.signIn(
-          action,
-          token,
-          autofill,
-          preferImmediatelyAvailableCredentials
-        );
+      const data = (await AuthsignalPasskeyModule.signIn(
+        action ?? null,
+        token ?? null,
+        autofill,
+        preferImmediatelyAvailableCredentials
+      )) as SignInResponse;
 
-        autofillRequestPending = false;
+      this.autofillRequestPending = false;
 
-        return { data };
-      } else {
-        const data = await AuthsignalPasskeyModule.signIn(
-          action,
-          token,
-          preferImmediatelyAvailableCredentials
-        );
-
-        autofillRequestPending = false;
-
-        return { data };
-      }
+      return { data };
     } catch (ex) {
       if (this.enableLogging && !autofill) {
         console.log(ex);
       }
 
-      autofillRequestPending = false;
+      this.autofillRequestPending = false;
 
       return handleErrorCodes(ex);
     }
   }
 
   cancel() {
-    if (Platform.OS === 'ios') {
-      AuthsignalPasskeyModule.cancel();
-    }
+    AuthsignalPasskeyModule.cancel();
   }
 
   isSupported(): boolean {
@@ -151,7 +134,9 @@ export class AuthsignalPasskey {
   }: { username?: string } = {}): Promise<boolean> {
     await this.ensureModuleIsInitialized();
 
-    return await AuthsignalPasskeyModule.shouldPromptToCreatePasskey(username);
+    return await AuthsignalPasskeyModule.shouldPromptToCreatePasskey(
+      username ?? null
+    );
   }
 
   /**
@@ -164,16 +149,16 @@ export class AuthsignalPasskey {
   }
 
   private async ensureModuleIsInitialized() {
-    if (initialized) {
+    if (this.initialized) {
       return;
     }
 
     await AuthsignalPasskeyModule.initialize(
       this.tenantID,
       this.baseURL,
-      this.deviceID
+      this.deviceID ?? null
     );
 
-    initialized = true;
+    this.initialized = true;
   }
 }

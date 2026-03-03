@@ -5,33 +5,22 @@ import com.authsignal.totp.AuthsignalTOTP
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.module.annotations.ReactModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
+@ReactModule(name = AuthsignalTOTPModule.NAME)
 class AuthsignalTOTPModule(private val reactContext: ReactApplicationContext) :
-  ReactContextBaseJavaModule(
-    reactContext
-  ) {
+  NativeAuthsignalTOTPModuleSpec(reactContext) {
   private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
   private var authsignal: AuthsignalTOTP? = null
   private val defaultError = "unexpected_error"
 
-  override fun getConstants(): Map<String, Any>? {
-    val constants: MutableMap<String, Any> = HashMap()
-    constants["bundleIdentifier"] = reactContext.applicationInfo.packageName
-    return constants
-  }
-
-  override fun getName(): String {
-    return "AuthsignalTOTPModule"
-  }
-
   @ReactMethod
-  fun initialize(tenantID: String, baseURL: String, promise: Promise) {
+  override fun initialize(tenantID: String, baseURL: String, promise: Promise) {
     val currentActivity = reactContext.currentActivity
 
     if (currentActivity != null) {
@@ -42,7 +31,7 @@ class AuthsignalTOTPModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun enroll(promise: Promise) {
+  override fun enroll(promise: Promise) {
     launch(promise) {
       val response = it.enroll()
 
@@ -62,7 +51,7 @@ class AuthsignalTOTPModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun verify(code: String, promise: Promise) {
+  override fun verify(code: String, promise: Promise) {
     launch(promise) {
       val response = it.verify(code)
 
@@ -91,5 +80,9 @@ class AuthsignalTOTPModule(private val reactContext: ReactApplicationContext) :
         promise.resolve(null)
       }
     }
+  }
+
+  companion object {
+    const val NAME = "AuthsignalTOTPModule"
   }
 }

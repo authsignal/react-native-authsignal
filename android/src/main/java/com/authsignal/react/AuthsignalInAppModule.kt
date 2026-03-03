@@ -5,41 +5,29 @@ import com.authsignal.inapp.AuthsignalInApp
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.module.annotations.ReactModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
+@ReactModule(name = AuthsignalInAppModule.NAME)
 class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
-  ReactContextBaseJavaModule(
-    reactContext
-  ) {
+  NativeAuthsignalInAppModuleSpec(reactContext) {
   private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
   private var authsignal: AuthsignalInApp? = null
   private var defaultError = "unexpected_error"
 
-  override fun getConstants(): Map<String, Any>? {
-    val constants: MutableMap<String, Any> = HashMap()
-    constants["bundleIdentifier"] = reactContext.applicationInfo.packageName
-    return constants
-  }
-
-  override fun getName(): String {
-    return "AuthsignalInAppModule"
-  }
-
   @ReactMethod
-  fun initialize(tenantID: String?, baseURL: String?, promise: Promise) {
-    Log.d("AuthsignalInAppModule", "initialize: $tenantID, $baseURL")
-    authsignal = AuthsignalInApp(tenantID!!, baseURL!!, context = reactContext)
+  override fun initialize(tenantID: String, baseURL: String, promise: Promise) {
+    authsignal = AuthsignalInApp(tenantID, baseURL, context = reactContext)
 
     promise.resolve(null)
   }
 
   @ReactMethod
-  fun getCredential(username: String?, promise: Promise) {
+  override fun getCredential(username: String?, promise: Promise) {
     launch(promise) {
       val response = it.getCredential(username = username)
 
@@ -62,8 +50,10 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun addCredential(
+  override fun addCredential(
     token: String?,
+    _requireUserAuthentication: Boolean,
+    _keychainAccess: String?,
     username: String?,
     promise: Promise
   ) {
@@ -94,7 +84,7 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun removeCredential(username: String?, promise: Promise) {
+  override fun removeCredential(username: String?, promise: Promise) {
     launch(promise) {
       val response = it.removeCredential(username = username)
 
@@ -109,7 +99,7 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun verify(
+  override fun verify(
     action: String?,
     username: String?,
     promise: Promise
@@ -134,7 +124,7 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun createPin(pin: String, username: String, token: String?, promise: Promise) {
+  override fun createPin(pin: String, username: String, token: String?, promise: Promise) {
     launch(promise) {
       val response = it.createPin(
         pin = pin,
@@ -159,7 +149,7 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun verifyPin(pin: String, username: String, action: String?, promise: Promise) {
+  override fun verifyPin(pin: String, username: String, action: String?, promise: Promise) {
     launch(promise) {
       val response = it.verifyPin(
         pin = pin,
@@ -183,7 +173,7 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun deletePin(username: String, promise: Promise) {
+  override fun deletePin(username: String, promise: Promise) {
     launch(promise) {
       val response = it.deletePin(username = username)
 
@@ -198,7 +188,7 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun getAllPinUsernames(promise: Promise) {
+  override fun getAllPinUsernames(promise: Promise) {
     launch(promise) {
       val response = it.getAllPinUsernames()
 
@@ -224,5 +214,9 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
         promise.resolve(null)
       }
     }
+  }
+
+  companion object {
+    const val NAME = "AuthsignalInAppModule"
   }
 }

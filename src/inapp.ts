@@ -1,5 +1,8 @@
-import { NativeModules, Platform } from 'react-native';
-import { handleErrorCodes, LINKING_ERROR } from './error';
+import { handleErrorCodes } from './error';
+import { getNativeModule } from './getNativeModule';
+import NativeAuthsignalInAppModule, {
+  type Spec as AuthsignalInAppModuleSpec,
+} from './NativeAuthsignalInAppModule';
 import type {
   AuthsignalResponse,
   AppCredential,
@@ -20,23 +23,16 @@ interface ConstructorArgs {
   enableLogging: boolean;
 }
 
-let initialized = false;
-
-const AuthsignalInAppModule = NativeModules.AuthsignalInAppModule
-  ? NativeModules.AuthsignalInAppModule
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
+const AuthsignalInAppModule = getNativeModule<AuthsignalInAppModuleSpec>(
+  'AuthsignalInAppModule',
+  NativeAuthsignalInAppModule
+);
 
 export class AuthsignalInApp {
   tenantID: string;
   baseURL: string;
   enableLogging: boolean;
+  private initialized = false;
 
   constructor({ tenantID, baseURL, enableLogging }: ConstructorArgs) {
     this.tenantID = tenantID;
@@ -52,7 +48,9 @@ export class AuthsignalInApp {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalInAppModule.getCredential(username);
+      const data = (await AuthsignalInAppModule.getCredential(
+        username ?? null
+      )) as AppCredential | undefined;
 
       return { data };
     } catch (ex) {
@@ -73,15 +71,12 @@ export class AuthsignalInApp {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data =
-        Platform.OS === 'ios'
-          ? await AuthsignalInAppModule.addCredential(
-              token,
-              requireUserAuthentication,
-              keychainAccess,
-              username
-            )
-          : await AuthsignalInAppModule.addCredential(token, username);
+      const data = (await AuthsignalInAppModule.addCredential(
+        token ?? null,
+        requireUserAuthentication,
+        keychainAccess ?? null,
+        username ?? null
+      )) as AppCredential;
 
       return { data };
     } catch (ex) {
@@ -99,7 +94,9 @@ export class AuthsignalInApp {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalInAppModule.removeCredential(username);
+      const data = await AuthsignalInAppModule.removeCredential(
+        username ?? null
+      );
       return { data };
     } catch (ex) {
       if (this.enableLogging) {
@@ -116,7 +113,10 @@ export class AuthsignalInApp {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalInAppModule.verify(action, username);
+      const data = (await AuthsignalInAppModule.verify(
+        action ?? null,
+        username ?? null
+      )) as InAppVerifyResponse;
 
       return { data };
     } catch (ex) {
@@ -136,7 +136,11 @@ export class AuthsignalInApp {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalInAppModule.createPin(pin, username, token);
+      const data = (await AuthsignalInAppModule.createPin(
+        pin,
+        username,
+        token ?? null
+      )) as AppCredential;
       return { data };
     } catch (ex) {
       if (this.enableLogging) {
@@ -155,7 +159,11 @@ export class AuthsignalInApp {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalInAppModule.verifyPin(pin, username, action);
+      const data = (await AuthsignalInAppModule.verifyPin(
+        pin,
+        username,
+        action ?? null
+      )) as VerifyPinResponse;
       return { data };
     } catch (ex) {
       if (this.enableLogging) {
@@ -199,12 +207,12 @@ export class AuthsignalInApp {
   }
 
   private async ensureModuleIsInitialized() {
-    if (initialized) {
+    if (this.initialized) {
       return;
     }
 
     await AuthsignalInAppModule.initialize(this.tenantID, this.baseURL);
 
-    initialized = true;
+    this.initialized = true;
   }
 }

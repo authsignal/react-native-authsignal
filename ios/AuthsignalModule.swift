@@ -18,8 +18,8 @@ class AuthsignalModule: NSObject, ASWebAuthenticationPresentationContextProvidin
   
   @objc func launch(
     _ url: NSString,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     let scheme = "authsignal"
     let urlStr = url as String?
@@ -68,11 +68,11 @@ class AuthsignalModule: NSObject, ASWebAuthenticationPresentationContextProvidin
   }
   
   @objc func setToken(
-    _ token: NSString,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    _ token: NSString?,
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
-    TokenCache.shared.token = token as String
+    TokenCache.shared.token = token as String?
 
     resolve("token_set")
   }

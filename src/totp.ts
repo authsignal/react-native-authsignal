@@ -1,5 +1,8 @@
-import { NativeModules } from 'react-native';
-import { handleErrorCodes, LINKING_ERROR } from './error';
+import { handleErrorCodes } from './error';
+import { getNativeModule } from './getNativeModule';
+import NativeAuthsignalTOTPModule, {
+  type Spec as AuthsignalTOTPModuleSpec,
+} from './NativeAuthsignalTOTPModule';
 import type { AuthsignalResponse, VerifyInput, VerifyResponse } from './types';
 
 interface ConstructorArgs {
@@ -13,23 +16,16 @@ interface EnrollTotpResponse {
   secret: string;
 }
 
-let initialized = false;
-
-const AuthsignalTOTPModule = NativeModules.AuthsignalTOTPModule
-  ? NativeModules.AuthsignalTOTPModule
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
+const AuthsignalTOTPModule = getNativeModule<AuthsignalTOTPModuleSpec>(
+  'AuthsignalTOTPModule',
+  NativeAuthsignalTOTPModule
+);
 
 export class AuthsignalTotp {
   tenantID: string;
   baseURL: string;
   enableLogging: boolean;
+  private initialized = false;
 
   constructor({ tenantID, baseURL, enableLogging }: ConstructorArgs) {
     this.tenantID = tenantID;
@@ -41,7 +37,7 @@ export class AuthsignalTotp {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalTOTPModule.enroll();
+      const data = (await AuthsignalTOTPModule.enroll()) as EnrollTotpResponse;
 
       return { data };
     } catch (ex) {
@@ -55,7 +51,7 @@ export class AuthsignalTotp {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalTOTPModule.verify(code);
+      const data = (await AuthsignalTOTPModule.verify(code)) as VerifyResponse;
 
       return { data };
     } catch (ex) {
@@ -64,13 +60,13 @@ export class AuthsignalTotp {
   }
 
   private async ensureModuleIsInitialized() {
-    if (initialized) {
+    if (this.initialized) {
       return;
     }
 
     await AuthsignalTOTPModule.initialize(this.tenantID, this.baseURL);
 
-    initialized = true;
+    this.initialized = true;
   }
 
   private handleError(ex: unknown) {

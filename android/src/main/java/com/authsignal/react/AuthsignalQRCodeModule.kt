@@ -5,41 +5,29 @@ import com.authsignal.qr.AuthsignalQRCode
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.module.annotations.ReactModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
+@ReactModule(name = AuthsignalQRCodeModule.NAME)
 class AuthsignalQRCodeModule(private val reactContext: ReactApplicationContext) :
-  ReactContextBaseJavaModule(
-    reactContext
-  ) {
+  NativeAuthsignalQRCodeModuleSpec(reactContext) {
   private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
   private var authsignal: AuthsignalQRCode? = null
   private var defaultError = "unexpected_error"
 
-  override fun getConstants(): Map<String, Any>? {
-    val constants: MutableMap<String, Any> = HashMap()
-    constants["bundleIdentifier"] = reactContext.applicationInfo.packageName
-    return constants
-  }
-
-  override fun getName(): String {
-    return "AuthsignalQRCodeModule"
-  }
-
   @ReactMethod
-  fun initialize(tenantID: String?, baseURL: String?, promise: Promise) {
-    Log.d("AuthsignalQRCodeModule", "initialize: $tenantID, $baseURL")
-    authsignal = AuthsignalQRCode(tenantID!!, baseURL!!)
+  override fun initialize(tenantID: String, baseURL: String, promise: Promise) {
+    authsignal = AuthsignalQRCode(tenantID, baseURL)
 
     promise.resolve(null)
   }
 
   @ReactMethod
-  fun getCredential(promise: Promise) {
+  override fun getCredential(promise: Promise) {
     launch(promise) {
       val response = it.getCredential()
 
@@ -62,8 +50,10 @@ class AuthsignalQRCodeModule(private val reactContext: ReactApplicationContext) 
   }
 
   @ReactMethod
-  fun addCredential(
+  override fun addCredential(
     token: String?,
+    _requireUserAuthentication: Boolean,
+    _keychainAccess: String?,
     promise: Promise
   ) {
     launch(promise) {
@@ -86,7 +76,7 @@ class AuthsignalQRCodeModule(private val reactContext: ReactApplicationContext) 
   }
 
   @ReactMethod
-  fun removeCredential(promise: Promise) {
+  override fun removeCredential(promise: Promise) {
     launch(promise) {
       val response = it.removeCredential()
 
@@ -101,7 +91,7 @@ class AuthsignalQRCodeModule(private val reactContext: ReactApplicationContext) 
   }
 
   @ReactMethod
-  fun claimChallenge(
+  override fun claimChallenge(
     challengeId: String,
     promise: Promise
   ) {
@@ -130,7 +120,7 @@ class AuthsignalQRCodeModule(private val reactContext: ReactApplicationContext) 
   }
 
   @ReactMethod
-  fun updateChallenge(
+  override fun updateChallenge(
     challengeId: String,
     approved: Boolean,
     verificationCode: String?,
@@ -159,5 +149,9 @@ class AuthsignalQRCodeModule(private val reactContext: ReactApplicationContext) 
         promise.resolve(null)
       }
     }
+  }
+
+  companion object {
+    const val NAME = "AuthsignalQRCodeModule"
   }
 }

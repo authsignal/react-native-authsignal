@@ -1,5 +1,8 @@
-import { NativeModules, Platform } from 'react-native';
-import { handleErrorCodes, LINKING_ERROR } from './error';
+import { handleErrorCodes } from './error';
+import { getNativeModule } from './getNativeModule';
+import NativeAuthsignalQRCodeModule, {
+  type Spec as AuthsignalQRCodeModuleSpec,
+} from './NativeAuthsignalQRCodeModule';
 import type {
   AddCredentialInput,
   AppCredential,
@@ -15,23 +18,16 @@ interface ConstructorArgs {
   enableLogging: boolean;
 }
 
-let initialized = false;
-
-const AuthsignalQRCodeModule = NativeModules.AuthsignalQRCodeModule
-  ? NativeModules.AuthsignalQRCodeModule
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
+const AuthsignalQRCodeModule = getNativeModule<AuthsignalQRCodeModuleSpec>(
+  'AuthsignalQRCodeModule',
+  NativeAuthsignalQRCodeModule
+);
 
 export class AuthsignalQrCode {
   tenantID: string;
   baseURL: string;
   enableLogging: boolean;
+  private initialized = false;
 
   constructor({ tenantID, baseURL, enableLogging }: ConstructorArgs) {
     this.tenantID = tenantID;
@@ -45,7 +41,9 @@ export class AuthsignalQrCode {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalQRCodeModule.getCredential();
+      const data = (await AuthsignalQRCodeModule.getCredential()) as
+        | AppCredential
+        | undefined;
 
       return { data };
     } catch (ex) {
@@ -65,14 +63,11 @@ export class AuthsignalQrCode {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data =
-        Platform.OS === 'ios'
-          ? await AuthsignalQRCodeModule.addCredential(
-              token,
-              requireUserAuthentication,
-              keychainAccess
-            )
-          : await AuthsignalQRCodeModule.addCredential(token);
+      const data = (await AuthsignalQRCodeModule.addCredential(
+        token ?? null,
+        requireUserAuthentication,
+        keychainAccess ?? null
+      )) as AppCredential;
 
       return { data };
     } catch (ex) {
@@ -105,7 +100,9 @@ export class AuthsignalQrCode {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalQRCodeModule.claimChallenge(challengeId);
+      const data = (await AuthsignalQRCodeModule.claimChallenge(
+        challengeId
+      )) as ClaimChallengeResponse;
 
       return { data };
     } catch (ex) {
@@ -142,12 +139,12 @@ export class AuthsignalQrCode {
   }
 
   private async ensureModuleIsInitialized() {
-    if (initialized) {
+    if (this.initialized) {
       return;
     }
 
     await AuthsignalQRCodeModule.initialize(this.tenantID, this.baseURL);
 
-    initialized = true;
+    this.initialized = true;
   }
 }

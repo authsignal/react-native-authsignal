@@ -1,5 +1,8 @@
-import { NativeModules } from 'react-native';
-import { handleErrorCodes, LINKING_ERROR } from './error';
+import { handleErrorCodes } from './error';
+import { getNativeModule } from './getNativeModule';
+import NativeAuthsignalWhatsappModule, {
+  type Spec as AuthsignalWhatsappModuleSpec,
+} from './NativeAuthsignalWhatsappModule';
 import type { AuthsignalResponse, VerifyInput, VerifyResponse } from './types';
 
 interface ConstructorArgs {
@@ -8,23 +11,16 @@ interface ConstructorArgs {
   enableLogging: boolean;
 }
 
-let initialized = false;
-
-const AuthsignalWhatsappModule = NativeModules.AuthsignalWhatsappModule
-  ? NativeModules.AuthsignalWhatsappModule
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
+const AuthsignalWhatsappModule = getNativeModule<AuthsignalWhatsappModuleSpec>(
+  'AuthsignalWhatsappModule',
+  NativeAuthsignalWhatsappModule
+);
 
 export class AuthsignalWhatsapp {
   tenantID: string;
   baseURL: string;
   enableLogging: boolean;
+  private initialized = false;
 
   constructor({ tenantID, baseURL, enableLogging }: ConstructorArgs) {
     this.tenantID = tenantID;
@@ -50,7 +46,9 @@ export class AuthsignalWhatsapp {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalWhatsappModule.verify(code);
+      const data = (await AuthsignalWhatsappModule.verify(
+        code
+      )) as VerifyResponse;
 
       return { data };
     } catch (ex) {
@@ -59,13 +57,13 @@ export class AuthsignalWhatsapp {
   }
 
   private async ensureModuleIsInitialized() {
-    if (initialized) {
+    if (this.initialized) {
       return;
     }
 
     await AuthsignalWhatsappModule.initialize(this.tenantID, this.baseURL);
 
-    initialized = true;
+    this.initialized = true;
   }
 
   private handleError(ex: unknown) {

@@ -1,5 +1,8 @@
-import { NativeModules } from 'react-native';
-import { handleErrorCodes, LINKING_ERROR } from './error';
+import { handleErrorCodes } from './error';
+import { getNativeModule } from './getNativeModule';
+import NativeAuthsignalEmailModule, {
+  type Spec as AuthsignalEmailModuleSpec,
+} from './NativeAuthsignalEmailModule';
 import type { AuthsignalResponse, VerifyInput, VerifyResponse } from './types';
 
 interface ConstructorArgs {
@@ -12,23 +15,16 @@ interface EnrollEmailInput {
   email: string;
 }
 
-let initialized = false;
-
-const AuthsignalEmailModule = NativeModules.AuthsignalEmailModule
-  ? NativeModules.AuthsignalEmailModule
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
+const AuthsignalEmailModule = getNativeModule<AuthsignalEmailModuleSpec>(
+  'AuthsignalEmailModule',
+  NativeAuthsignalEmailModule
+);
 
 export class AuthsignalEmail {
   tenantID: string;
   baseURL: string;
   enableLogging: boolean;
+  private initialized = false;
 
   constructor({ tenantID, baseURL, enableLogging }: ConstructorArgs) {
     this.tenantID = tenantID;
@@ -66,7 +62,7 @@ export class AuthsignalEmail {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalEmailModule.verify(code);
+      const data = (await AuthsignalEmailModule.verify(code)) as VerifyResponse;
 
       return { data };
     } catch (ex) {
@@ -75,13 +71,13 @@ export class AuthsignalEmail {
   }
 
   private async ensureModuleIsInitialized() {
-    if (initialized) {
+    if (this.initialized) {
       return;
     }
 
     await AuthsignalEmailModule.initialize(this.tenantID, this.baseURL);
 
-    initialized = true;
+    this.initialized = true;
   }
 
   private handleError(ex: unknown) {

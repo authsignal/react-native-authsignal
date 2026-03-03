@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       },
-      "package": "com.authsignal.example"
+      "package": "com.authsignal.example",
+      "kotlinVersion": "2.1.20"
     },
     "plugins": [
       "expo-router"

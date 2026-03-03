@@ -5,31 +5,22 @@ import com.authsignal.passkey.AuthsignalPasskey
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.module.annotations.ReactModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
+@ReactModule(name = AuthsignalPasskeyModule.NAME)
 class AuthsignalPasskeyModule(private val reactContext: ReactApplicationContext) :
-  ReactContextBaseJavaModule(reactContext) {
+  NativeAuthsignalPasskeyModuleSpec(reactContext) {
   private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
   private var authsignal: AuthsignalPasskey? = null
   private var defaultError = "unexpected_error"
 
-  override fun getConstants(): Map<String, Any>? {
-    val constants: MutableMap<String, Any> = HashMap()
-    constants["bundleIdentifier"] = reactContext.applicationInfo.packageName
-    return constants
-  }
-
-  override fun getName(): String {
-    return "AuthsignalPasskeyModule"
-  }
-
   @ReactMethod
-  fun initialize(tenantID: String, baseURL: String, deviceID: String?, promise: Promise) {
+  override fun initialize(tenantID: String, baseURL: String, deviceID: String?, promise: Promise) {
     val activity = reactContext.currentActivity
 
     if (activity != null) {
@@ -40,7 +31,7 @@ class AuthsignalPasskeyModule(private val reactContext: ReactApplicationContext)
   }
 
   @ReactMethod
-  fun signUp(token: String?, username: String?, displayName: String?, ignorePasskeyAlreadyExistsError: Boolean, promise: Promise) {
+  override fun signUp(token: String?, username: String?, displayName: String?, ignorePasskeyAlreadyExistsError: Boolean, promise: Promise) {
     launch(promise) {
       val response = it.signUp(token, username, displayName, false, ignorePasskeyAlreadyExistsError)
 
@@ -61,7 +52,13 @@ class AuthsignalPasskeyModule(private val reactContext: ReactApplicationContext)
   }
 
   @ReactMethod
-  fun signIn(action: String?, token: String?, preferImmediatelyAvailableCredentials: Boolean, promise: Promise) {
+  override fun signIn(
+    action: String?,
+    token: String?,
+    _autofill: Boolean,
+    preferImmediatelyAvailableCredentials: Boolean,
+    promise: Promise
+  ) {
     launch(promise) {
       val response = it.signIn(action, token, preferImmediatelyAvailableCredentials)
 
@@ -84,7 +81,12 @@ class AuthsignalPasskeyModule(private val reactContext: ReactApplicationContext)
   }
 
   @ReactMethod
-  fun shouldPromptToCreatePasskey(username: String?, promise: Promise) {
+  override fun cancel() {
+    // No-op on Android; cancel is only applicable for iOS autofill
+  }
+
+  @ReactMethod
+  override fun shouldPromptToCreatePasskey(username: String?, promise: Promise) {
     launch(promise) {
       val response = it.shouldPromptToCreatePasskey(username)
 
@@ -93,7 +95,7 @@ class AuthsignalPasskeyModule(private val reactContext: ReactApplicationContext)
   }
 
   @ReactMethod
-  fun isAvailableOnDevice(promise: Promise) {
+  override fun isAvailableOnDevice(promise: Promise) {
     launch(promise) {
       val response = it.isAvailableOnDevice()
 
@@ -111,5 +113,9 @@ class AuthsignalPasskeyModule(private val reactContext: ReactApplicationContext)
         promise.resolve(null)
       }
     }
+  }
+
+  companion object {
+    const val NAME = "AuthsignalPasskeyModule"
   }
 }
