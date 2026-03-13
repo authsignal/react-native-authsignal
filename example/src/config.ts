@@ -5,7 +5,7 @@ import { Platform } from 'react-native';
  * Get your credentials from: https://portal.authsignal.com
  */
 export const AuthsignalConfig = {
-  tenantId: 'YOUR_TENANT_ID',
+  tenantId: '87902a54-1902-47a6-b492-43acb0dca6d2',
   baseUrl: 'https://api.authsignal.com/v1',
   backendUrl: Platform.select({
     web: 'http://localhost:3001',
