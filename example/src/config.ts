@@ -10,7 +10,7 @@ export const AuthsignalConfig = {
   backendUrl: Platform.select({
     web: 'http://localhost:3001',
     android: 'http://10.0.2.2:3001',
-    default: 'http://192.168.1.3:3001',
+    default: 'http://localhost:3001',
   }),
 
   get isConfigured() {
