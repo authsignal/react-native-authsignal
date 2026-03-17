@@ -231,14 +231,16 @@ class AuthsignalInAppModule: NSObject {
       
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
-      } else {
+      } else if let data = response.data {
         let verifyPinResponse: [String: Any?] = [
-          "isVerified": response.data!.isVerified,
-          "token": response.data!.token,
-          "userId": response.data!.userId,
+          "isVerified": data.isVerified,
+          "token": data.token,
+          "userId": data.userId,
         ]
 
         resolve(verifyPinResponse)
+      } else {
+        reject("unexpected_error", "No data returned", nil)
       }
     }
   }

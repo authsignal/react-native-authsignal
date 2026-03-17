@@ -1,5 +1,5 @@
 PODS:
-  - Authsignal (2.3.0)
+  - Authsignal (2.4.0-alpha.1)
   - boost (1.84.0)
   - DoubleConversion (1.1.6)
   - EXConstants (17.1.8):
@@ -1401,8 +1401,8 @@ PODS:
     - React-jsiexecutor
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
-  - react-native-authsignal (2.6.1):
-    - Authsignal (= 2.3.0)
+  - react-native-authsignal (2.7.0-alpha.1):
+    - Authsignal (= 2.4.0-alpha.1)
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2139,7 +2139,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  Authsignal: 271c511c4f084982cae401f051937502098bff98
+  Authsignal: 2a8eb981ba1e0298b2e89d54029ef08170305a16
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   EXConstants: d3d551cb154718f5161c4247304e96aa59f6cca7
@@ -2188,7 +2188,7 @@ SPEC CHECKSUMS:
   React-logger: 1426d04b594a2e68b0ac2add21d45422d06397a3
   React-Mapbuffer: 70a29536f84ddffca4a91097651d2b8f194f7c67
   React-microtasksnativemodule: ff05e894231c44c21135d1d23a82b87656d98eeb
-  react-native-authsignal: 951f42ea96dd03ea8c26dde657ea56cd57055057
+  react-native-authsignal: 6476028e79dde2593767b958ece21475862673b2
   react-native-safe-area-context: 562163222d999b79a51577eda2ea8ad2c32b4d06
   React-NativeModulesApple: d94850b316446b0c39a82eb278d6efaa1a634055
   React-oscompat: 56b4766e96b06843a3af49a6763ef40992e720aa

@@ -116,6 +116,7 @@ export class AuthsignalPasskey {
   }
 
   cancel() {
+    this.autofillRequestPending = false;
     AuthsignalPasskeyModule.cancel();
   }
 

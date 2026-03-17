@@ -86,17 +86,19 @@ class AuthsignalPasskeyModule: NSObject {
       
       if (response.error != nil) {
         reject(response.errorCode ?? "unexpected_error", response.error, nil)
-      } else {
+      } else if let data = response.data {
         let signInResponse: [String: Any?] = [
-          "isVerified": response.data!.isVerified,
-          "token": response.data!.token,
-          "userId": response.data!.userId,
-          "userAuthenticatorId": response.data!.userAuthenticatorId,
-          "username": response.data!.username,
-          "displayName": response.data!.displayName,
+          "isVerified": data.isVerified,
+          "token": data.token,
+          "userId": data.userId,
+          "userAuthenticatorId": data.userAuthenticatorId,
+          "username": data.username,
+          "displayName": data.displayName,
         ]
 
         resolve(signInResponse)
+      } else {
+        reject("unexpected_error", "No data returned", nil)
       }
     }
   }

@@ -127,13 +127,17 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
 
         promise.reject(errorCode, response.error)
       } else {
-        val data = response.data!!
-        val map = Arguments.createMap()
-        map.putString("token", data.token)
-        map.putString("userId", data.userId)
-        map.putString("userAuthenticatorId", data.userAuthenticatorId)
-        map.putString("username", data.username)
-        promise.resolve(map)
+        val data = response.data
+        if (data != null) {
+          val map = Arguments.createMap()
+          map.putString("token", data.token)
+          map.putString("userId", data.userId)
+          map.putString("userAuthenticatorId", data.userAuthenticatorId)
+          map.putString("username", data.username)
+          promise.resolve(map)
+        } else {
+          promise.reject(defaultError, "No data returned")
+        }
       }
     }
   }
@@ -152,13 +156,17 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
 
         promise.reject(errorCode, response.error)
       } else {
-        val data = response.data!!
-        val map = Arguments.createMap()
-        map.putString("credentialId", data.credentialId)
-        map.putString("createdAt", data.createdAt)
-        map.putString("userId", data.userId)
-        map.putString("lastAuthenticatedAt", data.lastAuthenticatedAt)
-        promise.resolve(map)
+        val data = response.data
+        if (data != null) {
+          val map = Arguments.createMap()
+          map.putString("credentialId", data.credentialId)
+          map.putString("createdAt", data.createdAt)
+          map.putString("userId", data.userId)
+          map.putString("lastAuthenticatedAt", data.lastAuthenticatedAt)
+          promise.resolve(map)
+        } else {
+          promise.reject(defaultError, "No data returned")
+        }
       }
     }
   }
@@ -177,12 +185,16 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
 
         promise.reject(errorCode, response.error)
       } else {
-        val data = response.data!!
-        val map = Arguments.createMap()
-        map.putBoolean("isVerified", data.isVerified)
-        map.putString("token", data.token)
-        map.putString("userId", data.userId)
-        promise.resolve(map)
+        val data = response.data
+        if (data != null) {
+          val map = Arguments.createMap()
+          map.putBoolean("isVerified", data.isVerified)
+          map.putString("token", data.token)
+          map.putString("userId", data.userId)
+          promise.resolve(map)
+        } else {
+          promise.reject(defaultError, "No data returned")
+        }
       }
     }
   }
