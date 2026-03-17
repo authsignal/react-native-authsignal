@@ -69,6 +69,7 @@ export class AuthsignalInApp {
     requireUserAuthentication = false,
     keychainAccess,
     username,
+    appAttestation,
   }: InAppAddCredentialInput = {}): Promise<AuthsignalResponse<AppCredential>> {
     await this.ensureModuleIsInitialized();
 
@@ -79,9 +80,14 @@ export class AuthsignalInApp {
               token,
               requireUserAuthentication,
               keychainAccess,
-              username
+              username,
+              appAttestation
             )
-          : await AuthsignalInAppModule.addCredential(token, username);
+          : await AuthsignalInAppModule.addCredential(
+              token,
+              username,
+              appAttestation
+            );
 
       return { data };
     } catch (ex) {

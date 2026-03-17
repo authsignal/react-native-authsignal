@@ -45,10 +45,22 @@ export interface VerifyResponse {
   failureReason?: string;
 }
 
+export enum AppAttestationProvider {
+  apple = 'apple',
+  playIntegrity = 'playIntegrity',
+}
+
+export interface AppAttestation {
+  provider: AppAttestationProvider;
+  token: string;
+  keyId?: string;
+}
+
 export interface AddCredentialInput {
   token?: string;
   requireUserAuthentication?: boolean;
   keychainAccess?: KeychainAccess;
+  appAttestation?: AppAttestation;
 }
 
 export interface AppChallenge {
