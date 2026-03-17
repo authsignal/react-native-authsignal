@@ -2,11 +2,14 @@ package com.authsignal.react
 
 import android.util.Log
 import com.authsignal.inapp.AuthsignalInApp
+import com.authsignal.models.api.AppAttestation
+import com.authsignal.models.api.AppAttestationProvider
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.ReadableMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -65,8 +68,19 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
   fun addCredential(
     token: String?,
     username: String?,
+    appAttestationMap: ReadableMap?,
     promise: Promise
   ) {
+    val appAttestation = appAttestationMap?.let { map ->
+      val attestationToken = map.getString("token") ?: return@let null
+      val provider = when (map.getString("provider")) {
+        "playIntegrity" -> AppAttestationProvider.PLAY_INTEGRITY
+        else -> AppAttestationProvider.PLAY_INTEGRITY
+      }
+      val keyId = if (map.hasKey("keyId")) map.getString("keyId") else null
+      AppAttestation(provider = provider, token = attestationToken, keyId = keyId)
+    }
+
     launch(promise) {
       val response = it.addCredential(
         token = token,
@@ -75,6 +89,7 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
         timeout = 0,
         authorizationType = 0,
         username = username,
+        appAttestation = appAttestation,
       )
 
       if (response.error != null) {

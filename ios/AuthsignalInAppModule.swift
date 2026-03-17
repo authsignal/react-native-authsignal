@@ -58,6 +58,7 @@ class AuthsignalInAppModule: NSObject {
     withRequireUserAuthentication requireUserAuthentication: Bool,
     withKeychainAccess keychainAccess: NSString,
     withUsername username: NSString?,
+    withAppAttestation appAttestationDict: NSDictionary?,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -65,18 +66,29 @@ class AuthsignalInAppModule: NSObject {
       resolve(nil)
       return
     }
-    
+
     let tokenStr = token as String?
     let userPresenceRequired = requireUserAuthentication as Bool
     let keychainAccess = getKeychainAccess(value: keychainAccess as String?)
     let usernameStr = username as String?
-    
+
+    var appAttestation: AppAttestation? = nil
+    if let dict = appAttestationDict,
+       let attestationToken = dict["token"] as? String {
+      appAttestation = AppAttestation(
+        provider: .apple,
+        token: attestationToken,
+        keyId: dict["keyId"] as? String
+      )
+    }
+
     Task.init {
       let response = await authsignal.addCredential(
         token: tokenStr,
         keychainAccess: keychainAccess,
         userPresenceRequired: userPresenceRequired,
-        username: usernameStr
+        username: usernameStr,
+        appAttestation: appAttestation
       )
       
       if let error = response.error {
