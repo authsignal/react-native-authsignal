@@ -7,7 +7,8 @@ export interface Spec extends TurboModule {
     token: string | null,
     withRequireUserAuthentication: boolean,
     withKeychainAccess: string | null,
-    withUsername: string | null
+    withUsername: string | null,
+    withAppAttestation: Object | null
   ): Promise<Object | null>;
   removeCredential(username: string | null): Promise<boolean>;
   verify(
