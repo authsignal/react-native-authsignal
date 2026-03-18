@@ -45,13 +45,7 @@ export interface VerifyResponse {
   failureReason?: string;
 }
 
-export enum AppAttestationProvider {
-  apple = 'apple',
-  playIntegrity = 'playIntegrity',
-}
-
 export interface AppAttestation {
-  provider: AppAttestationProvider;
   token: string;
   keyId?: string;
 }

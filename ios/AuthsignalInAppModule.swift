@@ -77,7 +77,6 @@ class AuthsignalInAppModule: NSObject {
     if let dict = appAttestationDict,
        let attestationToken = dict["token"] as? String {
       appAttestation = AppAttestation(
-        provider: .apple,
         token: attestationToken,
         keyId: dict["keyId"] as? String
       )
