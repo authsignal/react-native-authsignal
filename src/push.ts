@@ -1,5 +1,8 @@
-import { NativeModules, Platform } from 'react-native';
-import { handleErrorCodes, LINKING_ERROR } from './error';
+import { handleErrorCodes } from './error';
+import { getNativeModule } from './getNativeModule';
+import NativeAuthsignalPushModule, {
+  type Spec as AuthsignalPushModuleSpec,
+} from './NativeAuthsignalPushModule';
 import type {
   AddCredentialInput,
   AppChallenge,
@@ -14,23 +17,16 @@ interface ConstructorArgs {
   enableLogging: boolean;
 }
 
-let initialized = false;
-
-const AuthsignalPushModule = NativeModules.AuthsignalPushModule
-  ? NativeModules.AuthsignalPushModule
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
+const AuthsignalPushModule = getNativeModule<AuthsignalPushModuleSpec>(
+  'AuthsignalPushModule',
+  NativeAuthsignalPushModule
+);
 
 export class AuthsignalPush {
   tenantID: string;
   baseURL: string;
   enableLogging: boolean;
+  private initialized = false;
 
   constructor({ tenantID, baseURL, enableLogging }: ConstructorArgs) {
     this.tenantID = tenantID;
@@ -44,7 +40,9 @@ export class AuthsignalPush {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalPushModule.getCredential();
+      const data = (await AuthsignalPushModule.getCredential()) as
+        | AppCredential
+        | undefined;
 
       return { data };
     } catch (ex) {
@@ -64,14 +62,11 @@ export class AuthsignalPush {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data =
-        Platform.OS === 'ios'
-          ? await AuthsignalPushModule.addCredential(
-              token,
-              requireUserAuthentication,
-              keychainAccess
-            )
-          : await AuthsignalPushModule.addCredential(token);
+      const data = (await AuthsignalPushModule.addCredential(
+        token ?? null,
+        requireUserAuthentication,
+        keychainAccess ?? null
+      )) as AppCredential;
 
       return { data };
     } catch (ex) {
@@ -102,7 +97,9 @@ export class AuthsignalPush {
     await this.ensureModuleIsInitialized();
 
     try {
-      const data = await AuthsignalPushModule.getChallenge();
+      const data = (await AuthsignalPushModule.getChallenge()) as
+        | AppChallenge
+        | undefined;
 
       return { data };
     } catch (ex) {
@@ -139,12 +136,12 @@ export class AuthsignalPush {
   }
 
   private async ensureModuleIsInitialized() {
-    if (initialized) {
+    if (this.initialized) {
       return;
     }
 
     await AuthsignalPushModule.initialize(this.tenantID, this.baseURL);
 
-    initialized = true;
+    this.initialized = true;
   }
 }

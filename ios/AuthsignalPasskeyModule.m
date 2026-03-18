@@ -6,30 +6,30 @@
 RCT_EXTERN_METHOD(initialize:(NSString)tenantID
                   withBaseURL:(NSString)baseURL
                   withDeviceID:(NSString)deviceID
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(signUp:(NSString)token
                   withUsername:(NSString)username
                   withDisplayName:(NSString)displayName
                   withIgnorePasskeyAlreadyExistsError:(BOOL)ignorePasskeyAlreadyExistsError
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(signIn:(NSString)action
                   withToken:(NSString)token
                   withAutofill:(BOOL)autofill
                   withPreferImmediatelyAvailableCredentials:(BOOL)preferImmediatelyAvailableCredentials
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(shouldPromptToCreatePasskey:(NSString)username
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(isAvailableOnDevice:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
+                  reject:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN__BLOCKING_SYNCHRONOUS_METHOD(cancel)
+RCT_EXTERN_METHOD(cancel)
 
 @end

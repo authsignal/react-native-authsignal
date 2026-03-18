@@ -1,6 +1,7 @@
-import Security
-import Foundation
 import Authsignal
+import Foundation
+import React
+import Security
 
 @objc(AuthsignalEmailModule)
 class AuthsignalEmailModule: NSObject {
@@ -13,8 +14,8 @@ class AuthsignalEmailModule: NSObject {
   @objc func initialize(
     _ tenantID: NSString,
     withBaseURL baseURL: NSString,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     self.authsignal = AuthsignalEmail(tenantID: tenantID as String, baseURL: baseURL as String)
     
@@ -23,8 +24,8 @@ class AuthsignalEmailModule: NSObject {
   
   @objc func enroll(
     _ email: NSString,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     if (authsignal == nil) {
       resolve(nil)
@@ -50,7 +51,7 @@ class AuthsignalEmailModule: NSObject {
 
   @objc func challenge(
     _ resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     if (authsignal == nil) {
       resolve(nil)
@@ -74,8 +75,8 @@ class AuthsignalEmailModule: NSObject {
 
   @objc func verify(
     _ code: NSString,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     if (authsignal == nil) {
       resolve(nil)

@@ -5,40 +5,29 @@ import com.authsignal.push.AuthsignalPush
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.module.annotations.ReactModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
+@ReactModule(name = AuthsignalPushModule.NAME)
 class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
-  ReactContextBaseJavaModule(
-    reactContext
-  ) {
+  NativeAuthsignalPushModuleSpec(reactContext) {
   private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
   private var authsignal: AuthsignalPush? = null
   private var defaultError = "unexpected_error"
 
-  override fun getConstants(): Map<String, Any>? {
-    val constants: MutableMap<String, Any> = HashMap()
-    constants["bundleIdentifier"] = reactContext.applicationInfo.packageName
-    return constants
-  }
-
-  override fun getName(): String {
-    return "AuthsignalPushModule"
-  }
-
   @ReactMethod
-  fun initialize(tenantID: String?, baseURL: String?, promise: Promise) {
-    authsignal = AuthsignalPush(tenantID!!, baseURL!!)
+  override fun initialize(tenantID: String, baseURL: String, promise: Promise) {
+    authsignal = AuthsignalPush(tenantID, baseURL)
 
     promise.resolve(null)
   }
 
   @ReactMethod
-  fun getCredential(promise: Promise) {
+  override fun getCredential(promise: Promise) {
     launch(promise) {
       val response = it.getCredential()
 
@@ -61,8 +50,10 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun addCredential(
+  override fun addCredential(
     token: String?,
+    _requireUserAuthentication: Boolean,
+    _keychainAccess: String?,
     promise: Promise
   ) {
     launch(promise) {
@@ -85,7 +76,7 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun removeCredential(promise: Promise) {
+  override fun removeCredential(promise: Promise) {
     launch(promise) {
       val response = it.removeCredential()
 
@@ -100,7 +91,7 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun getChallenge(promise: Promise) {
+  override fun getChallenge(promise: Promise) {
     launch(promise) {
       val response = it.getChallenge()
 
@@ -128,7 +119,7 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun updateChallenge(
+  override fun updateChallenge(
     challengeId: String,
     approved: Boolean,
     verificationCode: String?,
@@ -157,5 +148,9 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
         promise.resolve(null)
       }
     }
+  }
+
+  companion object {
+    const val NAME = "AuthsignalPushModule"
   }
 }

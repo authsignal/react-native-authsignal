@@ -1,6 +1,7 @@
-import Security
-import Foundation
 import Authsignal
+import Foundation
+import React
+import Security
 
 @objc(AuthsignalPasskeyModule)
 class AuthsignalPasskeyModule: NSObject {
@@ -14,8 +15,8 @@ class AuthsignalPasskeyModule: NSObject {
     _ tenantID: NSString,
     withBaseURL baseURL: NSString,
     withDeviceID deviceID: NSString?,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     self.authsignal = AuthsignalPasskey(tenantID: tenantID as String, baseURL: baseURL as String, deviceID: deviceID as String?)
     
@@ -27,8 +28,8 @@ class AuthsignalPasskeyModule: NSObject {
     withUsername username: NSString?,
     withDisplayName displayName: NSString?,
     withIgnorePasskeyAlreadyExistsError ignorePasskeyAlreadyExistsError: Bool,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     if (authsignal == nil) {
       resolve(nil)
@@ -64,8 +65,8 @@ class AuthsignalPasskeyModule: NSObject {
     withToken token: NSString?,
     withAutofill autofill: Bool,
     withPreferImmediatelyAvailableCredentials preferImmediatelyAvailableCredentials: Bool,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     if (authsignal == nil) {
       resolve(nil)
@@ -85,25 +86,25 @@ class AuthsignalPasskeyModule: NSObject {
       
       if (response.error != nil) {
         reject(response.errorCode ?? "unexpected_error", response.error, nil)
-      } else {
+      } else if let data = response.data {
         let signInResponse: [String: Any?] = [
-          "isVerified": response.data!.isVerified,
-          "token": response.data!.token,
-          "userId": response.data!.userId,
-          "userAuthenticatorId": response.data!.userAuthenticatorId,
-          "username": response.data!.username,
-          "displayName": response.data!.displayName,
+          "isVerified": data.isVerified,
+          "token": data.token,
+          "userId": data.userId,
+          "userAuthenticatorId": data.userAuthenticatorId,
+          "username": data.username,
+          "displayName": data.displayName,
         ]
 
         resolve(signInResponse)
+      } else {
+        reject("unexpected_error", "No data returned", nil)
       }
     }
   }
   
-  @objc func cancel() -> NSString? {
+  @objc func cancel() -> Void {
     authsignal?.cancel()
-    
-    return nil
   }
   
   @objc func invalidate() -> Void {
@@ -112,8 +113,8 @@ class AuthsignalPasskeyModule: NSObject {
 
   @objc func shouldPromptToCreatePasskey(
     _ username: NSString?,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     if (authsignal == nil) {
       resolve(false)
@@ -133,7 +134,7 @@ class AuthsignalPasskeyModule: NSObject {
     }
   }
 
-  @objc func isAvailableOnDevice(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
+  @objc func isAvailableOnDevice(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
     if (authsignal == nil) {
       resolve(false)
       return

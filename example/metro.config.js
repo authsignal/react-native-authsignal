@@ -15,6 +15,13 @@ config.resolver.nodeModulesPaths = [
   path.resolve(sdkRoot, 'node_modules'),
 ];
 
+// Block the SDK's node_modules/react-native from being resolved
+// (it has an old version 0.70.4 as a devDependency)
+config.resolver.blockList = [
+  new RegExp(path.resolve(sdkRoot, 'node_modules', 'react-native') + '/.*'),
+  new RegExp(path.resolve(sdkRoot, 'node_modules', 'react') + '/.*'),
+];
+
 // Ensure react and react-native resolve from the example's node_modules
 // to avoid duplicate React instances
 config.resolver.extraNodeModules = {

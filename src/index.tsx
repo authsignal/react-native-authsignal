@@ -1,5 +1,7 @@
-import { NativeModules, Platform } from 'react-native';
-import { LINKING_ERROR } from './error';
+import { getNativeModule } from './getNativeModule';
+import NativeAuthsignalModule, {
+  type Spec as AuthsignalModuleSpec,
+} from './NativeAuthsignalModule';
 import { AuthsignalEmail } from './email';
 import { AuthsignalPasskey } from './passkey';
 import { AuthsignalPush } from './push';
@@ -13,16 +15,10 @@ import type { LaunchOptions } from './types';
 export * from './types';
 export { ErrorCode } from './error';
 
-const AuthsignalModule = NativeModules.AuthsignalModule
-  ? NativeModules.AuthsignalModule
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
+const AuthsignalModule = getNativeModule<AuthsignalModuleSpec>(
+  'AuthsignalModule',
+  NativeAuthsignalModule
+);
 
 interface ConstructorArgs {
   tenantID: string;
@@ -80,25 +76,5 @@ export function launch(
   url: string,
   _options?: LaunchOptions
 ): Promise<string | null> {
-  if (Platform.OS === 'ios') {
-    return AuthsignalModule.launch(url);
-  } else {
-    return new Promise((resolve, reject) => {
-      const callback = (error: any, token: string) => {
-        if (token) {
-          resolve(token);
-        } else if (error) {
-          if (error.error === 'user_cancelled') {
-            resolve(null);
-          } else {
-            reject(error);
-          }
-        } else {
-          reject('Unexpected error');
-        }
-      };
-
-      AuthsignalModule.launch(url, callback);
-    });
-  }
+  return AuthsignalModule.launch(url);
 }

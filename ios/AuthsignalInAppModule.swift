@@ -1,6 +1,7 @@
-import Security
-import Foundation
 import Authsignal
+import Foundation
+import React
+import Security
 
 @objc(AuthsignalInAppModule)
 class AuthsignalInAppModule: NSObject {
@@ -13,8 +14,8 @@ class AuthsignalInAppModule: NSObject {
   @objc func initialize(
     _ tenantID: NSString,
     withBaseURL baseURL: NSString,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     self.authsignal = AuthsignalInApp(tenantID: tenantID as String, baseURL: baseURL as String)
     
@@ -23,8 +24,8 @@ class AuthsignalInAppModule: NSObject {
 
   @objc func getCredential(
     _ username: NSString?,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     guard let authsignal = authsignal else {
       resolve(nil)
@@ -56,11 +57,11 @@ class AuthsignalInAppModule: NSObject {
   @objc func addCredential(
     _ token: NSString?,
     withRequireUserAuthentication requireUserAuthentication: Bool,
-    withKeychainAccess keychainAccess: NSString,
+    withKeychainAccess keychainAccess: NSString?,
     withUsername username: NSString?,
     withAppAttestation appAttestationDict: NSDictionary?,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     guard let authsignal = authsignal else {
       resolve(nil)
@@ -110,8 +111,8 @@ class AuthsignalInAppModule: NSObject {
   
   @objc func removeCredential(
     _ username: NSString?,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     guard let authsignal = authsignal else {
       resolve(nil)
@@ -134,8 +135,8 @@ class AuthsignalInAppModule: NSObject {
   @objc func verify(
     _ action: NSString?,
     withUsername username: NSString?,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     guard let authsignal = authsignal else {
       resolve(nil)
@@ -169,8 +170,8 @@ class AuthsignalInAppModule: NSObject {
     _ pin: NSString,
     withUsername username: NSString,
     withToken token: NSString?,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     guard let authsignal = authsignal else {
       resolve(nil)
@@ -209,8 +210,8 @@ class AuthsignalInAppModule: NSObject {
     _ pin: NSString,
     withUsername username: NSString,
     withAction action: NSString?,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     guard let authsignal = authsignal else {
       resolve(nil)
@@ -230,22 +231,24 @@ class AuthsignalInAppModule: NSObject {
       
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
-      } else {
+      } else if let data = response.data {
         let verifyPinResponse: [String: Any?] = [
-          "isVerified": response.data!.isVerified,
-          "token": response.data!.token,
-          "userId": response.data!.userId,
+          "isVerified": data.isVerified,
+          "token": data.token,
+          "userId": data.userId,
         ]
 
         resolve(verifyPinResponse)
+      } else {
+        reject("unexpected_error", "No data returned", nil)
       }
     }
   }
   
   @objc func deletePin(
     _ username: NSString,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     guard let authsignal = authsignal else {
       resolve(nil)
@@ -267,7 +270,7 @@ class AuthsignalInAppModule: NSObject {
 
   @objc func getAllPinUsernames(
     _ resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     guard let authsignal = authsignal else {
       resolve(nil)

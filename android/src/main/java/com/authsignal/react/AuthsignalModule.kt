@@ -7,61 +7,49 @@ import android.net.Uri
 import com.authsignal.TokenCache.Companion.shared
 import com.authsignal.react.AuthenticationActivity.Companion.authenticateUsingBrowser
 import com.facebook.react.bridge.ActivityEventListener
-import com.facebook.react.bridge.Arguments
-import com.facebook.react.bridge.Callback
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.module.annotations.ReactModule
 import java.net.URLDecoder
 
+@ReactModule(name = AuthsignalModule.NAME)
 class AuthsignalModule(private val reactContext: ReactApplicationContext) :
-  ReactContextBaseJavaModule(
-    reactContext
-  ), ActivityEventListener {
-  private var callback: Callback? = null
+  NativeAuthsignalModuleSpec(reactContext), ActivityEventListener {
+  private var launchPromise: Promise? = null
 
   init {
     reactContext.addActivityEventListener(this)
   }
 
-  override fun getConstants(): Map<String, Any>? {
-    val constants: MutableMap<String, Any> = HashMap()
-    constants["bundleIdentifier"] = reactContext.applicationInfo.packageName
-    return constants
-  }
-
-  override fun getName(): String {
-    return "AuthsignalModule"
-  }
-
   @ReactMethod
-  fun setToken(token: String?, promise: Promise) {
+  override fun setToken(token: String?, promise: Promise) {
     shared.token = token
 
     promise.resolve("token_set")
   }
 
   @ReactMethod
-  fun launch(url: String?, callback: Callback) {
+  override fun launch(url: String?, promise: Promise) {
+    if (url == null) {
+      promise.reject("invalid_url", "Launch URL must not be null.")
+      return
+    }
+
     val activity = reactContext.currentActivity
     val parsedUrl = Uri.parse(url)
-    this.callback = callback
+    this.launchPromise = promise
 
     try {
       if (activity != null) {
         authenticateUsingBrowser(activity, parsedUrl)
       } else {
-        val error = Arguments.createMap()
-        error.putString("error", "activity_not_available")
-        error.putString("error_description", "Android Activity is null.")
-        callback.invoke(error)
+        promise.reject("activity_not_available", "Android Activity is null.")
+        this.launchPromise = null
       }
     } catch (e: ActivityNotFoundException) {
-      val error = Arguments.createMap()
-      error.putString("error", "browser_not_available")
-      error.putString("error_description", "No browser app is installed")
-      callback.invoke(error)
+      promise.reject("browser_not_available", "No browser app is installed")
+      this.launchPromise = null
     }
   }
 
@@ -71,7 +59,7 @@ class AuthsignalModule(private val reactContext: ReactApplicationContext) :
     resultCode: Int,
     data: Intent?
   ) {
-    val cb = this@AuthsignalModule.callback ?: return
+    val pendingPromise = this@AuthsignalModule.launchPromise ?: return
 
     val hasResult =
       resultCode == Activity.RESULT_OK && requestCode == AuthenticationActivity.AUTHENTICATION_REQUEST && data!!.data != null
@@ -93,23 +81,21 @@ class AuthsignalModule(private val reactContext: ReactApplicationContext) :
             shared.token = value
           }
         }
-        cb.invoke(null, token)
+        pendingPromise.resolve(token)
       } catch (ex: Exception) {
-        val error = Arguments.createMap()
-        error.putString("error", "malformed_url")
-        error.putString("error_description", "Malformed redirect url")
-        cb.invoke(error)
+        pendingPromise.reject("malformed_url", "Malformed redirect url")
       }
     } else {
-      val error = Arguments.createMap()
-      error.putString("error", "user_cancelled")
-      error.putString("error_description", "User cancelled")
-      cb.invoke(error)
+      pendingPromise.resolve(null)
     }
 
-    this@AuthsignalModule.callback = null
+    this@AuthsignalModule.launchPromise = null
   }
 
   override fun onNewIntent(intent: Intent) {
+  }
+
+  companion object {
+    const val NAME = "AuthsignalModule"
   }
 }

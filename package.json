@@ -8,6 +8,7 @@
   "react-native": "lib/module/index",
   "source": "src/index",
   "files": [
+    "src",
     "lib",
     "android",
     "ios",
@@ -122,5 +123,13 @@
         }
       ]
     ]
+  },
+  "codegenConfig": {
+    "name": "AuthsignalReactNativeSpec",
+    "type": "modules",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.authsignal.react"
+    }
   }
 }

@@ -1,42 +1,25 @@
 package com.authsignal.react
 
 import android.util.Log
-import com.authsignal.models.AuthsignalResponse
-import com.authsignal.models.ChallengeResponse
-import com.authsignal.models.EnrollResponse
-import com.authsignal.models.VerifyResponse
 import com.authsignal.whatsapp.AuthsignalWhatsApp
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.module.annotations.ReactModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import java.util.function.Consumer
-
+@ReactModule(name = AuthsignalWhatsappModule.NAME)
 class AuthsignalWhatsappModule(private val reactContext: ReactApplicationContext) :
-  ReactContextBaseJavaModule(
-    reactContext
-  ) {
+  NativeAuthsignalWhatsappModuleSpec(reactContext) {
   private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
   private var authsignal: AuthsignalWhatsApp? = null
   private val defaultError = "unexpected_error"
 
-  override fun getConstants(): Map<String, Any>? {
-    val constants: MutableMap<String, Any> = HashMap()
-    constants["bundleIdentifier"] = reactContext.applicationInfo.packageName
-    return constants
-  }
-
-  override fun getName(): String {
-    return "AuthsignalWhatsappModule"
-  }
-
   @ReactMethod
-  fun initialize(tenantID: String, baseURL: String, promise: Promise) {
+  override fun initialize(tenantID: String, baseURL: String, promise: Promise) {
     val currentActivity = reactContext.currentActivity
 
     if (currentActivity != null) {
@@ -47,7 +30,7 @@ class AuthsignalWhatsappModule(private val reactContext: ReactApplicationContext
   }
 
   @ReactMethod
-  fun challenge(promise: Promise) {
+  override fun challenge(promise: Promise) {
     launch(promise) {
       val response = it.challenge()
 
@@ -65,7 +48,7 @@ class AuthsignalWhatsappModule(private val reactContext: ReactApplicationContext
   }
 
   @ReactMethod
-  fun verify(code: String, promise: Promise) {
+  override fun verify(code: String, promise: Promise) {
     launch(promise) {
       val response = it.verify(code)
 
@@ -94,5 +77,9 @@ class AuthsignalWhatsappModule(private val reactContext: ReactApplicationContext
         promise.resolve(null)
       }
     }
+  }
+
+  companion object {
+    const val NAME = "AuthsignalWhatsappModule"
   }
 }

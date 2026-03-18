@@ -18,13 +18,12 @@ class AuthsignalModule: NSObject, ASWebAuthenticationPresentationContextProvidin
   
   @objc func launch(
     _ url: NSString,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     let scheme = "authsignal"
-    let urlStr = url as String?
-    
-    guard let authUrl = URL(string: urlStr!) else {
+
+    guard let authUrl = URL(string: url as String) else {
       reject("launchError", "Invalid URL", nil)
       
       return
@@ -68,11 +67,11 @@ class AuthsignalModule: NSObject, ASWebAuthenticationPresentationContextProvidin
   }
   
   @objc func setToken(
-    _ token: NSString,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    _ token: NSString?,
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
-    TokenCache.shared.token = token as String
+    TokenCache.shared.token = token as String?
 
     resolve("token_set")
   }
@@ -82,6 +81,11 @@ class AuthsignalModule: NSObject, ASWebAuthenticationPresentationContextProvidin
   }
   
   func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-    return UIApplication.shared.keyWindow!
+    if let windowScene = UIApplication.shared.connectedScenes
+      .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+      let keyWindow = windowScene.windows.first(where: { $0.isKeyWindow }) {
+      return keyWindow
+    }
+    return UIWindow()
   }
 }

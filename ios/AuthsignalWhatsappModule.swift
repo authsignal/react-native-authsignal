@@ -1,6 +1,7 @@
-import Security
-import Foundation
 import Authsignal
+import Foundation
+import React
+import Security
 
 @objc(AuthsignalWhatsappModule)
 class AuthsignalWhatsappModule: NSObject {
@@ -13,8 +14,8 @@ class AuthsignalWhatsappModule: NSObject {
   @objc func initialize(
     _ tenantID: NSString,
     withBaseURL baseURL: NSString,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     self.authsignal = AuthsignalWhatsApp(tenantID: tenantID as String, baseURL: baseURL as String)
     
@@ -23,7 +24,7 @@ class AuthsignalWhatsappModule: NSObject {
   
   @objc func challenge(
     _ resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     if (authsignal == nil) {
       resolve(nil)
@@ -47,8 +48,8 @@ class AuthsignalWhatsappModule: NSObject {
 
   @objc func verify(
     _ code: NSString,
-    resolver resolve: @escaping RCTPromiseResolveBlock,
-    rejecter reject: @escaping RCTPromiseRejectBlock
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
     if (authsignal == nil) {
       resolve(nil)
