@@ -74,7 +74,7 @@ class AuthsignalInAppModule: NSObject {
     let usernameStr = username as String?
 
     // Pass a sentinel AppAttestation to signal the native SDK to generate attestation internally
-    let appAttestationValue: AppAttestation? = appAttestation ? AppAttestation(token: "", keyId: nil) : nil
+    let appAttestationValue: AppAttestation? = appAttestation ? AppAttestation(attestationToken: "", keyId: nil) : nil
 
     Task.init {
       let response = await authsignal.addCredential(
