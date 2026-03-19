@@ -59,7 +59,7 @@ class AuthsignalInAppModule: NSObject {
     withRequireUserAuthentication requireUserAuthentication: Bool,
     withKeychainAccess keychainAccess: NSString?,
     withUsername username: NSString?,
-    withAppAttestation appAttestationDict: NSDictionary?,
+    withAppAttestation appAttestation: Bool,
     resolve: @escaping RCTPromiseResolveBlock,
     reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -73,14 +73,8 @@ class AuthsignalInAppModule: NSObject {
     let keychainAccess = getKeychainAccess(value: keychainAccess as String?)
     let usernameStr = username as String?
 
-    var appAttestation: AppAttestation? = nil
-    if let dict = appAttestationDict,
-       let attestationToken = dict["token"] as? String {
-      appAttestation = AppAttestation(
-        token: attestationToken,
-        keyId: dict["keyId"] as? String
-      )
-    }
+    // Pass a sentinel AppAttestation to signal the native SDK to generate attestation internally
+    let appAttestationValue: AppAttestation? = appAttestation ? AppAttestation(token: "", keyId: nil) : nil
 
     Task.init {
       let response = await authsignal.addCredential(
@@ -88,7 +82,7 @@ class AuthsignalInAppModule: NSObject {
         keychainAccess: keychainAccess,
         userPresenceRequired: userPresenceRequired,
         username: usernameStr,
-        appAttestation: appAttestation
+        appAttestation: appAttestationValue
       )
       
       if let error = response.error {

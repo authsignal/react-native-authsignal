@@ -45,16 +45,11 @@ export interface VerifyResponse {
   failureReason?: string;
 }
 
-export interface AppAttestation {
-  token: string;
-  keyId?: string;
-}
-
 export interface AddCredentialInput {
   token?: string;
   requireUserAuthentication?: boolean;
   keychainAccess?: KeychainAccess;
-  appAttestation?: AppAttestation;
+  appAttestation?: boolean;
 }
 
 export interface AppChallenge {

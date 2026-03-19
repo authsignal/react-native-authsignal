@@ -7,7 +7,6 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.module.annotations.ReactModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -57,14 +56,11 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
     _requireUserAuthentication: Boolean,
     _keychainAccess: String?,
     username: String?,
-    appAttestationMap: ReadableMap?,
+    appAttestation: Boolean,
     promise: Promise
   ) {
-    val appAttestation = appAttestationMap?.let { map ->
-      val attestationToken = map.getString("token") ?: return@let null
-      val keyId = if (map.hasKey("keyId")) map.getString("keyId") else null
-      AppAttestation(token = attestationToken, keyId = keyId)
-    }
+    // Pass a sentinel AppAttestation to signal the native SDK to generate attestation internally
+    val appAttestationValue = if (appAttestation) AppAttestation(token = "") else null
 
     launch(promise) {
       val response = it.addCredential(
@@ -74,7 +70,7 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
         timeout = 0,
         authorizationType = 0,
         username = username,
-        appAttestation = appAttestation,
+        appAttestation = appAttestationValue,
       )
 
       if (response.error != null) {
