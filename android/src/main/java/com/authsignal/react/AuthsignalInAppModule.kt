@@ -2,7 +2,6 @@ package com.authsignal.react
 
 import android.util.Log
 import com.authsignal.inapp.AuthsignalInApp
-import com.authsignal.models.api.AppAttestation
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
@@ -59,9 +58,6 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
     appAttestation: Boolean,
     promise: Promise
   ) {
-    // Pass a sentinel AppAttestation to signal the native SDK to generate attestation internally
-    val appAttestationValue = if (appAttestation) AppAttestation(token = "") else null
-
     launch(promise) {
       val response = it.addCredential(
         token = token,
@@ -70,7 +66,7 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
         timeout = 0,
         authorizationType = 0,
         username = username,
-        appAttestation = appAttestationValue,
+        appAttestation = appAttestation,
       )
 
       if (response.error != null) {
