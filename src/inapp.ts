@@ -77,7 +77,7 @@ export class AuthsignalInApp {
         requireUserAuthentication,
         keychainAccess ?? null,
         username ?? null,
-        appAttestation ?? null
+        appAttestation ?? false
       )) as AppCredential;
 
       return { data };

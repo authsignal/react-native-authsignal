@@ -2,12 +2,10 @@ package com.authsignal.react
 
 import android.util.Log
 import com.authsignal.inapp.AuthsignalInApp
-import com.authsignal.models.api.AppAttestation
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.module.annotations.ReactModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -57,15 +55,9 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
     _requireUserAuthentication: Boolean,
     _keychainAccess: String?,
     username: String?,
-    appAttestationMap: ReadableMap?,
+    appAttestation: Boolean,
     promise: Promise
   ) {
-    val appAttestation = appAttestationMap?.let { map ->
-      val attestationToken = map.getString("token") ?: return@let null
-      val keyId = if (map.hasKey("keyId")) map.getString("keyId") else null
-      AppAttestation(token = attestationToken, keyId = keyId)
-    }
-
     launch(promise) {
       val response = it.addCredential(
         token = token,
