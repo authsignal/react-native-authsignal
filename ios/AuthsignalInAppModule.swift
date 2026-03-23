@@ -59,7 +59,7 @@ class AuthsignalInAppModule: NSObject {
     withRequireUserAuthentication requireUserAuthentication: Bool,
     withKeychainAccess keychainAccess: NSString?,
     withUsername username: NSString?,
-    withAppAttestation appAttestation: Bool,
+    withDeviceIntegrity deviceIntegrity: Bool,
     resolve: @escaping RCTPromiseResolveBlock,
     reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -79,7 +79,7 @@ class AuthsignalInAppModule: NSObject {
         keychainAccess: keychainAccess,
         userPresenceRequired: userPresenceRequired,
         username: usernameStr,
-        appAttestation: appAttestation
+        deviceIntegrity: deviceIntegrity
       )
       
       if let error = response.error {

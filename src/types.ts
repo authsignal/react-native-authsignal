@@ -49,7 +49,7 @@ export interface AddCredentialInput {
   token?: string;
   requireUserAuthentication?: boolean;
   keychainAccess?: KeychainAccess;
-  appAttestation?: boolean;
+  deviceIntegrity?: boolean;
 }
 
 export interface AppChallenge {

@@ -55,7 +55,7 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
     _requireUserAuthentication: Boolean,
     _keychainAccess: String?,
     username: String?,
-    appAttestation: Boolean,
+    deviceIntegrity: Boolean,
     promise: Promise
   ) {
     launch(promise) {
@@ -66,7 +66,7 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
         timeout = 0,
         authorizationType = 0,
         username = username,
-        appAttestation = appAttestation,
+        deviceIntegrity = deviceIntegrity,
       )
 
       if (response.error != null) {
