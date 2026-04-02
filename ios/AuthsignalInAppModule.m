@@ -16,7 +16,7 @@ RCT_EXTERN_METHOD(addCredential:(NSString)token
                   withRequireUserAuthentication:(BOOL)requireUserAuthentication
                   withKeychainAccess:(NSString)keychainAccess
                   withUsername:(NSString)username
-                  withDeviceIntegrity:(BOOL)deviceIntegrity
+                  withPerformAttestation:(BOOL)performAttestation
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 

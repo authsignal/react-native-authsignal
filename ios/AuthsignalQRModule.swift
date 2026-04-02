@@ -55,6 +55,7 @@ class AuthsignalQRCodeModule: NSObject {
     _ token: NSString?,
     withRequireUserAuthentication requireUserAuthentication: Bool,
     withKeychainAccess keychainAccess: NSString?,
+    withPerformAttestation performAttestation: Bool,
     resolve: @escaping RCTPromiseResolveBlock,
     reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -62,16 +63,17 @@ class AuthsignalQRCodeModule: NSObject {
       resolve(nil)
       return
     }
-    
+
     let tokenStr = token as String?
     let userPresenceRequired = requireUserAuthentication as Bool
     let keychainAccess = getKeychainAccess(value: keychainAccess as String?)
-    
+
     Task.init {
       let response = await authsignal.addCredential(
         token: tokenStr,
         keychainAccess: keychainAccess,
-        userPresenceRequired: userPresenceRequired
+        userPresenceRequired: userPresenceRequired,
+        performAttestation: performAttestation
       )
       
       if let error = response.error {
