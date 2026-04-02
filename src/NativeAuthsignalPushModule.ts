@@ -6,7 +6,8 @@ export interface Spec extends TurboModule {
   addCredential(
     token: string | null,
     withRequireUserAuthentication: boolean,
-    withKeychainAccess: string | null
+    withKeychainAccess: string | null,
+    withPerformAttestation: boolean
   ): Promise<Object | null>;
   removeCredential(): Promise<boolean>;
   getChallenge(): Promise<Object | null>;

@@ -59,6 +59,7 @@ export class AuthsignalQrCode {
     token,
     requireUserAuthentication = false,
     keychainAccess,
+    performAttestation,
   }: AddCredentialInput = {}): Promise<AuthsignalResponse<AppCredential>> {
     await this.ensureModuleIsInitialized();
 
@@ -66,7 +67,8 @@ export class AuthsignalQrCode {
       const data = (await AuthsignalQRCodeModule.addCredential(
         token ?? null,
         requireUserAuthentication,
-        keychainAccess ?? null
+        keychainAccess ?? null,
+        performAttestation ?? false
       )) as AppCredential;
 
       return { data };
