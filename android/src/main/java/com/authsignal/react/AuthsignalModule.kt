@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
+import com.authsignal.DeviceCache
 import com.authsignal.TokenCache.Companion.shared
 import com.authsignal.react.AuthenticationActivity.Companion.authenticateUsingBrowser
 import com.facebook.react.bridge.ActivityEventListener
@@ -11,15 +12,21 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.module.annotations.ReactModule
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import java.net.URLDecoder
 
 @ReactModule(name = AuthsignalModule.NAME)
 class AuthsignalModule(private val reactContext: ReactApplicationContext) :
   NativeAuthsignalModuleSpec(reactContext), ActivityEventListener {
+  private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
   private var launchPromise: Promise? = null
 
   init {
     reactContext.addActivityEventListener(this)
+    DeviceCache.shared.initialize(reactContext.applicationContext)
   }
 
   @ReactMethod
@@ -90,6 +97,14 @@ class AuthsignalModule(private val reactContext: ReactApplicationContext) :
     }
 
     this@AuthsignalModule.launchPromise = null
+  }
+
+  @ReactMethod
+  override fun getDeviceId(promise: Promise) {
+    coroutineScope.launch {
+      val deviceId = DeviceCache.shared.getDefaultDeviceId()
+      promise.resolve(deviceId)
+    }
   }
 
   override fun onNewIntent(intent: Intent) {
