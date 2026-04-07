@@ -77,6 +77,29 @@ export function HomeScreen() {
     }
   };
 
+  // --- Device ID ---
+
+  const testGetDeviceId = async () => {
+    const authsignal = authsignalRef.current;
+    if (!authsignal) return;
+
+    try {
+      addOutput('Fetching device ID...');
+      const deviceId = await authsignal.getDeviceId();
+      addOutput(`Device ID: ${deviceId}`);
+
+      // Call again to verify persistence
+      const deviceId2 = await authsignal.getDeviceId();
+      if (deviceId === deviceId2) {
+        addOutput('Persistence check passed (same ID returned)');
+      } else {
+        addOutput(`Persistence check FAILED: ${deviceId2}`);
+      }
+    } catch (e) {
+      addOutput(`Error getting device ID: ${e}`);
+    }
+  };
+
   // --- Launch Methods ---
 
   const launchPopup = async () => {
@@ -601,6 +624,18 @@ export function HomeScreen() {
         onPhoneChange={setPhone}
         onInitialize={initializeSDK}
       />
+
+      {/* Device ID */}
+      <FeatureCard
+        title="Device ID (web + mobile)"
+        description="Test cross-platform device ID generation and persistence."
+      >
+        <ActionButton
+          title="Get Device ID"
+          onPress={testGetDeviceId}
+          disabled={!isInitialized}
+        />
+      </FeatureCard>
 
       {/* Launch */}
       <FeatureCard

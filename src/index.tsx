@@ -70,6 +70,10 @@ export class Authsignal {
   async launch(url: string, _options?: LaunchOptions): Promise<string | null> {
     return await launch(url);
   }
+
+  async getDeviceId(): Promise<string> {
+    return AuthsignalModule.getDeviceId();
+  }
 }
 
 export function launch(

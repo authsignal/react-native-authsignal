@@ -75,6 +75,16 @@ class AuthsignalModule: NSObject, ASWebAuthenticationPresentationContextProvidin
 
     resolve("token_set")
   }
+
+  @objc func getDeviceId(
+    _ resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
+  ) -> Void {
+    Task {
+      let deviceId = await DeviceCache.shared.getDefaultDeviceID()
+      resolve(deviceId)
+    }
+  }
   
   private func isCanceledLoginError(_ error: Error) -> Bool {
     (error as NSError).code == ASWebAuthenticationSessionError.canceledLogin.rawValue
