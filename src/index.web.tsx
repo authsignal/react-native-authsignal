@@ -69,7 +69,20 @@ export class Authsignal {
   }
 
   async getDeviceId(): Promise<string> {
-    return getDeviceId();
+    if (typeof window === 'undefined' || !window.localStorage) {
+      return crypto.randomUUID();
+    }
+
+    const existingId = localStorage.getItem(DEVICE_ID_KEY);
+
+    if (existingId) {
+      return existingId;
+    }
+
+    const newId = crypto.randomUUID();
+    localStorage.setItem(DEVICE_ID_KEY, newId);
+
+    return newId;
   }
 }
 
@@ -103,24 +116,3 @@ export function launch(
 }
 
 const DEVICE_ID_KEY = '@as_device_id';
-
-function generateUUID(): string {
-  return crypto.randomUUID();
-}
-
-export function getDeviceId(): string {
-  if (typeof window === 'undefined' || !window.localStorage) {
-    return generateUUID();
-  }
-
-  const existingId = localStorage.getItem(DEVICE_ID_KEY);
-
-  if (existingId) {
-    return existingId;
-  }
-
-  const newId = generateUUID();
-  localStorage.setItem(DEVICE_ID_KEY, newId);
-
-  return newId;
-}

@@ -72,12 +72,8 @@ export class Authsignal {
   }
 
   async getDeviceId(): Promise<string> {
-    return await getDeviceId();
+    return AuthsignalModule.getDeviceId();
   }
-}
-
-export async function getDeviceId(): Promise<string> {
-  return AuthsignalModule.getDeviceId();
 }
 
 export function launch(
