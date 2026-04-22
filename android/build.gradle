@@ -61,5 +61,5 @@ dependencies {
 
   implementation "androidx.browser:browser:1.2.0"
 
-  implementation("com.authsignal:authsignal-android:3.6.0")
+  implementation("com.authsignal:authsignal-android:3.7.0")
 }

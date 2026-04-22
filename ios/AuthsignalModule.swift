@@ -6,6 +6,8 @@ import Security
 
 @objc(AuthsignalModule)
 class AuthsignalModule: NSObject, ASWebAuthenticationPresentationContextProviding {
+  private let callbackScheme = "authsignal"
+  private let nativeSchemeQueryItemName = "nativeScheme"
   var session: ASWebAuthenticationSession?
   
   @objc static func requiresMainQueueSetup() -> Bool {
@@ -21,15 +23,13 @@ class AuthsignalModule: NSObject, ASWebAuthenticationPresentationContextProvidin
     resolve: @escaping RCTPromiseResolveBlock,
     reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
-    let scheme = "authsignal"
-
-    guard let authUrl = URL(string: url as String) else {
+    guard let authUrl = buildLaunchURL(from: url as String) else {
       reject("launchError", "Invalid URL", nil)
       
       return
     }
     
-    let authenticationSession = ASWebAuthenticationSession(url: authUrl, callbackURLScheme: scheme) { callbackURL, error in
+    let authenticationSession = ASWebAuthenticationSession(url: authUrl, callbackURLScheme: callbackScheme) { callbackURL, error in
       if let error {
         if self.isCanceledLoginError(error) {
           resolve(nil)
@@ -88,6 +88,19 @@ class AuthsignalModule: NSObject, ASWebAuthenticationPresentationContextProvidin
   
   private func isCanceledLoginError(_ error: Error) -> Bool {
     (error as NSError).code == ASWebAuthenticationSessionError.canceledLogin.rawValue
+  }
+
+  private func buildLaunchURL(from urlString: String) -> URL? {
+    guard let authUrl = URL(string: urlString),
+      var components = URLComponents(url: authUrl, resolvingAgainstBaseURL: false) else {
+      return nil
+    }
+
+    var queryItems = components.queryItems?.filter { $0.name != nativeSchemeQueryItemName } ?? []
+    queryItems.append(URLQueryItem(name: nativeSchemeQueryItemName, value: callbackScheme))
+    components.queryItems = queryItems
+
+    return components.url
   }
   
   func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
