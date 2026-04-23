@@ -44,7 +44,7 @@ class AuthsignalModule(private val reactContext: ReactApplicationContext) :
     }
 
     val activity = reactContext.currentActivity
-    val parsedUrl = Uri.parse(url)
+    val parsedUrl = buildLaunchUri(url)
     this.launchPromise = promise
 
     try {
@@ -110,7 +110,26 @@ class AuthsignalModule(private val reactContext: ReactApplicationContext) :
   override fun onNewIntent(intent: Intent) {
   }
 
+  private fun buildLaunchUri(url: String): Uri {
+    val parsedUrl = Uri.parse(url)
+    val builder = parsedUrl.buildUpon().clearQuery()
+
+    for (queryName in parsedUrl.queryParameterNames) {
+      if (queryName == NATIVE_SCHEME_QUERY_PARAM) continue
+
+      for (queryValue in parsedUrl.getQueryParameters(queryName)) {
+        builder.appendQueryParameter(queryName, queryValue)
+      }
+    }
+
+    builder.appendQueryParameter(NATIVE_SCHEME_QUERY_PARAM, CALLBACK_SCHEME)
+
+    return builder.build()
+  }
+
   companion object {
     const val NAME = "AuthsignalModule"
+    private const val CALLBACK_SCHEME = "authsignal"
+    private const val NATIVE_SCHEME_QUERY_PARAM = "nativeScheme"
   }
 }
