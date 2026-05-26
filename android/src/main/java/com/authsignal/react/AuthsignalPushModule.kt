@@ -55,10 +55,16 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
     _requireUserAuthentication: Boolean,
     _keychainAccess: String?,
     performAttestation: Boolean,
+    pushToken: String?,
     promise: Promise
   ) {
     launch(promise) {
-      val response = it.addCredential(token, null, performAttestation = performAttestation)
+      val response = it.addCredential(
+        token,
+        null,
+        performAttestation = performAttestation,
+        pushToken = pushToken,
+      )
 
       if (response.error != null) {
         val errorCode = response.errorCode ?: defaultError
