@@ -50,6 +50,7 @@ export interface AddCredentialInput {
   requireUserAuthentication?: boolean;
   keychainAccess?: KeychainAccess;
   performAttestation?: boolean;
+  pushToken?: string;
 }
 
 export interface AppChallenge {

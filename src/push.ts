@@ -59,6 +59,7 @@ export class AuthsignalPush {
     requireUserAuthentication = false,
     keychainAccess,
     performAttestation,
+    pushToken,
   }: AddCredentialInput = {}): Promise<AuthsignalResponse<AppCredential>> {
     await this.ensureModuleIsInitialized();
 
@@ -67,7 +68,8 @@ export class AuthsignalPush {
         token ?? null,
         requireUserAuthentication,
         keychainAccess ?? null,
-        performAttestation ?? false
+        performAttestation ?? false,
+        pushToken ?? null
       )) as AppCredential;
 
       return { data };

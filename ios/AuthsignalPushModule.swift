@@ -56,6 +56,7 @@ class AuthsignalPushModule: NSObject {
     withRequireUserAuthentication requireUserAuthentication: Bool,
     withKeychainAccess keychainAccess: NSString?,
     withPerformAttestation performAttestation: Bool,
+    withPushToken pushToken: NSString?,
     resolve: @escaping RCTPromiseResolveBlock,
     reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -67,13 +68,15 @@ class AuthsignalPushModule: NSObject {
     let tokenStr = token as String?
     let requireAuthentication = requireUserAuthentication as Bool
     let keychainAccess = getKeychainAccess(value: keychainAccess as String?)
+    let pushTokenStr = pushToken as String?
 
     Task.init {
       let response = await authsignal.addCredential(
         token: tokenStr,
         keychainAccess: keychainAccess,
         userPresenceRequired: requireAuthentication,
-        performAttestation: performAttestation
+        performAttestation: performAttestation,
+        pushToken: pushTokenStr
       )
       
       if let error = response.error {
