@@ -50,14 +50,6 @@ export interface AddCredentialInput {
   requireUserAuthentication?: boolean;
   keychainAccess?: KeychainAccess;
   performAttestation?: boolean;
-  /**
-   * Optional push provider token (e.g. FCM/APNs registration token) to
-   * associate with the enrolled push authenticator. When supplied, the
-   * Authsignal backend stores the token on the user authenticator and uses
-   * it later to deliver push challenges. The host app is responsible for
-   * sourcing this token from its push stack of choice (FCM, APNs, Airship,
-   * etc.) - this SDK stays push-stack-agnostic.
-   */
   pushToken?: string;
 }
 
