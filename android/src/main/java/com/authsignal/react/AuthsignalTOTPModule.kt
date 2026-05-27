@@ -24,6 +24,7 @@ class AuthsignalTOTPModule(private val reactContext: ReactApplicationContext) :
     val currentActivity = reactContext.currentActivity
 
     if (currentActivity != null) {
+      RequestMetadata.configure()
       authsignal = AuthsignalTOTP(tenantID, baseURL)
     }
 

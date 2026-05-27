@@ -17,6 +17,7 @@ class AuthsignalInAppModule: NSObject {
     resolve: @escaping RCTPromiseResolveBlock,
     reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
+    RequestMetadata.configure()
     self.authsignal = AuthsignalInApp(tenantID: tenantID as String, baseURL: baseURL as String)
     
     resolve(nil)

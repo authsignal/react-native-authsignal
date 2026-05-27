@@ -23,6 +23,7 @@ class AuthsignalWhatsappModule(private val reactContext: ReactApplicationContext
     val currentActivity = reactContext.currentActivity
 
     if (currentActivity != null) {
+      RequestMetadata.configure()
       authsignal = AuthsignalWhatsApp(tenantID, baseURL)
     }
 

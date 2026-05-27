@@ -24,6 +24,7 @@ class AuthsignalPasskeyModule(private val reactContext: ReactApplicationContext)
     val activity = reactContext.currentActivity
 
     if (activity != null) {
+      RequestMetadata.configure()
       authsignal = AuthsignalPasskey(tenantID, baseURL, activity, deviceID)
     }
 

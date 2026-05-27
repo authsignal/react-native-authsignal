@@ -26,6 +26,7 @@ class AuthsignalEmailModule(private val reactContext: ReactApplicationContext) :
     val currentActivity = reactContext.currentActivity
 
     if (currentActivity != null) {
+      RequestMetadata.configure()
       authsignal = AuthsignalEmail(tenantID, baseURL)
     }
 
