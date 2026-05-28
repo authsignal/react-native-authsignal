@@ -18,6 +18,7 @@ class AuthsignalPasskeyModule: NSObject {
     resolve: @escaping RCTPromiseResolveBlock,
     reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
+    RequestMetadata.configure()
     self.authsignal = AuthsignalPasskey(tenantID: tenantID as String, baseURL: baseURL as String, deviceID: deviceID as String?)
     
     resolve(nil)

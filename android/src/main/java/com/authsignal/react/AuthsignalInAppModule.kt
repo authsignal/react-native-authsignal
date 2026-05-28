@@ -21,6 +21,7 @@ class AuthsignalInAppModule(private val reactContext: ReactApplicationContext) :
 
   @ReactMethod
   override fun initialize(tenantID: String, baseURL: String, promise: Promise) {
+    RequestMetadata.configure()
     authsignal = AuthsignalInApp(tenantID, baseURL, context = reactContext)
 
     promise.resolve(null)

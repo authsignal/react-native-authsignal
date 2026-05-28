@@ -17,6 +17,7 @@ class AuthsignalQRCodeModule: NSObject {
     resolve: @escaping RCTPromiseResolveBlock,
     reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
+    RequestMetadata.configure()
     self.authsignal = AuthsignalQRCode(tenantID: tenantID as String, baseURL: baseURL as String)
     
     resolve(nil)

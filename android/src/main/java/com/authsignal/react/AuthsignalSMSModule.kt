@@ -23,6 +23,7 @@ class AuthsignalSMSModule(private val reactContext: ReactApplicationContext) :
     val currentActivity = reactContext.currentActivity
 
     if (currentActivity != null) {
+      RequestMetadata.configure()
       authsignal = AuthsignalSMS(tenantID, baseURL)
     }
 

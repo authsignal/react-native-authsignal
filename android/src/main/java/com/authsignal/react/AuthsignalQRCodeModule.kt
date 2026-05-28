@@ -21,6 +21,7 @@ class AuthsignalQRCodeModule(private val reactContext: ReactApplicationContext) 
 
   @ReactMethod
   override fun initialize(tenantID: String, baseURL: String, promise: Promise) {
+    RequestMetadata.configure()
     authsignal = AuthsignalQRCode(tenantID, baseURL)
 
     promise.resolve(null)

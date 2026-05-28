@@ -17,6 +17,7 @@ class AuthsignalWhatsappModule: NSObject {
     resolve: @escaping RCTPromiseResolveBlock,
     reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
+    RequestMetadata.configure()
     self.authsignal = AuthsignalWhatsApp(tenantID: tenantID as String, baseURL: baseURL as String)
     
     resolve(nil)
