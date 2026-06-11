@@ -60,6 +60,12 @@ export interface AppChallenge {
   userAgent?: string;
   deviceId?: string;
   ipAddress?: string;
+  custom?: Record<string, unknown>;
+  user?: ChallengeUser;
+}
+
+export interface ChallengeUser {
+  custom?: Record<string, unknown>;
 }
 
 export interface AppCredential {
@@ -79,6 +85,8 @@ export interface ClaimChallengeResponse {
   ipAddress?: string;
   actionCode?: string;
   idempotencyKey?: string;
+  custom?: Record<string, unknown>;
+  user?: ChallengeUser;
 }
 
 export interface UpdateChallengeInput {

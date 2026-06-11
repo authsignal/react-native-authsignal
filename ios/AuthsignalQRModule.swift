@@ -138,6 +138,8 @@ class AuthsignalQRCodeModule: NSObject {
           "ipAddress": data.ipAddress,
           "actionCode": data.actionCode,
           "idempotencyKey": data.idempotencyKey,
+          "custom": data.custom?.mapValues { $0.value },
+          "user": data.user.map { user in ["custom": user.custom?.mapValues { $0.value }] },
         ]
         
         resolve(result)

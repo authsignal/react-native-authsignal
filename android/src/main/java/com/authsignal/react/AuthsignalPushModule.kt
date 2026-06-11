@@ -120,6 +120,16 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
           map.putString("ipAddress", challenge.ipAddress)
           map.putString("deviceId", challenge.deviceId)
           map.putString("userAgent", challenge.userAgent)
+          challenge.custom?.let { custom ->
+            map.putMap("custom", JsonConversion.toWritableMap(custom))
+          }
+          challenge.user?.let { user ->
+            val userMap = Arguments.createMap()
+            user.custom?.let { custom ->
+              userMap.putMap("custom", JsonConversion.toWritableMap(custom))
+            }
+            map.putMap("user", userMap)
+          }
           promise.resolve(map)
         }
       }

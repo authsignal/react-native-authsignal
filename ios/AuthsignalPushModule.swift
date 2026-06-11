@@ -130,15 +130,17 @@ class AuthsignalPushModule: NSObject {
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
       } else if let data = response.data as? AppChallenge {
-        let challenge: [String: String?] = [
+        let challenge: [String: Any?] = [
           "challengeId": data.challengeId,
           "actionCode": data.actionCode,
           "idempotencyKey": data.idempotencyKey,
           "userAgent": data.userAgent,
           "deviceId": data.deviceId,
           "ipAddress": data.ipAddress,
+          "custom": data.custom?.mapValues { $0.value },
+          "user": data.user.map { user in ["custom": user.custom?.mapValues { $0.value }] },
         ]
-        
+
         resolve(challenge)
       } else {
         resolve(nil)
