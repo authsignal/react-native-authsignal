@@ -115,6 +115,16 @@ class AuthsignalQRCodeModule(private val reactContext: ReactApplicationContext) 
           data.ipAddress?.let { map.putString("ipAddress", it) }
           data.actionCode?.let { map.putString("actionCode", it) }
           data.idempotencyKey?.let { map.putString("idempotencyKey", it) }
+          data.custom?.let { custom ->
+            map.putMap("custom", JsonConversion.toWritableMap(custom))
+          }
+          data.user?.let { user ->
+            val userMap = Arguments.createMap()
+            user.custom?.let { custom ->
+              userMap.putMap("custom", JsonConversion.toWritableMap(custom))
+            }
+            map.putMap("user", userMap)
+          }
           promise.resolve(map)
         }
       }
