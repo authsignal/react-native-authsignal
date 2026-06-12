@@ -26,6 +26,10 @@ export function HomeScreen() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('+1234567890');
 
+  const [lastPushChallengeId, setLastPushChallengeId] = useState<
+    string | null
+  >(null);
+
   const [emailCode, setEmailCode] = useState('');
   const [smsCode, setSmsCode] = useState('');
   const [totpCode, setTotpCode] = useState('');
@@ -582,6 +586,132 @@ export function HomeScreen() {
     }
   };
 
+  const getPushCredential = async () => {
+    const authsignal = authsignalRef.current;
+    if (!authsignal) return;
+
+    try {
+      const response = await authsignal.push.getCredential();
+
+      if (!response.data) {
+        addOutput(
+          response.error
+            ? `Error: ${response.error}`
+            : 'No push credential on this device'
+        );
+        return;
+      }
+
+      addOutput('Push credential found');
+      addOutput(`  Credential ID: ${response.data.credentialId}`);
+      addOutput(`  User ID: ${response.data.userId}`);
+    } catch (e) {
+      addOutput(`Error: ${e}`);
+    }
+  };
+
+  const enrollPush = async () => {
+    const authsignal = authsignalRef.current;
+    if (!authsignal) return;
+
+    try {
+      addOutput('Requesting registration token from backend...');
+      const tokenResponse = await BackendService.getRegistrationToken(userId);
+
+      if (!tokenResponse) {
+        addOutput('Failed to get registration token');
+        return;
+      }
+
+      addOutput(`Token received (${tokenResponse.state})`);
+
+      addOutput('Enrolling push credential...');
+      const response = await authsignal.push.addCredential({
+        token: tokenResponse.token,
+      });
+
+      if (response.error) {
+        addOutput(`Failed to enroll push: ${response.error}`);
+        return;
+      }
+
+      addOutput('Push credential enrolled!');
+      addOutput(`  Credential ID: ${response.data?.credentialId}`);
+      addOutput(`  User ID: ${response.data?.userId}`);
+    } catch (e) {
+      addOutput(`Error: ${e}`);
+    }
+  };
+
+  const getPushChallenge = async () => {
+    const authsignal = authsignalRef.current;
+    if (!authsignal) return;
+
+    try {
+      addOutput('Fetching push challenge (signed)...');
+      const response = await authsignal.push.getChallenge();
+
+      if (!response.data) {
+        addOutput(
+          response.error
+            ? `Error: ${response.error}`
+            : 'No pending challenge for this device'
+        );
+        return;
+      }
+
+      const challenge = response.data;
+      setLastPushChallengeId(challenge.challengeId);
+
+      addOutput(`Challenge: ${challenge.challengeId}`);
+      addOutput(`  actionCode: ${challenge.actionCode}`);
+      addOutput(`  custom: ${JSON.stringify(challenge.custom) ?? '(none)'}`);
+      addOutput(
+        `  user.custom: ${JSON.stringify(challenge.user?.custom) ?? '(none)'}`
+      );
+    } catch (e) {
+      addOutput(`Error: ${e}`);
+    }
+  };
+
+  const updatePushChallenge = async (approved: boolean) => {
+    const authsignal = authsignalRef.current;
+    if (!authsignal || !lastPushChallengeId) return;
+
+    try {
+      const response = await authsignal.push.updateChallenge({
+        challengeId: lastPushChallengeId,
+        approved,
+      });
+
+      if (response.data) {
+        addOutput(approved ? 'Challenge approved' : 'Challenge rejected');
+        setLastPushChallengeId(null);
+      } else {
+        addOutput(`Failed to update challenge: ${response.error}`);
+      }
+    } catch (e) {
+      addOutput(`Error: ${e}`);
+    }
+  };
+
+  const removePushCredential = async () => {
+    const authsignal = authsignalRef.current;
+    if (!authsignal) return;
+
+    try {
+      const response = await authsignal.push.removeCredential();
+
+      if (response.data) {
+        addOutput('Push credential removed');
+      } else {
+        addOutput(`Failed to remove push credential: ${response.error}`);
+      }
+    } catch (e) {
+      addOutput(`Error: ${e}`);
+    }
+  };
+
   const ActionButton = ({
     title,
     onPress,
@@ -667,6 +797,43 @@ export function HomeScreen() {
         <ActionButton
           title="Sign In with Passkey"
           onPress={signInWithPasskey}
+          disabled={!isInitialized}
+        />
+      </FeatureCard>
+
+      {/* Push */}
+      <FeatureCard
+        title="Push Verification (mobile)"
+        description="Enroll a push credential and fetch challenges with a signed request, including public custom data points."
+      >
+        <ActionButton
+          title="Get Credential"
+          onPress={getPushCredential}
+          disabled={!isInitialized}
+        />
+        <ActionButton
+          title="Enroll Push"
+          onPress={enrollPush}
+          disabled={!isInitialized}
+        />
+        <ActionButton
+          title="Get Challenge"
+          onPress={getPushChallenge}
+          disabled={!isInitialized}
+        />
+        <ActionButton
+          title="Approve"
+          onPress={() => updatePushChallenge(true)}
+          disabled={!isInitialized || !lastPushChallengeId}
+        />
+        <ActionButton
+          title="Reject"
+          onPress={() => updatePushChallenge(false)}
+          disabled={!isInitialized || !lastPushChallengeId}
+        />
+        <ActionButton
+          title="Remove"
+          onPress={removePushCredential}
           disabled={!isInitialized}
         />
       </FeatureCard>
