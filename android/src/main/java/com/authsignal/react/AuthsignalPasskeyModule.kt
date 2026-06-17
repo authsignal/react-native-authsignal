@@ -32,9 +32,9 @@ class AuthsignalPasskeyModule(private val reactContext: ReactApplicationContext)
   }
 
   @ReactMethod
-  override fun signUp(token: String?, username: String?, displayName: String?, ignorePasskeyAlreadyExistsError: Boolean, promise: Promise) {
+  override fun signUp(token: String?, username: String?, displayName: String?, ignorePasskeyAlreadyExistsError: Boolean, syncCredentials: Boolean, promise: Promise) {
     launch(promise) {
-      val response = it.signUp(token, username, displayName, false, ignorePasskeyAlreadyExistsError)
+      val response = it.signUp(token, username, displayName, false, ignorePasskeyAlreadyExistsError, syncCredentials)
 
       if (response.error != null) {
         val errorCode = response.errorCode ?: defaultError
@@ -58,10 +58,11 @@ class AuthsignalPasskeyModule(private val reactContext: ReactApplicationContext)
     token: String?,
     _autofill: Boolean,
     preferImmediatelyAvailableCredentials: Boolean,
+    syncCredentials: Boolean,
     promise: Promise
   ) {
     launch(promise) {
-      val response = it.signIn(action, token, preferImmediatelyAvailableCredentials)
+      val response = it.signIn(action, token, preferImmediatelyAvailableCredentials, syncCredentials)
 
       if (response.error != null) {
         val errorCode = response.errorCode ?: defaultError
@@ -83,7 +84,6 @@ class AuthsignalPasskeyModule(private val reactContext: ReactApplicationContext)
 
   @ReactMethod
   override fun cancel() {
-    // No-op on Android; cancel is only applicable for iOS autofill
   }
 
   @ReactMethod

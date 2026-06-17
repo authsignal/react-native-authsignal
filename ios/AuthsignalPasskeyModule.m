@@ -13,6 +13,7 @@ RCT_EXTERN_METHOD(signUp:(NSString)token
                   withUsername:(NSString)username
                   withDisplayName:(NSString)displayName
                   withIgnorePasskeyAlreadyExistsError:(BOOL)ignorePasskeyAlreadyExistsError
+                  withSyncCredentials:(BOOL)syncCredentials
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 
@@ -20,6 +21,7 @@ RCT_EXTERN_METHOD(signIn:(NSString)action
                   withToken:(NSString)token
                   withAutofill:(BOOL)autofill
                   withPreferImmediatelyAvailableCredentials:(BOOL)preferImmediatelyAvailableCredentials
+                  withSyncCredentials:(BOOL)syncCredentials
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 

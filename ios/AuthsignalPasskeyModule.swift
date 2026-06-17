@@ -29,6 +29,7 @@ class AuthsignalPasskeyModule: NSObject {
     withUsername username: NSString?,
     withDisplayName displayName: NSString?,
     withIgnorePasskeyAlreadyExistsError ignorePasskeyAlreadyExistsError: Bool,
+    withSyncCredentials syncCredentials: Bool,
     resolve: @escaping RCTPromiseResolveBlock,
     reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -36,17 +37,18 @@ class AuthsignalPasskeyModule: NSObject {
       resolve(nil)
       return
     }
-    
+
     let tokenStr = token as String?
     let usernameStr = username as String?
     let displayNameStr = displayName as String?
-    
+
     Task.init {
       let response = await authsignal!.signUp(
         token: tokenStr,
         username: usernameStr,
         displayName: displayNameStr,
-        ignorePasskeyAlreadyExistsError: ignorePasskeyAlreadyExistsError
+        ignorePasskeyAlreadyExistsError: ignorePasskeyAlreadyExistsError,
+        syncCredentials: syncCredentials
       )
 
       if (response.error != nil) {
@@ -66,6 +68,7 @@ class AuthsignalPasskeyModule: NSObject {
     withToken token: NSString?,
     withAutofill autofill: Bool,
     withPreferImmediatelyAvailableCredentials preferImmediatelyAvailableCredentials: Bool,
+    withSyncCredentials syncCredentials: Bool,
     resolve: @escaping RCTPromiseResolveBlock,
     reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -73,16 +76,17 @@ class AuthsignalPasskeyModule: NSObject {
       resolve(nil)
       return
     }
-    
+
     let actionStr = action as String?
     let tokenStr = token as String?
-    
+
     Task.init {
       let response = await authsignal!.signIn(
         token: tokenStr,
         action: actionStr,
         autofill: autofill,
-        preferImmediatelyAvailableCredentials: preferImmediatelyAvailableCredentials
+        preferImmediatelyAvailableCredentials: preferImmediatelyAvailableCredentials,
+        syncCredentials: syncCredentials
       )
       
       if (response.error != nil) {

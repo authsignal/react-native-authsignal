@@ -1,6 +1,6 @@
 {
   "name": "react-native-authsignal",
-  "version": "2.13.0",
+  "version": "2.14.0",
   "description": "The official Authsignal React Native library.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -53,7 +53,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@authsignal/browser": "^1.13.1",
+    "@authsignal/browser": "^1.17.0",
     "@react-native-community/eslint-config": "^3.0.2",
     "@types/react": "~17.0.21",
     "@types/react-native": "0.68.0",

@@ -22,6 +22,7 @@ interface PasskeySignUpInput {
   username?: string;
   displayName?: string;
   ignorePasskeyAlreadyExistsError?: boolean;
+  syncCredentials?: boolean;
 }
 
 interface PasskeySignInInput {
@@ -29,6 +30,7 @@ interface PasskeySignInInput {
   token?: string;
   autofill?: boolean;
   preferImmediatelyAvailableCredentials?: boolean;
+  syncCredentials?: boolean;
 }
 
 const AuthsignalPasskeyModule = getNativeModule<AuthsignalPasskeyModuleSpec>(
@@ -56,6 +58,7 @@ export class AuthsignalPasskey {
     username,
     displayName,
     ignorePasskeyAlreadyExistsError = false,
+    syncCredentials = true,
   }: PasskeySignUpInput = {}): Promise<AuthsignalResponse<SignUpResponse>> {
     await this.ensureModuleIsInitialized();
 
@@ -64,7 +67,8 @@ export class AuthsignalPasskey {
         token ?? null,
         username ?? null,
         displayName ?? null,
-        ignorePasskeyAlreadyExistsError
+        ignorePasskeyAlreadyExistsError,
+        syncCredentials
       )) as SignUpResponse;
 
       return { data };
@@ -82,6 +86,7 @@ export class AuthsignalPasskey {
     token,
     autofill = false,
     preferImmediatelyAvailableCredentials = true,
+    syncCredentials = true,
   }: PasskeySignInInput = {}): Promise<AuthsignalResponse<SignInResponse>> {
     await this.ensureModuleIsInitialized();
 
@@ -98,7 +103,8 @@ export class AuthsignalPasskey {
         action ?? null,
         token ?? null,
         autofill,
-        preferImmediatelyAvailableCredentials
+        preferImmediatelyAvailableCredentials,
+        syncCredentials
       )) as SignInResponse;
 
       this.autofillRequestPending = false;

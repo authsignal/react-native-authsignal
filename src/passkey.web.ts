@@ -18,12 +18,14 @@ interface PasskeySignUpInput {
   username?: string;
   displayName?: string;
   ignorePasskeyAlreadyExistsError?: boolean;
+  syncCredentials?: boolean;
 }
 
 interface PasskeySignInInput {
   action?: string;
   token?: string;
   autofill?: boolean;
+  syncCredentials?: boolean;
 }
 
 export class AuthsignalPasskey {
@@ -44,6 +46,7 @@ export class AuthsignalPasskey {
     username,
     displayName,
     ignorePasskeyAlreadyExistsError = false,
+    syncCredentials = true,
   }: PasskeySignUpInput = {}): Promise<AuthsignalResponse<SignUpResponse>> {
     try {
       const client = this.getClient();
@@ -51,6 +54,7 @@ export class AuthsignalPasskey {
         token,
         username,
         displayName,
+        syncCredentials,
       });
 
       if (result.errorCode) {
@@ -76,6 +80,7 @@ export class AuthsignalPasskey {
     action,
     token,
     autofill = false,
+    syncCredentials = true,
   }: PasskeySignInInput = {}): Promise<AuthsignalResponse<SignInResponse>> {
     try {
       const client = this.getClient();
@@ -83,6 +88,7 @@ export class AuthsignalPasskey {
         action,
         token,
         autofill,
+        syncCredentials,
       });
 
       if (result.errorCode) {
@@ -110,8 +116,7 @@ export class AuthsignalPasskey {
   }
 
   cancel() {
-    // On web, passkey operations are managed by the browser
-    // and cannot be programmatically cancelled
+    return;
   }
 
   isSupported(): boolean {
