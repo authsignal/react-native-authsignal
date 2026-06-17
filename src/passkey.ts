@@ -58,7 +58,7 @@ export class AuthsignalPasskey {
     username,
     displayName,
     ignorePasskeyAlreadyExistsError = false,
-    syncCredentials = true,
+    syncCredentials = false,
   }: PasskeySignUpInput = {}): Promise<AuthsignalResponse<SignUpResponse>> {
     await this.ensureModuleIsInitialized();
 
@@ -86,7 +86,7 @@ export class AuthsignalPasskey {
     token,
     autofill = false,
     preferImmediatelyAvailableCredentials = true,
-    syncCredentials = true,
+    syncCredentials = false,
   }: PasskeySignInInput = {}): Promise<AuthsignalResponse<SignInResponse>> {
     await this.ensureModuleIsInitialized();
 

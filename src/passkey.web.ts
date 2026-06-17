@@ -46,7 +46,7 @@ export class AuthsignalPasskey {
     username,
     displayName,
     ignorePasskeyAlreadyExistsError = false,
-    syncCredentials = true,
+    syncCredentials = false,
   }: PasskeySignUpInput = {}): Promise<AuthsignalResponse<SignUpResponse>> {
     try {
       const client = this.getClient();
@@ -80,7 +80,7 @@ export class AuthsignalPasskey {
     action,
     token,
     autofill = false,
-    syncCredentials = true,
+    syncCredentials = false,
   }: PasskeySignInInput = {}): Promise<AuthsignalResponse<SignInResponse>> {
     try {
       const client = this.getClient();
