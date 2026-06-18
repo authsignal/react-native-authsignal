@@ -18,6 +18,8 @@ Then link the native iOS dependencies:
 npx pod-install ios
 ```
 
+For Android apps, use compile SDK 35 and Android Gradle Plugin 8.6.0 or newer.
+
 ## Initialization
 
 Initialize the Authsignal client in your code:

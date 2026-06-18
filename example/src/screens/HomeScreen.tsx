@@ -26,9 +26,9 @@ export function HomeScreen() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('+1234567890');
 
-  const [lastPushChallengeId, setLastPushChallengeId] = useState<
-    string | null
-  >(null);
+  const [lastPushChallengeId, setLastPushChallengeId] = useState<string | null>(
+    null
+  );
 
   const [emailCode, setEmailCode] = useState('');
   const [smsCode, setSmsCode] = useState('');

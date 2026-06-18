@@ -10,13 +10,15 @@ export interface Spec extends TurboModule {
     token: string | null,
     withUsername: string | null,
     withDisplayName: string | null,
-    withIgnorePasskeyAlreadyExistsError: boolean
+    withIgnorePasskeyAlreadyExistsError: boolean,
+    withSyncCredentials: boolean
   ): Promise<Object | null>;
   signIn(
     action: string | null,
     withToken: string | null,
     withAutofill: boolean,
-    withPreferImmediatelyAvailableCredentials: boolean
+    withPreferImmediatelyAvailableCredentials: boolean,
+    withSyncCredentials: boolean
   ): Promise<Object | null>;
   shouldPromptToCreatePasskey(username: string | null): Promise<boolean>;
   isAvailableOnDevice(): Promise<boolean>;
