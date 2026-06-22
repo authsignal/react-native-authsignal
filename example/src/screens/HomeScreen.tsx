@@ -712,6 +712,29 @@ export function HomeScreen() {
     }
   };
 
+  const updatePushCredential = async () => {
+    const authsignal = authsignalRef.current;
+    if (!authsignal) return;
+
+    try {
+      // Simulated new FCM/APNs token - in production this comes from the OS push service.
+      const newPushToken = `test-push-token-${Date.now()}`;
+
+      addOutput('Updating push credential...');
+      const response = await authsignal.push.updateCredential(newPushToken);
+
+      if (response.data) {
+        addOutput('Push credential updated');
+        addOutput(`  Credential ID: ${response.data.credentialId}`);
+        addOutput(`  New token: ${newPushToken}`);
+      } else {
+        addOutput(`Failed to update push credential: ${response.error}`);
+      }
+    } catch (e) {
+      addOutput(`Error: ${e}`);
+    }
+  };
+
   const ActionButton = ({
     title,
     onPress,
@@ -830,6 +853,11 @@ export function HomeScreen() {
           title="Reject"
           onPress={() => updatePushChallenge(false)}
           disabled={!isInitialized || !lastPushChallengeId}
+        />
+        <ActionButton
+          title="Update Credential"
+          onPress={updatePushCredential}
+          disabled={!isInitialized}
         />
         <ActionButton
           title="Remove"

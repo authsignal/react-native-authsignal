@@ -139,6 +139,26 @@ export class AuthsignalPush {
     }
   }
 
+  async updateCredential(
+    pushToken: string
+  ): Promise<AuthsignalResponse<AppCredential>> {
+    await this.ensureModuleIsInitialized();
+
+    try {
+      const data = (await AuthsignalPushModule.updateCredential(
+        pushToken
+      )) as AppCredential;
+
+      return { data };
+    } catch (ex) {
+      if (this.enableLogging) {
+        console.log(ex);
+      }
+
+      return handleErrorCodes(ex);
+    }
+  }
+
   private async ensureModuleIsInitialized() {
     if (this.initialized) {
       return;

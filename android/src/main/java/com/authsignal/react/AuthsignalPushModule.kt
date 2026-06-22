@@ -156,6 +156,29 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
     }
   }
 
+  @ReactMethod
+  override fun updateCredential(pushToken: String, promise: Promise) {
+    launch(promise) {
+      val response = it.updateCredential(pushToken)
+
+      if (response.error != null) {
+        val errorCode = response.errorCode ?: defaultError
+
+        promise.reject(errorCode, response.error)
+      } else if (response.data != null) {
+        val credential = response.data
+        val map = Arguments.createMap()
+        map.putString("credentialId", credential!!.credentialId)
+        map.putString("createdAt", credential.createdAt)
+        map.putString("userId", credential.userId)
+        map.putString("lastAuthenticatedAt", credential.lastAuthenticatedAt)
+        promise.resolve(map)
+      } else {
+        promise.resolve(null)
+      }
+    }
+  }
+
   private fun launch(promise: Promise, fn: suspend (client: AuthsignalPush) -> Unit) {
     coroutineScope.launch {
       authsignal?.let {
