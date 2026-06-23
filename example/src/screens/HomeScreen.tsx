@@ -717,16 +717,16 @@ export function HomeScreen() {
     if (!authsignal) return;
 
     try {
-      // Simulated new FCM/APNs token - in production this comes from the OS push service.
-      const newPushToken = `test-push-token-${Date.now()}`;
+      // Pass the device's current FCM (Android) / APNs (iOS) push token, e.g. from
+      // messaging().getToken(). This example uses a placeholder to demonstrate the call.
+      const pushToken = `example-push-token-${Date.now()}`;
 
       addOutput('Updating push credential...');
-      const response = await authsignal.push.updateCredential(newPushToken);
+      const response = await authsignal.push.updateCredential(pushToken);
 
       if (response.data) {
         addOutput('Push credential updated');
         addOutput(`  Credential ID: ${response.data.credentialId}`);
-        addOutput(`  New token: ${newPushToken}`);
       } else {
         addOutput(`Failed to update push credential: ${response.error}`);
       }
