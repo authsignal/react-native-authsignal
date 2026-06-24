@@ -1401,7 +1401,7 @@ PODS:
     - React-jsiexecutor
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
-  - react-native-authsignal (2.14.0):
+  - react-native-authsignal (3.0.0):
     - Authsignal (~> 2.10.0)
     - DoubleConversion
     - glog
@@ -2188,7 +2188,7 @@ SPEC CHECKSUMS:
   React-logger: 1426d04b594a2e68b0ac2add21d45422d06397a3
   React-Mapbuffer: 70a29536f84ddffca4a91097651d2b8f194f7c67
   React-microtasksnativemodule: ff05e894231c44c21135d1d23a82b87656d98eeb
-  react-native-authsignal: 307cf77a221650f787b897dd3f0348a6c8005401
+  react-native-authsignal: eb926c0fb7fb2f138e1ac8a39c564ec38ea91faf
   react-native-safe-area-context: 562163222d999b79a51577eda2ea8ad2c32b4d06
   React-NativeModulesApple: d94850b316446b0c39a82eb278d6efaa1a634055
   React-oscompat: 56b4766e96b06843a3af49a6763ef40992e720aa
