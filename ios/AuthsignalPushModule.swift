@@ -198,10 +198,10 @@ class AuthsignalPushModule: NSObject {
         reject(response.errorCode ?? "unexpected_error", error, nil)
       } else if let data = response.data {
         let credential: [String: String?] = [
-          "credentialId": data.credentialId,
-          "createdAt": data.createdAt,
+          "userAuthenticatorId": data.userAuthenticatorId,
           "userId": data.userId,
-          "lastAuthenticatedAt": data.lastAuthenticatedAt,
+          "lastVerifiedAt": data.lastVerifiedAt,
+          "pushToken": data.pushToken,
         ]
 
         resolve(credential)

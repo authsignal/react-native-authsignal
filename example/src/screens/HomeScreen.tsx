@@ -726,7 +726,7 @@ export function HomeScreen() {
 
       if (response.data) {
         addOutput('Push credential updated');
-        addOutput(`  Credential ID: ${response.data.credentialId}`);
+        addOutput(`  Credential ID: ${response.data.userAuthenticatorId}`);
       } else {
         addOutput(`Failed to update push credential: ${response.error}`);
       }

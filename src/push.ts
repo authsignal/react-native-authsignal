@@ -9,6 +9,7 @@ import type {
   AppCredential,
   AuthsignalResponse,
   UpdateChallengeInput,
+  UpdatedAppCredential,
 } from './types';
 
 interface ConstructorArgs {
@@ -141,13 +142,13 @@ export class AuthsignalPush {
 
   async updateCredential(
     pushToken: string
-  ): Promise<AuthsignalResponse<AppCredential>> {
+  ): Promise<AuthsignalResponse<UpdatedAppCredential>> {
     await this.ensureModuleIsInitialized();
 
     try {
       const data = (await AuthsignalPushModule.updateCredential(
         pushToken
-      )) as AppCredential;
+      )) as UpdatedAppCredential;
 
       return { data };
     } catch (ex) {

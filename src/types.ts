@@ -75,6 +75,13 @@ export interface AppCredential {
   lastAuthenticatedAt?: string;
 }
 
+export interface UpdatedAppCredential {
+  userAuthenticatorId: string;
+  userId: string;
+  lastVerifiedAt: string;
+  pushToken: string;
+}
+
 export interface ClaimChallengeInput {
   challengeId: string;
 }

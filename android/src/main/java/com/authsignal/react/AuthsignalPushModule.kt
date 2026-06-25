@@ -161,17 +161,18 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
     launch(promise) {
       val response = it.updateCredential(pushToken)
 
+      val credential = response.data
+
       if (response.error != null) {
         val errorCode = response.errorCode ?: defaultError
 
         promise.reject(errorCode, response.error)
-      } else if (response.data != null) {
-        val credential = response.data
+      } else if (credential != null) {
         val map = Arguments.createMap()
-        map.putString("credentialId", credential!!.credentialId)
-        map.putString("createdAt", credential.createdAt)
+        map.putString("userAuthenticatorId", credential.userAuthenticatorId)
         map.putString("userId", credential.userId)
-        map.putString("lastAuthenticatedAt", credential.lastAuthenticatedAt)
+        map.putString("lastVerifiedAt", credential.lastVerifiedAt)
+        map.putString("pushToken", credential.pushToken)
         promise.resolve(map)
       } else {
         promise.resolve(null)
