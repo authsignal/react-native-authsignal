@@ -82,19 +82,21 @@ class AuthsignalPushModule: NSObject {
       
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
-      } else {
+      } else if let data = response.data {
          let credential: [String: String?] = [
-          "credentialId": response.data!.credentialId,
-          "createdAt": response.data!.createdAt,
-          "userId": response.data!.userId,
-          "lastAuthenticatedAt": response.data!.lastAuthenticatedAt,
+          "credentialId": data.credentialId,
+          "createdAt": data.createdAt,
+          "userId": data.userId,
+          "lastAuthenticatedAt": data.lastAuthenticatedAt,
         ]
-        
+
         resolve(credential)
+      } else {
+        resolve(nil)
       }
     }
   }
-  
+
   @objc func removeCredential(
     _ resolve: @escaping RCTPromiseResolveBlock,
     reject: @escaping RCTPromiseRejectBlock
@@ -179,6 +181,36 @@ class AuthsignalPushModule: NSObject {
     }
   }
   
+  @objc func updateCredential(
+    _ pushToken: NSString,
+    resolve: @escaping RCTPromiseResolveBlock,
+    reject: @escaping RCTPromiseRejectBlock
+  ) -> Void {
+    guard let authsignal = authsignal else {
+      resolve(nil)
+      return
+    }
+
+    Task.init {
+      let response = await authsignal.updateCredential(pushToken: pushToken as String)
+
+      if let error = response.error {
+        reject(response.errorCode ?? "unexpected_error", error, nil)
+      } else if let data = response.data {
+        let credential: [String: String?] = [
+          "userAuthenticatorId": data.userAuthenticatorId,
+          "userId": data.userId,
+          "lastVerifiedAt": data.lastVerifiedAt,
+          "pushToken": data.pushToken,
+        ]
+
+        resolve(credential)
+      } else {
+        resolve(nil)
+      }
+    }
+  }
+
   func getKeychainAccess(value: String?) -> KeychainAccess {
     switch value {
     case "afterFirstUnlock":

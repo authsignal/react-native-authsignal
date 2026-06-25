@@ -9,6 +9,7 @@ import type {
   AppCredential,
   AuthsignalResponse,
   UpdateChallengeInput,
+  UpdatedAppCredential,
 } from './types';
 
 interface ConstructorArgs {
@@ -128,6 +129,26 @@ export class AuthsignalPush {
         approved,
         verificationCode
       );
+
+      return { data };
+    } catch (ex) {
+      if (this.enableLogging) {
+        console.log(ex);
+      }
+
+      return handleErrorCodes(ex);
+    }
+  }
+
+  async updateCredential(
+    pushToken: string
+  ): Promise<AuthsignalResponse<UpdatedAppCredential>> {
+    await this.ensureModuleIsInitialized();
+
+    try {
+      const data = (await AuthsignalPushModule.updateCredential(
+        pushToken
+      )) as UpdatedAppCredential;
 
       return { data };
     } catch (ex) {

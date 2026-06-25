@@ -31,4 +31,8 @@ RCT_EXTERN_METHOD(updateChallenge:(NSString)challengeId
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(updateCredential:(NSString)pushToken
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
+
 @end

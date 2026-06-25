@@ -17,6 +17,7 @@ export interface Spec extends TurboModule {
     withApproval: boolean,
     withVerificationCode: string | null
   ): Promise<boolean>;
+  updateCredential(pushToken: string): Promise<Object | null>;
 }
 
 export default TurboModuleRegistry.get<Spec>('AuthsignalPushModule');
