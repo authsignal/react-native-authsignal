@@ -605,6 +605,12 @@ export function HomeScreen() {
       addOutput('Push credential found');
       addOutput(`  Credential ID: ${response.data.credentialId}`);
       addOutput(`  User ID: ${response.data.userId}`);
+      if (response.data.expiresAt) {
+        addOutput(`  Expires At: ${response.data.expiresAt}`);
+      }
+      if (response.data.isExpired !== undefined) {
+        addOutput(`  Is Expired: ${response.data.isExpired}`);
+      }
     } catch (e) {
       addOutput(`Error: ${e}`);
     }
@@ -722,13 +728,34 @@ export function HomeScreen() {
       const pushToken = `example-push-token-${Date.now()}`;
 
       addOutput('Updating push credential...');
-      const response = await authsignal.push.updateCredential(pushToken);
+      const response = await authsignal.push.updateCredential({ pushToken });
 
       if (response.data) {
         addOutput('Push credential updated');
         addOutput(`  Credential ID: ${response.data.userAuthenticatorId}`);
       } else {
         addOutput(`Failed to update push credential: ${response.error}`);
+      }
+    } catch (e) {
+      addOutput(`Error: ${e}`);
+    }
+  };
+
+  const extendPushCredential = async () => {
+    const authsignal = authsignalRef.current;
+    if (!authsignal) return;
+
+    try {
+      // Keep-alive: reset the credential lease without necessarily rotating the
+      // push token. `pushToken` is optional — omit it to preserve the stored token.
+      addOutput('Extending push credential lease...');
+      const response = await authsignal.push.updateCredential({ extend: true });
+
+      if (response.data) {
+        addOutput('Push credential lease extended');
+        addOutput(`  Credential ID: ${response.data.userAuthenticatorId}`);
+      } else {
+        addOutput(`Failed to extend push credential: ${response.error}`);
       }
     } catch (e) {
       addOutput(`Error: ${e}`);
@@ -857,6 +884,11 @@ export function HomeScreen() {
         <ActionButton
           title="Update Credential"
           onPress={updatePushCredential}
+          disabled={!isInitialized}
+        />
+        <ActionButton
+          title="Extend Credential"
+          onPress={extendPushCredential}
           disabled={!isInitialized}
         />
         <ActionButton
