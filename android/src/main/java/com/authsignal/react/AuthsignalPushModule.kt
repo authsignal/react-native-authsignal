@@ -157,9 +157,9 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  override fun updateCredential(pushToken: String, promise: Promise) {
+  override fun updateCredential(pushToken: String?, withExtend: Boolean, promise: Promise) {
     launch(promise) {
-      val response = it.updateCredential(pushToken)
+      val response = it.updateCredential(pushToken, extend = withExtend)
 
       val credential = response.data
 
