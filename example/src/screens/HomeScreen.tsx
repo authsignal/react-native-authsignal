@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  Clipboard,
   Platform,
   ScrollView,
   StyleSheet,
@@ -616,6 +617,33 @@ export function HomeScreen() {
     }
   };
 
+  // Copies the credential's public key (credentialId) to the clipboard for testing —
+  // e.g. pasting into Postman's publicKey variable so a local signer can sign for it.
+  const copyPushPublicKey = async () => {
+    const authsignal = authsignalRef.current;
+    if (!authsignal) return;
+
+    try {
+      const response = await authsignal.push.getCredential();
+
+      if (!response.data) {
+        addOutput(
+          response.error
+            ? `Error: ${response.error}`
+            : 'No push credential on this device'
+        );
+        return;
+      }
+
+      const publicKey = response.data.credentialId;
+      Clipboard.setString(publicKey);
+      addOutput('Public key copied to clipboard');
+      addOutput(`  ${publicKey}`);
+    } catch (e) {
+      addOutput(`Error: ${e}`);
+    }
+  };
+
   const enrollPush = async () => {
     const authsignal = authsignalRef.current;
     if (!authsignal) return;
@@ -861,6 +889,11 @@ export function HomeScreen() {
         <ActionButton
           title="Get Credential"
           onPress={getPushCredential}
+          disabled={!isInitialized}
+        />
+        <ActionButton
+          title="Copy Public Key"
+          onPress={copyPushPublicKey}
           disabled={!isInitialized}
         />
         <ActionButton
