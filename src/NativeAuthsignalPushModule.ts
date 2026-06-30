@@ -19,7 +19,7 @@ export interface Spec extends TurboModule {
   ): Promise<boolean>;
   updateCredential(
     pushToken: string | null,
-    withExtend: boolean
+    withResetExpiry: boolean
   ): Promise<Object | null>;
 }
 

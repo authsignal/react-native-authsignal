@@ -89,7 +89,7 @@ export interface UpdateCredentialInput {
    * When `true`, resets the credential lease (keep-alive). When omitted or
    * `false`, the call only updates the push token without resetting the lease.
    */
-  extend?: boolean;
+  resetExpiry?: boolean;
 }
 
 export interface UpdatedAppCredential {

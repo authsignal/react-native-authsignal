@@ -741,21 +741,23 @@ export function HomeScreen() {
     }
   };
 
-  const extendPushCredential = async () => {
+  const resetPushCredentialExpiry = async () => {
     const authsignal = authsignalRef.current;
     if (!authsignal) return;
 
     try {
       // Keep-alive: reset the credential lease without necessarily rotating the
       // push token. `pushToken` is optional — omit it to preserve the stored token.
-      addOutput('Extending push credential lease...');
-      const response = await authsignal.push.updateCredential({ extend: true });
+      addOutput('Resetting push credential expiry...');
+      const response = await authsignal.push.updateCredential({
+        resetExpiry: true,
+      });
 
       if (response.data) {
-        addOutput('Push credential lease extended');
+        addOutput('Push credential expiry reset');
         addOutput(`  Credential ID: ${response.data.userAuthenticatorId}`);
       } else {
-        addOutput(`Failed to extend push credential: ${response.error}`);
+        addOutput(`Failed to reset push credential expiry: ${response.error}`);
       }
     } catch (e) {
       addOutput(`Error: ${e}`);
@@ -887,8 +889,8 @@ export function HomeScreen() {
           disabled={!isInitialized}
         />
         <ActionButton
-          title="Extend Credential"
-          onPress={extendPushCredential}
+          title="Reset Expiry"
+          onPress={resetPushCredentialExpiry}
           disabled={!isInitialized}
         />
         <ActionButton

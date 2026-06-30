@@ -183,7 +183,7 @@ class AuthsignalPushModule: NSObject {
   
   @objc func updateCredential(
     _ pushToken: NSString?,
-    withExtend extend: Bool,
+    withResetExpiry resetExpiry: Bool,
     resolve: @escaping RCTPromiseResolveBlock,
     reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -195,7 +195,7 @@ class AuthsignalPushModule: NSObject {
     let pushTokenStr = pushToken as String?
 
     Task.init {
-      let response = await authsignal.updateCredential(pushToken: pushTokenStr, extend: extend)
+      let response = await authsignal.updateCredential(pushToken: pushTokenStr, resetExpiry: resetExpiry)
 
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
