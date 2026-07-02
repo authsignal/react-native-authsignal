@@ -607,7 +607,11 @@ export function HomeScreen() {
       addOutput(`  Credential ID: ${response.data.credentialId}`);
       addOutput(`  User ID: ${response.data.userId}`);
       if (response.data.expiresAt) {
-        addOutput(`  Expires At: ${response.data.expiresAt}`);
+        addOutput(
+          `  Expires At: ${new Date(
+            response.data.expiresAt * 1000
+          ).toISOString()}`
+        );
       }
       if (response.data.isExpired !== undefined) {
         addOutput(`  Is Expired: ${response.data.isExpired}`);
@@ -785,7 +789,11 @@ export function HomeScreen() {
         addOutput('Push credential expiry reset');
         addOutput(`  Credential ID: ${response.data.userAuthenticatorId}`);
         if (response.data.expiresAt) {
-          addOutput(`  New Expires At: ${response.data.expiresAt}`);
+          addOutput(
+            `  New Expires At: ${new Date(
+              response.data.expiresAt * 1000
+            ).toISOString()}`
+          );
         }
       } else {
         addOutput(`Failed to reset push credential expiry: ${response.error}`);
