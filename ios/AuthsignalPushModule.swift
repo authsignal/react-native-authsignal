@@ -38,13 +38,15 @@ class AuthsignalPushModule: NSObject {
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
       } else if let data = response.data {
-        let credential: [String: String?] = [
+        let credential: [String: Any?] = [
           "credentialId": data.credentialId,
           "createdAt": data.createdAt,
           "userId": data.userId,
           "lastAuthenticatedAt": data.lastAuthenticatedAt,
+          "expiresAt": data.expiresAt,
+          "isExpired": data.isExpired,
         ]
-        
+
         resolve(credential)
       } else {
         resolve(nil)
@@ -83,11 +85,13 @@ class AuthsignalPushModule: NSObject {
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
       } else if let data = response.data {
-         let credential: [String: String?] = [
+         let credential: [String: Any?] = [
           "credentialId": data.credentialId,
           "createdAt": data.createdAt,
           "userId": data.userId,
           "lastAuthenticatedAt": data.lastAuthenticatedAt,
+          "expiresAt": data.expiresAt,
+          "isExpired": data.isExpired,
         ]
 
         resolve(credential)
@@ -182,7 +186,8 @@ class AuthsignalPushModule: NSObject {
   }
   
   @objc func updateCredential(
-    _ pushToken: NSString,
+    _ pushToken: NSString?,
+    withResetExpiry resetExpiry: Bool,
     resolve: @escaping RCTPromiseResolveBlock,
     reject: @escaping RCTPromiseRejectBlock
   ) -> Void {
@@ -191,8 +196,10 @@ class AuthsignalPushModule: NSObject {
       return
     }
 
+    let pushTokenStr = pushToken as String?
+
     Task.init {
-      let response = await authsignal.updateCredential(pushToken: pushToken as String)
+      let response = await authsignal.updateCredential(pushToken: pushTokenStr, resetExpiry: resetExpiry)
 
       if let error = response.error {
         reject(response.errorCode ?? "unexpected_error", error, nil)
@@ -202,6 +209,7 @@ class AuthsignalPushModule: NSObject {
           "userId": data.userId,
           "lastVerifiedAt": data.lastVerifiedAt,
           "pushToken": data.pushToken,
+          "expiresAt": data.expiresAt,
         ]
 
         resolve(credential)

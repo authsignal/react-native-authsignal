@@ -9,6 +9,7 @@ import type {
   AppCredential,
   AuthsignalResponse,
   UpdateChallengeInput,
+  UpdateCredentialInput,
   UpdatedAppCredential,
 } from './types';
 
@@ -141,13 +142,20 @@ export class AuthsignalPush {
   }
 
   async updateCredential(
-    pushToken: string
+    input?: UpdateCredentialInput | string
   ): Promise<AuthsignalResponse<UpdatedAppCredential>> {
     await this.ensureModuleIsInitialized();
 
+    // Backward compatible: existing callers pass a `pushToken` string directly.
+    const { pushToken, resetExpiry = false } =
+      typeof input === 'string'
+        ? { pushToken: input, resetExpiry: false }
+        : input ?? {};
+
     try {
       const data = (await AuthsignalPushModule.updateCredential(
-        pushToken
+        pushToken ?? null,
+        resetExpiry
       )) as UpdatedAppCredential;
 
       return { data };

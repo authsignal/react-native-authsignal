@@ -43,6 +43,8 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
         map.putString("createdAt", credential.createdAt)
         map.putString("userId", credential.userId)
         map.putString("lastAuthenticatedAt", credential.lastAuthenticatedAt)
+        map.putString("expiresAt", credential.expiresAt)
+        map.putBoolean("isExpired", credential.isExpired)
         promise.resolve(map)
       } else {
         promise.resolve(null)
@@ -78,6 +80,8 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
         map.putString("createdAt", credential.createdAt)
         map.putString("userId", credential.userId)
         map.putString("lastAuthenticatedAt", credential.lastAuthenticatedAt)
+        map.putString("expiresAt", credential.expiresAt)
+        map.putBoolean("isExpired", credential.isExpired)
         promise.resolve(map)
       }
     }
@@ -157,9 +161,9 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  override fun updateCredential(pushToken: String, promise: Promise) {
+  override fun updateCredential(pushToken: String?, withResetExpiry: Boolean, promise: Promise) {
     launch(promise) {
-      val response = it.updateCredential(pushToken)
+      val response = it.updateCredential(pushToken, resetExpiry = withResetExpiry)
 
       val credential = response.data
 
@@ -173,6 +177,7 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
         map.putString("userId", credential.userId)
         map.putString("lastVerifiedAt", credential.lastVerifiedAt)
         map.putString("pushToken", credential.pushToken)
+        map.putString("expiresAt", credential.expiresAt)
         promise.resolve(map)
       } else {
         promise.resolve(null)

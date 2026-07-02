@@ -73,13 +73,37 @@ export interface AppCredential {
   createdAt: string;
   userId: string;
   lastAuthenticatedAt?: string;
+  /** ISO timestamp at which the credential lease expires, if the credential has an expiry. */
+  expiresAt?: string;
+  /**
+   * True if the credential lease has lapsed, computed on-device from `expiresAt`.
+   * The server rejects expired credentials (getCredential errors rather than
+   * returning one), so this is only true for a credential held past its expiry.
+   */
+  isExpired?: boolean;
+}
+
+export interface UpdateCredentialInput {
+  /**
+   * The device's current push token (FCM/APNs). Optional — when omitted, the
+   * server preserves the stored token.
+   */
+  pushToken?: string;
+  /**
+   * When `true`, resets the credential lease (keep-alive). When omitted or
+   * `false`, the call only updates the push token without resetting the lease.
+   */
+  resetExpiry?: boolean;
 }
 
 export interface UpdatedAppCredential {
   userAuthenticatorId: string;
   userId: string;
   lastVerifiedAt: string;
-  pushToken: string;
+  /** Echoes the request's push token; absent for keep-alive calls that omit it. */
+  pushToken?: string;
+  /** ISO timestamp of the new credential lease, if the credential has an expiry. */
+  expiresAt?: string;
 }
 
 export interface ClaimChallengeInput {
