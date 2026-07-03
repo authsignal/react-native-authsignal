@@ -146,7 +146,6 @@ export class AuthsignalPush {
   ): Promise<AuthsignalResponse<UpdatedAppCredential>> {
     await this.ensureModuleIsInitialized();
 
-    // Backward compatible: existing callers pass a `pushToken` string directly.
     const { pushToken, resetExpiry = false } =
       typeof input === 'string'
         ? { pushToken: input, resetExpiry: false }

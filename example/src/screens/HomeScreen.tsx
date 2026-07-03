@@ -614,8 +614,6 @@ export function HomeScreen() {
     }
   };
 
-  // Copies the credential's public key (credentialId) to the clipboard for testing —
-  // e.g. pasting into Postman's publicKey variable so a local signer can sign for it.
   const copyPushPublicKey = async () => {
     const authsignal = authsignalRef.current;
     if (!authsignal) return;
@@ -771,8 +769,6 @@ export function HomeScreen() {
     if (!authsignal) return;
 
     try {
-      // Keep-alive: reset the credential lease without necessarily rotating the
-      // push token. `pushToken` is optional — omit it to preserve the stored token.
       addOutput('Resetting push credential expiry...');
       const response = await authsignal.push.updateCredential({
         resetExpiry: true,
