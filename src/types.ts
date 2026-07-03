@@ -75,8 +75,6 @@ export interface AppCredential {
   lastAuthenticatedAt?: string;
   /** Unix epoch seconds at which the credential lease expires, if the credential has an expiry. */
   expiresAt?: number;
-  /** True if the credential lease has lapsed, computed on-device from `expiresAt`. */
-  isExpired?: boolean;
 }
 
 export interface UpdateCredentialInput {

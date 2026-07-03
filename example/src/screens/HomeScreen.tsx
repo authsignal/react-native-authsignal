@@ -613,9 +613,6 @@ export function HomeScreen() {
           ).toISOString()}`
         );
       }
-      if (response.data.isExpired !== undefined) {
-        addOutput(`  Is Expired: ${response.data.isExpired}`);
-      }
     } catch (e) {
       addOutput(`Error: ${e}`);
     }

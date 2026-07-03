@@ -44,7 +44,6 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
         map.putString("userId", credential.userId)
         map.putString("lastAuthenticatedAt", credential.lastAuthenticatedAt)
         credential.expiresAt?.let { map.putDouble("expiresAt", it.toDouble()) }
-        map.putBoolean("isExpired", credential.isExpired)
         promise.resolve(map)
       } else {
         promise.resolve(null)
@@ -81,7 +80,6 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
         map.putString("userId", credential.userId)
         map.putString("lastAuthenticatedAt", credential.lastAuthenticatedAt)
         credential.expiresAt?.let { map.putDouble("expiresAt", it.toDouble()) }
-        map.putBoolean("isExpired", credential.isExpired)
         promise.resolve(map)
       }
     }
