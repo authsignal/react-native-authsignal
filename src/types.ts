@@ -73,8 +73,8 @@ export interface AppCredential {
   createdAt: string;
   userId: string;
   lastAuthenticatedAt?: string;
-  /** Unix epoch seconds at which the credential lease expires, if the credential has an expiry. */
-  expiresAt?: number;
+  /** ISO timestamp at which the credential lease expires, if the credential has an expiry. */
+  expiresAt?: string;
 }
 
 export interface UpdateCredentialInput {
@@ -96,8 +96,8 @@ export interface UpdatedAppCredential {
   lastVerifiedAt: string;
   /** Echoes the request's push token; absent for keep-alive calls that omit it. */
   pushToken?: string;
-  /** Unix epoch seconds of the new credential lease, if the credential has an expiry. */
-  expiresAt?: number;
+  /** ISO timestamp of the new credential lease, if the credential has an expiry. */
+  expiresAt?: string;
 }
 
 export interface ClaimChallengeInput {
