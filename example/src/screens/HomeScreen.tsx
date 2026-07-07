@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  Clipboard,
   Platform,
   ScrollView,
   StyleSheet,
@@ -605,6 +606,34 @@ export function HomeScreen() {
       addOutput('Push credential found');
       addOutput(`  Credential ID: ${response.data.credentialId}`);
       addOutput(`  User ID: ${response.data.userId}`);
+      if (response.data.expiresAt) {
+        addOutput(`  Expires At: ${response.data.expiresAt}`);
+      }
+    } catch (e) {
+      addOutput(`Error: ${e}`);
+    }
+  };
+
+  const copyPushPublicKey = async () => {
+    const authsignal = authsignalRef.current;
+    if (!authsignal) return;
+
+    try {
+      const response = await authsignal.push.getCredential();
+
+      if (!response.data) {
+        addOutput(
+          response.error
+            ? `Error: ${response.error}`
+            : 'No push credential on this device'
+        );
+        return;
+      }
+
+      const publicKey = response.data.credentialId;
+      Clipboard.setString(publicKey);
+      addOutput('Public key copied to clipboard');
+      addOutput(`  ${publicKey}`);
     } catch (e) {
       addOutput(`Error: ${e}`);
     }
@@ -722,13 +751,37 @@ export function HomeScreen() {
       const pushToken = `example-push-token-${Date.now()}`;
 
       addOutput('Updating push credential...');
-      const response = await authsignal.push.updateCredential(pushToken);
+      const response = await authsignal.push.updateCredential({ pushToken });
 
       if (response.data) {
         addOutput('Push credential updated');
         addOutput(`  Credential ID: ${response.data.userAuthenticatorId}`);
       } else {
         addOutput(`Failed to update push credential: ${response.error}`);
+      }
+    } catch (e) {
+      addOutput(`Error: ${e}`);
+    }
+  };
+
+  const resetPushCredentialExpiry = async () => {
+    const authsignal = authsignalRef.current;
+    if (!authsignal) return;
+
+    try {
+      addOutput('Resetting push credential expiry...');
+      const response = await authsignal.push.updateCredential({
+        resetExpiry: true,
+      });
+
+      if (response.data) {
+        addOutput('Push credential expiry reset');
+        addOutput(`  Credential ID: ${response.data.userAuthenticatorId}`);
+        if (response.data.expiresAt) {
+          addOutput(`  New Expires At: ${response.data.expiresAt}`);
+        }
+      } else {
+        addOutput(`Failed to reset push credential expiry: ${response.error}`);
       }
     } catch (e) {
       addOutput(`Error: ${e}`);
@@ -835,6 +888,11 @@ export function HomeScreen() {
           disabled={!isInitialized}
         />
         <ActionButton
+          title="Copy Public Key"
+          onPress={copyPushPublicKey}
+          disabled={!isInitialized}
+        />
+        <ActionButton
           title="Enroll Push"
           onPress={enrollPush}
           disabled={!isInitialized}
@@ -857,6 +915,11 @@ export function HomeScreen() {
         <ActionButton
           title="Update Credential"
           onPress={updatePushCredential}
+          disabled={!isInitialized}
+        />
+        <ActionButton
+          title="Reset Expiry"
+          onPress={resetPushCredentialExpiry}
           disabled={!isInitialized}
         />
         <ActionButton
