@@ -694,6 +694,7 @@ export function HomeScreen() {
 
       addOutput(`Challenge: ${challenge.challengeId}`);
       addOutput(`  actionCode: ${challenge.actionCode}`);
+      addOutput(`  expiresAt: ${challenge.expiresAt ?? '(none)'}`);
       addOutput(`  custom: ${JSON.stringify(challenge.custom) ?? '(none)'}`);
       addOutput(
         `  user.custom: ${JSON.stringify(challenge.user?.custom) ?? '(none)'}`

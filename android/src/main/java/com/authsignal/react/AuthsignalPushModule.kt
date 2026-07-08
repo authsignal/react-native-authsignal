@@ -122,6 +122,9 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
           map.putString("ipAddress", challenge.ipAddress)
           map.putString("deviceId", challenge.deviceId)
           map.putString("userAgent", challenge.userAgent)
+          challenge.expiresAt?.let { expiresAt ->
+            map.putDouble("expiresAt", expiresAt.toDouble())
+          }
           challenge.custom?.let { custom ->
             map.putMap("custom", JsonConversion.toWritableMap(custom))
           }

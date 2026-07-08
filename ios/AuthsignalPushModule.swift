@@ -141,6 +141,7 @@ class AuthsignalPushModule: NSObject {
           "userAgent": data.userAgent,
           "deviceId": data.deviceId,
           "ipAddress": data.ipAddress,
+          "expiresAt": data.expiresAt,
           "custom": data.custom?.mapValues { $0.value },
           "user": data.user.map { user in ["custom": user.custom?.mapValues { $0.value }] },
         ]
