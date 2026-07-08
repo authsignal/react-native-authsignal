@@ -60,6 +60,7 @@ export interface AppChallenge {
   userAgent?: string;
   deviceId?: string;
   ipAddress?: string;
+  expiresAt?: number;
   custom?: Record<string, unknown>;
   user?: ChallengeUser;
 }
