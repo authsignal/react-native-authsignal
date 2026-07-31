@@ -6,6 +6,10 @@ import android.content.Intent
 import android.net.Uri
 import com.authsignal.DeviceCache
 import com.authsignal.TokenCache.Companion.shared
+import com.authsignal.react.AuthenticationActivity.Companion.AUTHENTICATION_REQUEST
+import com.authsignal.react.AuthenticationActivity.Companion.CALLBACK_SCHEME
+import com.authsignal.react.AuthenticationActivity.Companion.EXTRA_ERROR_CODE
+import com.authsignal.react.AuthenticationActivity.Companion.EXTRA_ERROR_MESSAGE
 import com.authsignal.react.AuthenticationActivity.Companion.authenticateUsingBrowser
 import com.facebook.react.bridge.ActivityEventListener
 import com.facebook.react.bridge.Promise
@@ -16,7 +20,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import java.net.URLDecoder
 
 @ReactModule(name = AuthsignalModule.NAME)
 class AuthsignalModule(private val reactContext: ReactApplicationContext) :
@@ -38,6 +41,14 @@ class AuthsignalModule(private val reactContext: ReactApplicationContext) :
 
   @ReactMethod
   override fun launch(url: String?, promise: Promise) {
+    if (launchPromise != null) {
+      promise.reject(
+        "launch_in_progress",
+        "Another Authsignal browser flow is already in progress."
+      )
+      return
+    }
+
     if (url == null) {
       promise.reject("invalid_url", "Launch URL must not be null.")
       return
@@ -66,37 +77,36 @@ class AuthsignalModule(private val reactContext: ReactApplicationContext) :
     resultCode: Int,
     data: Intent?
   ) {
-    val pendingPromise = this@AuthsignalModule.launchPromise ?: return
+    if (requestCode != AUTHENTICATION_REQUEST) return
 
-    val hasResult =
-      resultCode == Activity.RESULT_OK && requestCode == AuthenticationActivity.AUTHENTICATION_REQUEST && data!!.data != null
+    val pendingPromise = launchPromise ?: return
+    launchPromise = null
 
-    if (hasResult) {
-      try {
-        val redirectUrl = data!!.data.toString()
-        val query = redirectUrl.split("[?]".toRegex()).dropLastWhile { it.isEmpty() }
-          .toTypedArray()[1]
-        val pairs = query.split("&".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        var token: String? = null
-        for (pair in pairs) {
-          val index = pair.indexOf("=")
-          val name = URLDecoder.decode(pair.substring(0, index), "UTF-8")
-          val value = URLDecoder.decode(pair.substring(index + 1), "UTF-8")
-          if (name == "token") {
-            token = value
-
-            shared.token = value
-          }
-        }
-        pendingPromise.resolve(token)
-      } catch (ex: Exception) {
-        pendingPromise.reject("malformed_url", "Malformed redirect url")
-      }
-    } else {
-      pendingPromise.resolve(null)
+    val errorCode = data?.getStringExtra(EXTRA_ERROR_CODE)
+    if (errorCode != null) {
+      pendingPromise.reject(
+        errorCode,
+        data.getStringExtra(EXTRA_ERROR_MESSAGE) ?: "Authentication failed."
+      )
+      return
     }
 
-    this@AuthsignalModule.launchPromise = null
+    if (resultCode == Activity.RESULT_CANCELED) {
+      pendingPromise.resolve(null)
+      return
+    }
+
+    val redirectUri = data?.data
+    if (resultCode != Activity.RESULT_OK || redirectUri == null) {
+      pendingPromise.reject("malformed_url", "Malformed redirect URL.")
+      return
+    }
+
+    val token = redirectUri.getQueryParameter("token")
+    if (token != null) {
+      shared.token = token
+    }
+    pendingPromise.resolve(token)
   }
 
   @ReactMethod
@@ -129,7 +139,6 @@ class AuthsignalModule(private val reactContext: ReactApplicationContext) :
 
   companion object {
     const val NAME = "AuthsignalModule"
-    private const val CALLBACK_SCHEME = "authsignal"
     private const val NATIVE_SCHEME_QUERY_PARAM = "nativeScheme"
   }
 }

@@ -1,6 +1,5 @@
 <!--suppress AndroidElementNotAllowed -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application>
@@ -14,8 +13,7 @@
         <activity
             android:name="com.authsignal.react.RedirectActivity"
             android:exported="true">
-            <intent-filter android:autoVerify="true"
-                tools:targetApi="m">
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
