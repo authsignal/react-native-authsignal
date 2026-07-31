@@ -3,20 +3,29 @@ package com.authsignal.react
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.browser.customtabs.CustomTabsService
 
 class AuthenticationActivity : ComponentActivity() {
   private var authenticationLaunched = false
   private var authenticationCompleted = false
+  private var authTabSupported = false
+  private var cancellationDeadlineMillis = 0L
   private val mainHandler = Handler(Looper.getMainLooper())
-  private val completeCancellation = Runnable { completeAuthentication(null) }
+  private val completeCancellation =
+    Runnable {
+      cancellationDeadlineMillis = 0L
+      completeAuthentication(null)
+    }
 
   private val browserLauncher =
     registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -29,8 +38,13 @@ class AuthenticationActivity : ComponentActivity() {
             completeAuthentication(redirectUri)
           }
         }
-        RESULT_CANCELED ->
-          mainHandler.postDelayed(completeCancellation, REDIRECT_GRACE_PERIOD_MILLIS)
+        RESULT_CANCELED -> {
+          if (authTabSupported) {
+            completeAuthentication(null)
+          } else {
+            scheduleCancellation()
+          }
+        }
         else ->
           completeWithError(
             "authentication_failed",
@@ -47,6 +61,10 @@ class AuthenticationActivity : ComponentActivity() {
         savedInstanceState.getBoolean(EXTRA_AUTHENTICATION_LAUNCHED, false)
       authenticationCompleted =
         savedInstanceState.getBoolean(EXTRA_AUTHENTICATION_COMPLETED, false)
+      authTabSupported =
+        savedInstanceState.getBoolean(EXTRA_AUTH_TAB_SUPPORTED, false)
+      cancellationDeadlineMillis =
+        savedInstanceState.getLong(EXTRA_CANCELLATION_DEADLINE_MILLIS, 0L)
     }
 
     intent.data?.let {
@@ -56,6 +74,11 @@ class AuthenticationActivity : ComponentActivity() {
 
     if (authenticationCompleted) {
       finish()
+      return
+    }
+
+    if (cancellationDeadlineMillis > 0L) {
+      scheduleCancellation(cancellationDeadlineMillis)
       return
     }
 
@@ -83,6 +106,13 @@ class AuthenticationActivity : ComponentActivity() {
     super.onSaveInstanceState(outState)
     outState.putBoolean(EXTRA_AUTHENTICATION_LAUNCHED, authenticationLaunched)
     outState.putBoolean(EXTRA_AUTHENTICATION_COMPLETED, authenticationCompleted)
+    outState.putBoolean(EXTRA_AUTH_TAB_SUPPORTED, authTabSupported)
+    outState.putLong(EXTRA_CANCELLATION_DEADLINE_MILLIS, cancellationDeadlineMillis)
+  }
+
+  override fun onDestroy() {
+    mainHandler.removeCallbacks(completeCancellation)
+    super.onDestroy()
   }
 
   override fun onNewIntent(intent: Intent) {
@@ -100,16 +130,50 @@ class AuthenticationActivity : ComponentActivity() {
         .putExtra(EXTRA_LAUNCH_AUTH_TAB, true)
         .putExtra(EXTRA_REDIRECT_SCHEME, CALLBACK_SCHEME)
 
+      authTabSupported = isAuthTabSupported(customTabsIntent.intent)
       browserLauncher.launch(customTabsIntent.intent)
     } catch (exception: ActivityNotFoundException) {
       completeWithError("browser_not_available", "No browser app is installed.")
     }
   }
 
+  private fun isAuthTabSupported(browserIntent: Intent): Boolean {
+    val browserPackage = browserIntent.resolveActivity(packageManager)?.packageName ?: return false
+    val serviceIntent =
+      Intent(CustomTabsService.ACTION_CUSTOM_TABS_CONNECTION)
+        .setPackage(browserPackage)
+        .addCategory(CATEGORY_AUTH_TAB)
+
+    val service =
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        packageManager.resolveService(
+          serviceIntent,
+          PackageManager.ResolveInfoFlags.of(0)
+        )
+      } else {
+        @Suppress("DEPRECATION")
+        packageManager.resolveService(serviceIntent, 0)
+      }
+
+    return service != null
+  }
+
+  private fun scheduleCancellation(
+    deadlineMillis: Long = SystemClock.elapsedRealtime() + REDIRECT_GRACE_PERIOD_MILLIS
+  ) {
+    cancellationDeadlineMillis = deadlineMillis
+    mainHandler.removeCallbacks(completeCancellation)
+    mainHandler.postDelayed(
+      completeCancellation,
+      maxOf(0L, deadlineMillis - SystemClock.elapsedRealtime())
+    )
+  }
+
   private fun completeAuthentication(redirectUri: Uri?) {
     if (authenticationCompleted) return
 
     mainHandler.removeCallbacks(completeCancellation)
+    cancellationDeadlineMillis = 0L
     authenticationCompleted = true
     if (redirectUri == null) {
       setResult(RESULT_CANCELED)
@@ -122,6 +186,8 @@ class AuthenticationActivity : ComponentActivity() {
   private fun completeWithError(code: String, message: String) {
     if (authenticationCompleted) return
 
+    mainHandler.removeCallbacks(completeCancellation)
+    cancellationDeadlineMillis = 0L
     authenticationCompleted = true
     val result =
       Intent()
@@ -143,7 +209,12 @@ class AuthenticationActivity : ComponentActivity() {
       "com.authsignal.react.EXTRA_AUTHENTICATION_LAUNCHED"
     private const val EXTRA_AUTHENTICATION_COMPLETED =
       "com.authsignal.react.EXTRA_AUTHENTICATION_COMPLETED"
-    private const val REDIRECT_GRACE_PERIOD_MILLIS = 1_000L
+    private const val EXTRA_AUTH_TAB_SUPPORTED =
+      "com.authsignal.react.EXTRA_AUTH_TAB_SUPPORTED"
+    private const val EXTRA_CANCELLATION_DEADLINE_MILLIS =
+      "com.authsignal.react.EXTRA_CANCELLATION_DEADLINE_MILLIS"
+    private const val CATEGORY_AUTH_TAB = "androidx.browser.auth.category.AuthTab"
+    private const val REDIRECT_GRACE_PERIOD_MILLIS = 5_000L
 
     @JvmStatic
     fun authenticateUsingBrowser(activity: Activity, authorizeUri: Uri) {
