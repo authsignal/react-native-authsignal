@@ -29,9 +29,6 @@ class AuthenticationActivity : ComponentActivity() {
             completeAuthentication(redirectUri)
           }
         }
-        // A classic Custom Tab reports cancellation while handing a custom-scheme redirect back
-        // to the app. Give RedirectActivity.onNewIntent a brief chance to deliver that URI before
-        // treating the result as a user cancellation.
         RESULT_CANCELED ->
           mainHandler.postDelayed(completeCancellation, REDIRECT_GRACE_PERIOD_MILLIS)
         else ->
@@ -98,8 +95,6 @@ class AuthenticationActivity : ComponentActivity() {
     try {
       val customTabsIntent = CustomTabsIntent.Builder().build()
 
-      // Auth Tab is a public Custom Tabs intent protocol. Sending its stable extras directly keeps
-      // this SDK compatible with compileSdk 35 while browser 1.9+ requires compileSdk 36.
       customTabsIntent.intent
         .setData(authorizeUri)
         .putExtra(EXTRA_LAUNCH_AUTH_TAB, true)
