@@ -1,32 +1,32 @@
-name-template: "v$RESOLVED_VERSION 🚀"
+name-template: "v$RESOLVED_VERSION"
 tag-template: "v$RESOLVED_VERSION"
 categories:
-  - title: "⚠️ Breaking Changes"
+  - title: "Breaking changes"
     labels:
       - "breaking"
       - "major"
-  - title: "🚀 Features"
+  - title: "New features"
     labels:
       - "feature"
       - "enhancement"
-  - title: "🐛 Bug Fixes"
+  - title: "Bug fixes"
     labels:
       - "fix"
       - "bugfix"
       - "bug"
-  - title: "🧰 Maintenance"
+  - title: "Maintenance"
     labels:
       - "chore"
       - "maintenance"
-  - title: "📚 Documentation"
+  - title: "Documentation"
     labels:
       - "documentation"
-  - title: "⬆️ Dependencies"
+  - title: "Dependencies"
     collapse-after: 5
     labels:
       - "dependencies"
 
-change-template: "- $TITLE @$AUTHOR (#$NUMBER)"
+change-template: "- $TITLE (#$NUMBER)"
 change-title-escapes: '\<*_&'
 version-resolver:
   major:
@@ -37,6 +37,7 @@ version-resolver:
     labels:
       - "minor"
       - "feature"
+      - "enhancement"
   patch:
     labels:
       - "patch"
@@ -65,11 +66,9 @@ autolabeler:
       - '/feature\/.+/'
   - label: "dependencies"
     files:
-      - "yarn.lock"
+      - "package-lock.json"
 
 template: |
-  ## Changes in Release v$RESOLVED_VERSION
-
   $CHANGES
 
   **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
