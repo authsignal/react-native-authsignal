@@ -75,6 +75,8 @@ export interface AppCredential {
   userId: string;
   lastAuthenticatedAt?: string;
   expiresAt?: string;
+  erroredAt?: string;
+  errorCode?: string;
 }
 
 export interface UpdateCredentialInput {
@@ -88,6 +90,8 @@ export interface UpdatedAppCredential {
   lastVerifiedAt: string;
   pushToken?: string;
   expiresAt?: string;
+  erroredAt?: string;
+  errorCode?: string;
 }
 
 export interface ClaimChallengeInput {

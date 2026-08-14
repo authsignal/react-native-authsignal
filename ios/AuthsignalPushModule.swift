@@ -44,6 +44,8 @@ class AuthsignalPushModule: NSObject {
           "userId": data.userId,
           "lastAuthenticatedAt": data.lastAuthenticatedAt,
           "expiresAt": data.expiresAt,
+          "erroredAt": data.erroredAt,
+          "errorCode": data.errorCode,
         ]
 
         resolve(credential)
@@ -90,6 +92,8 @@ class AuthsignalPushModule: NSObject {
           "userId": data.userId,
           "lastAuthenticatedAt": data.lastAuthenticatedAt,
           "expiresAt": data.expiresAt,
+          "erroredAt": data.erroredAt,
+          "errorCode": data.errorCode,
         ]
 
         resolve(credential)
@@ -209,6 +213,8 @@ class AuthsignalPushModule: NSObject {
           "lastVerifiedAt": data.lastVerifiedAt,
           "pushToken": data.pushToken,
           "expiresAt": data.expiresAt,
+          "erroredAt": data.erroredAt,
+          "errorCode": data.errorCode,
         ]
 
         resolve(credential)

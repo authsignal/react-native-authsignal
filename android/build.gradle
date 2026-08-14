@@ -67,7 +67,7 @@ dependencies {
   implementation "androidx.activity:activity:1.9.0"
   implementation "androidx.browser:browser:1.8.0"
 
-  implementation("com.authsignal:authsignal-android:4.3.0")
+  implementation("com.authsignal:authsignal-android:4.4.0")
 
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
 }

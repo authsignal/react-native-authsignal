@@ -44,6 +44,8 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
         map.putString("userId", credential.userId)
         map.putString("lastAuthenticatedAt", credential.lastAuthenticatedAt)
         map.putString("expiresAt", credential.expiresAt)
+        map.putString("erroredAt", credential.erroredAt)
+        map.putString("errorCode", credential.errorCode)
         promise.resolve(map)
       } else {
         promise.resolve(null)
@@ -80,6 +82,8 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
         map.putString("userId", credential.userId)
         map.putString("lastAuthenticatedAt", credential.lastAuthenticatedAt)
         map.putString("expiresAt", credential.expiresAt)
+        map.putString("erroredAt", credential.erroredAt)
+        map.putString("errorCode", credential.errorCode)
         promise.resolve(map)
       }
     }
@@ -179,6 +183,8 @@ class AuthsignalPushModule(private val reactContext: ReactApplicationContext) :
         map.putString("lastVerifiedAt", credential.lastVerifiedAt)
         map.putString("pushToken", credential.pushToken)
         map.putString("expiresAt", credential.expiresAt)
+        map.putString("erroredAt", credential.erroredAt)
+        map.putString("errorCode", credential.errorCode)
         promise.resolve(map)
       } else {
         promise.resolve(null)
