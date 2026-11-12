@@ -120,7 +120,6 @@ class AuthsignalPasskeyModule: NSObject {
     authsignal?.cancel()
   }
 
-  // React Native exposes the NSError's userInfo on the JS error, so put the native domain and code there.
   private func nativeError(domain: String?, code: Int?) -> NSError? {
     guard let domain = domain, let code = code else {
       return nil
