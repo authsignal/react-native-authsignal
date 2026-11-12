@@ -4,6 +4,10 @@ export interface AuthsignalResponse<T> {
   data?: T;
   error?: string;
   errorCode?: ErrorCode | string;
+  /** iOS only: the domain of the error returned by the OS for a passkey request. */
+  nativeErrorDomain?: string;
+  /** iOS only: the code of the error returned by the OS for a passkey request. */
+  nativeErrorCode?: number;
 }
 
 export interface TokenPayload {
