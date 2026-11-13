@@ -16,13 +16,28 @@ export enum ErrorCode {
 }
 
 export function handleErrorCodes(ex: any) {
-  return {
+  const response: ErrorResponse = {
     error: ex.message,
     errorCode: ex.code,
-  } as ErrorResponse;
+  };
+
+  const nativeErrorDomain = ex?.userInfo?.nativeErrorDomain;
+  const nativeErrorCode = ex?.userInfo?.nativeErrorCode;
+
+  if (typeof nativeErrorDomain === 'string') {
+    response.nativeErrorDomain = nativeErrorDomain;
+  }
+
+  if (typeof nativeErrorCode === 'number') {
+    response.nativeErrorCode = nativeErrorCode;
+  }
+
+  return response;
 }
 
 interface ErrorResponse {
   error: string;
   errorCode: string;
+  nativeErrorDomain?: string;
+  nativeErrorCode?: number;
 }
