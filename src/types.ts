@@ -4,6 +4,8 @@ export interface AuthsignalResponse<T> {
   data?: T;
   error?: string;
   errorCode?: ErrorCode | string;
+  nativeErrorDomain?: string;
+  nativeErrorCode?: number;
 }
 
 export interface TokenPayload {

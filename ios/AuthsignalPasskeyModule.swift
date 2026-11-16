@@ -52,7 +52,11 @@ class AuthsignalPasskeyModule: NSObject {
       )
 
       if (response.error != nil) {
-        reject(response.errorCode ?? "unexpected_error", response.error, nil)
+        reject(
+          response.errorCode ?? "unexpected_error",
+          response.error,
+          self.nativeError(domain: response.nativeErrorDomain, code: response.nativeErrorCode)
+        )
       } else {
         let signUpResponse: [String: String?] = [
           "token": response.data?.token,
@@ -90,7 +94,11 @@ class AuthsignalPasskeyModule: NSObject {
       )
       
       if (response.error != nil) {
-        reject(response.errorCode ?? "unexpected_error", response.error, nil)
+        reject(
+          response.errorCode ?? "unexpected_error",
+          response.error,
+          self.nativeError(domain: response.nativeErrorDomain, code: response.nativeErrorCode)
+        )
       } else if let data = response.data {
         let signInResponse: [String: Any?] = [
           "isVerified": data.isVerified,
@@ -110,6 +118,18 @@ class AuthsignalPasskeyModule: NSObject {
   
   @objc func cancel() -> Void {
     authsignal?.cancel()
+  }
+
+  private func nativeError(domain: String?, code: Int?) -> NSError? {
+    guard let domain = domain, let code = code else {
+      return nil
+    }
+
+    return NSError(
+      domain: domain,
+      code: code,
+      userInfo: ["nativeErrorDomain": domain, "nativeErrorCode": code]
+    )
   }
   
   @objc func invalidate() -> Void {
