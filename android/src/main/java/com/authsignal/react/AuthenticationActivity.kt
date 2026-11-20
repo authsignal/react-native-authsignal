@@ -40,7 +40,7 @@ class AuthenticationActivity : ComponentActivity() {
         }
         RESULT_CANCELED -> {
           if (authTabSupported) {
-            completeAuthentication(null)
+            scheduleCancellation(SystemClock.elapsedRealtime() + AUTH_TAB_GRACE_PERIOD_MILLIS)
           } else {
             scheduleCancellation()
           }
@@ -215,6 +215,7 @@ class AuthenticationActivity : ComponentActivity() {
       "com.authsignal.react.EXTRA_CANCELLATION_DEADLINE_MILLIS"
     private const val CATEGORY_AUTH_TAB = "androidx.browser.auth.category.AuthTab"
     private const val REDIRECT_GRACE_PERIOD_MILLIS = 5_000L
+    private const val AUTH_TAB_GRACE_PERIOD_MILLIS = 1_000L
 
     @JvmStatic
     fun authenticateUsingBrowser(activity: Activity, authorizeUri: Uri) {
