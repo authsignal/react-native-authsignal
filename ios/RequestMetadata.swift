@@ -1,7 +1,7 @@
 import Authsignal
 import Foundation
 
-private let authsignalReactNativeVersion = "3.3.2"
+private let authsignalReactNativeVersion = "3.4.1"
 
 enum RequestMetadata {
   static func configure() {
